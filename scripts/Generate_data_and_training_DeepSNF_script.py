@@ -5,6 +5,7 @@ python scripts/Generate_data_and_training_DeepSNF_script.py --marker_name 'CD38'
                                                             --Raw_directory "Raw_IMC_for_training" 
                                                             --train_epoches '50' 
                                                             --train_batch_size '128'
+                                                            --neighbours '4' --n_lambda '5' --slide_window_size '3'
                                              
 """
 from IMC_Denoise.IMC_Denoise_main.DeepSNF import DeepSNF
