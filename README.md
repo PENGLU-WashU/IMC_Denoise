@@ -103,9 +103,9 @@ In order to generate training set for DeepSNF, the directory structure of raw IM
 ### Download example data
 
 ### IMC-Denoise tutorials with Jupyter Notebook
-- [DeepSNF: generate data and training](https://github.com/PENGLU-WashU/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
-- [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
-- [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
+- [DeepSNF: generate data and training](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
+- [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
+- [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
 ### Implement IMC-Denoise with scripts
 - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. Here we take CD38 channel as an example.
