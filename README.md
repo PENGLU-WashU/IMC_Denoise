@@ -7,7 +7,11 @@
 - [Customize environment for IMC-Denoise](#customize-environment-for-imc-denoise)
   - [Our IMC-Denoise environment](#our-imc-denoise-environment)
   - [Installation](#installation)
- 
+- [IMC-Denoise tutorials with Jupyter Notebook](#imc-denoise-tutorials-with-jupyter-notebook)
+- [Implement IMC-Denoise with scripts](#implement-imc-denoise-with-scripts)
+- [License](#license)
+- [Contact](#contact)
+- [References](#references)
 
 <!-- Introduction to the project -->
 ## Introduction to the project
@@ -81,24 +85,11 @@ $ pip install -e .
 ```
 
 ## IMC-Denoise tutorials with Jupyter Notebook
-- [DeepSNF: Generate data and training](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter Notebooks/IMC_Denoise_Train.ipynb)
-## Roadmap
+- [DeepSNF: generate data and training](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
+- [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNF](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
+- [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a list of proposed features (and known issues).
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
+## Implement IMC-Denoise with scripts
 
 
 <!-- LICENSE -->
@@ -107,11 +98,10 @@ Contributions are what make the open source community such an amazing place to l
 <!-- CONTACT -->
 ## Contact
 
-Peng Lu - [@your_twitter](https://twitter.com/penglu10) - penglu@wustl.edu
+Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
+<br/>Project Link: [https://github.com/LUPENG7803111/IMC_Denoise](https://github.com/LUPENG7803111/IMC_Denoise)
+<br/>Lab Website: [Thorek Lab WashU](https://sites.wustl.edu/thoreklab/)
 
-Project Link: [https://github.com/LUPENG7803111/IMC_Denoise](https://github.com/LUPENG7803111/IMC_Denoise)
-
-<!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
+## References
 
 
