@@ -133,6 +133,7 @@ python scripts/Generate_data_and_training.py --marker_name 'CD38'
 python scripts/Predict_script.py --Raw_img_name 'Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
                                  --Denoised_img_name 'Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
                                  --weights_name "weights_CD38.hdf5" 
+- More specific parameters can also be added and adjusted. Please refer to the scripts file.
 ```
 <!-- LICENSE -->
 ## License
