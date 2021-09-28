@@ -114,12 +114,10 @@ In order to generate training set for DeepSNF, the directory structure of raw IM
   - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. Here we take CD38 channel as an example.
   ```
   python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38' --Raw_directory "D:\python_file_folder\IMC_learning\IMC_Denoise\Raw_IMC_for_training" 
-
   ```
   - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted.
   ```
   python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_CD38.npz' --weights_name 'weights_CD38.hdf5' --train_epoches '50'
-
   ```
   - Generate training set for a specific marker channel and then train a DeepSNF network. In this process, the generated training set will not be saved in a directory.
   ```
