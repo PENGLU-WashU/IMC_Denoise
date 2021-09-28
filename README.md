@@ -18,21 +18,12 @@
 
 <!-- Introduction to the project -->
 ## Introduction to the project
-
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/IMC_paper_fig-1.png" alt="Logo" width="600" align = "right">
-  </a>
-</p>
+<img src="images/IMC_paper_fig-1.png" alt="Logo" width="500" align = "right">
 
 Imaging Mass Cytometry (IMC) is an emerging multiplexed imaging technology for analyzing complex microenvironments that has the ability to detect the spatial distribution of at least 40 cell markers. However, this new modality has unique image data processing requirements, particularly when applying this
-technology to patient tissue specimens. In these cases, signal-to-noise ratio (SNR) for particular markers can be low despite optimization of staining conditions, and the presence of pixel intensity artifacts can deteriorate image quality and the performance of downstream analysis. Here we demonstrate a contentaware
-pipeline, IMCDenoise, to restore IMC images. Specifically, we deploy a differential intensity mapbased restoration (DIMR) algorithm for removing hot pixels and a selfsupervised deep learning algorithm for filtering photon shot noise (DeepSNF). IMCDenoise outperforms existing methods for adaptive hot pixel removal without loss of resolution and delivers significant SNR improvement to a diverse set of IMC channels and datasets, including a technically challenging unique human bone marrow IMC dataset. Moreover, with cellscale analysis on this bone marrow data, our approach reduces noise variability in modeling of
-intercell communications, enhances cell phenotyping including T cell subsetspecific biological interpretations.
+technology to patient tissue specimens. In these cases, signal-to-noise ratio (SNR) for particular markers can be low despite optimization of staining conditions, and the presence of pixel intensity artifacts can deteriorate image quality and the performance of downstream analysis. Here we demonstrate a content aware
+pipeline, IMCDenoise, to restore IMC images. Specifically, we deploy a differential intensity mapbased restoration (DIMR) algorithm for removing hot pixels and a self-supervised deep learning algorithm for filtering shot noise (DeepSNF). IMC-Denoise enables adaptive hot pixel removal without loss of resolution and delivers significant SNR improvement to a diverse set of IMC channels and datasets. Here we show how to implement IMC-Denoise and we hope this package could help the researchers in the field of mass cytometry imaging.
 
-<!-- Directory structure -->
 ## Directory structure of IMC-Denoise
 ```
 IMC_Denoise
@@ -51,15 +42,15 @@ IMC_Denoise
 |---|---N2V_utils
 |---|---|---N2V_util.py
 |---|---|---N2V_DataWrapper.py
+|---Jupyter_Notebook_examples
+|---|---IMC_Denoise_Train_and_Predict.ipynb
+|---|---IMC_Denoise_Train.ipynb
+|---|---IMC_Denoise_Predict.ipynb
 |---scripts
 |---|---Data_generation_script.py
 |---|---Training_script.py
 |---|---Generate_data_and_training.py
 |---|---Predict_script.py
-|---Jupyter_Notebook_examples
-|---|---IMC_Denoise_Train_and_Predict.ipynb
-|---|---IMC_Denoise_Train.ipynb
-|---|---IMC_Denoise_Predict.ipynb
 ```
 - **IMC_Denoise** implements DIMR and DeepSNF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
 - **scripts** and **Jupyter Notebooks** include several examples to implement IMC_Denoise algorithms.
