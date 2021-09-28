@@ -18,8 +18,6 @@ parser.add_argument("--Raw_directory", help = "The directory which contained raw
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_lambda", help = "DIMR algorithm parameter", default = 5)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default = 3, type = int)
-parser.add_argument("--Save_range_val_directory", help = "The directory which saves the pre-calculated range value. If None, the generated \
-                    range value will be saved in the default directory", default = None)
                     
 parser.add_argument("--weights_name", help = "trained network weights. hdf5 format")
 parser.add_argument("--loss_name", help = "training and validation losses saved here, either .mat or .npz format. \
