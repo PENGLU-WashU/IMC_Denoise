@@ -46,4 +46,4 @@ deepsnf = DeepSNF(train_epoches = args.train_epoches,
                   loss_name = args.loss_name,
                   weights_dir = args.weights_save_directory)
 
-deepsnf.train(train_data)
+deepsnf.train(generated_patches)

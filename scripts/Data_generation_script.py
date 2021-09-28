@@ -25,4 +25,4 @@ DataGenerator = DeepSNF_DataGenerator(marker_name = args.marker_name, n_neighbou
                                       n_lambda = args.n_lambda, window_size = args.slide_window_size)
 generated_patches = DataGenerator.generate_patches_from_directory(load_directory = args.Raw_directory)
 if DataGenerator.save_patches(generated_patches,  save_directory = args.Save_directory):  
-    print('Data generated successfully for ' + str(self.marker_name) + '.')
+    print('Data generated successfully for ' + str(args.marker_name) + '.')
