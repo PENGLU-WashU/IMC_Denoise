@@ -7,8 +7,11 @@
 - [Customize environment for IMC-Denoise](#customize-environment-for-imc-denoise)
   - [Our IMC-Denoise environment](#our-imc-denoise-environment)
   - [Installation](#installation)
-- [IMC-Denoise tutorials with Jupyter Notebook](#imc-denoise-tutorials-with-jupyter-notebook)
-- [Implement IMC-Denoise with scripts](#implement-imc-denoise-with-scripts)
+- [Implement IMC-Denoise](#implement-imc-denoise)
+  - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
+  - [Download example data](#download-example-data)
+  - [IMC-Denoise tutorials with Jupyter Notebook](#imc-denoise-tutorials-with-jupyter-notebook)
+  - [Implement IMC-Denoise with scripts](#implement-imc-denoise-with-scripts)
 - [License](#license)
 - [Contact](#contact)
 - [References](#references)
@@ -30,10 +33,11 @@ pipeline, IMCDenoise, to restore IMC images. Specifically, we deploy a different
 intercell communications, enhances cell phenotyping including T cell subsetspecific biological interpretations.
 
 <!-- Directory structure -->
-## Directory structure
+## Directory structure of IMC-Denoise
 ```
+IMC_Denoise
 |---IMC_Denoise
-|---|---IMC_Denoise_main
+|---|---IMC-Denoise_main
 |---|---|---DeepSNF.py
 |---|---|---DeepSNF_model.py
 |---|---|---DIMR.py
@@ -52,7 +56,7 @@ intercell communications, enhances cell phenotyping including T cell subsetspeci
 |---|---Training_script.py
 |---|---Generate_data_and_training.py
 |---|---Predict_script.py
-|---Jupyter Notebooks
+|---Jupyter_Notebook_examples
 |---|---IMC_Denoise_Train_and_Predict.ipynb
 |---|---IMC_Denoise_Train.ipynb
 |---|---IMC_Denoise_Predict.ipynb
@@ -60,7 +64,6 @@ intercell communications, enhances cell phenotyping including T cell subsetspeci
 - **IMC_Denoise** implements DIMR and DeepSNF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
 - **scripts** and **Jupyter Notebooks** include several examples to implement IMC_Denoise algorithms.
 
-<!-- GETTING STARTED -->
 ## Customize environment for IMC-Denoise
 ### Our IMC-Denoise environment
 - Windows 10 64bit
@@ -84,12 +87,36 @@ $ cd IMC_Denoise
 $ pip install -e .
 ```
 
-## IMC-Denoise tutorials with Jupyter Notebook
+## Implement IMC-Denoise
+### Directory structure of raw IMC images
+In order to generate training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows.
+```
+|---Raw_image_directory
+|---|---Tissue1_sub_directory
+|---|---|---Marker1_img.tiff
+|---|---|---Marker2_img.tiff
+             ...
+|---|---|---Marker_n_img.tiff
+|---|---Tissue2_sub_directory
+|---|---|---Marker1_img.tiff
+|---|---|---Marker2_img.tiff
+             ...
+|---|---|---Marker_n_img.tiff
+             ...
+|---|---Tissue_m_sub_directory
+|---|---|---Marker1_img.tiff
+|---|---|---Marker2_img.tiff
+             ...
+|---|---|---Marker_n_img.tiff
+```
+### Download example data
+
+### IMC-Denoise tutorials with Jupyter Notebook
 - [DeepSNF: generate data and training](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
 - [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNF](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
 - [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
-## Implement IMC-Denoise with scripts
+### Implement IMC-Denoise with scripts
 
 
 <!-- LICENSE -->
