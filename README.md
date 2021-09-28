@@ -63,7 +63,7 @@ IMC_Denoise
 - NVIDIA GPU (24 GB Memory) + CUDA
 
 ### Installation
-- Create a virtual environment and install tensorflow-gpu, keras and jupyter.
+- Create a virtual environment and install tensorflow-gpu and keras.
 ```
 $ conda create -n 'IMC_Denoise' python=3.6
 $ conda activate IMC_Denoise
