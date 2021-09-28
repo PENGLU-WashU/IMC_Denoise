@@ -70,7 +70,6 @@ $ conda activate IMC_Denoise
 $ conda install -c anaconda brotlipy
 $ pip install tensorflow-gpu==2.2.0 keras==2.3.1
 $ conda install -c anaconda cudnn 
-$ conda install -c anaconda cudatoolkit=10.1
 ```
 - Download the source code and install the package
 ```
@@ -81,7 +80,7 @@ $ pip install -e .
 
 ## Implement IMC-Denoise
 ### Directory structure of raw IMC images
-In order to generate training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows.
+In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows.
 ```
 |---Raw_image_directory
 |---|---Tissue1_sub_directory
