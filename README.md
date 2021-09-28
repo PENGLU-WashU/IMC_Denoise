@@ -2,8 +2,12 @@
 
 ## Contents
 
-- [Introduction to the project](#Introduction to the project)
-
+- [Introduction to the project](#introduction-to-the-project)
+- [Directory structure](#directory-structure)
+- [Customize environment for IMC-Denoise](#customize-environment-for-imc-denoise)
+  - [Our IMC-Denoise environment](#our-imc-denoise-environment)
+  - [Installation](#installation)
+ 
 
 <!-- Introduction to the project -->
 ## Introduction to the project
@@ -14,7 +18,6 @@
   <a href="https://github.com/othneildrew/Best-README-Template">
     <img src="images/IMC_paper_fig-1.png" alt="Logo" width="600" align = "right">
   </a>
-
 </p>
 
 Imaging Mass Cytometry (IMC) is an emerging multiplexed imaging technology for analyzing complex microenvironments that has the ability to detect the spatial distribution of at least 40 cell markers. However, this new modality has unique image data processing requirements, particularly when applying this
@@ -52,9 +55,10 @@ intercell communications, enhances cell phenotyping including T cell subsetspeci
 ```
 - **IMC_Denoise** implements DIMR and DeepSNF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
 - **scripts** and **Jupyter Notebooks** include several examples to implement IMC_Denoise algorithms.
+
 <!-- GETTING STARTED -->
-## Tensorflow and Keras code
-### Environment
+## Customize environment for IMC-Denoise
+### Our IMC-Denoise environment
 - Windows 10 64bit
 - Python 3.6
 - Tensorflow 2.2.0
@@ -62,24 +66,22 @@ intercell communications, enhances cell phenotyping including T cell subsetspeci
 - NVIDIA GPU (24 GB Memory) + CUDA (smaller memory also works)
 
 ### Installation
-- Create a virtual environment and install Keras and tensorflow-gpu.
+- Create a virtual environment and install tensorflow-gpu, keras and jupyter.
 ```
 $ conda create -n 'IMC_Denoise' python=3.6
 $ conda activate IMC_Denoise
 $ pip install tensorflow-gpu==2.2.0 keras==2.3.1
 $ pip install jupyter
 ```
-- Install other dependencies
-```
-$ pip install tifffile scipy 
-```
-### Download the source code
+- Download the source code and install the package
 ```
 $ git clone git://github.com/LUPENG7803111/IMC_Denoise
 $ cd IMC_Denoise
+$ pip install -e .
 ```
 
-<!-- ROADMAP -->
+## IMC-Denoise tutorials with Jupyter Notebook
+- [DeepSNF: Generate data and training](https://github.com/LUPENG7803111/IMC_Denoise/Jupyter Notebooks/IMC_Denoise_Train.ipynb)
 ## Roadmap
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a list of proposed features (and known issues).
@@ -102,49 +104,14 @@ Contributions are what make the open source community such an amazing place to l
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
-
-
-
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Peng Lu - [@your_twitter](https://twitter.com/penglu10) - penglu@wustl.edu
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
-
-
+Project Link: [https://github.com/LUPENG7803111/IMC_Denoise](https://github.com/LUPENG7803111/IMC_Denoise)
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Img Shields](https://shields.io)
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Pages](https://pages.github.com)
-* [Animate.css](https://daneden.github.io/animate.css)
-* [Loaders.css](https://connoratherton.com/loaders)
-* [Slick Carousel](https://kenwheeler.github.io/slick)
-* [Smooth Scroll](https://github.com/cferdinandi/smooth-scroll)
-* [Sticky Kit](http://leafo.net/sticky-kit)
-* [JVectorMap](http://jvectormap.com)
-* [Font Awesome](https://fontawesome.com)
 
 
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
