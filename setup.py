@@ -9,5 +9,13 @@ from __future__ import absolute_import
 from setuptools import setup, find_packages
 
 setup(name='IMC_Denoise',
-      packages=find_packages()
+      packages=find_packages(),
+      install_requires=[
+          "numpy",
+          "scipy",
+          "matplotlib",
+          "keras==2.3.1",
+          "tifffile",
+          "python_version==3.6"
+        ]
       )
