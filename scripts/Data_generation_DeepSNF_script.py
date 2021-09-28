@@ -2,7 +2,7 @@
 """
 python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38' 
                                                  --Raw_directory "D:\python_file_folder\IMC_learning\IMC_Denoise\Raw_IMC_for_training"
-                                                 --neighbours '4' --n_lambda '5' --slide_window_size '3'
+                                                 --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
 """
          
 from IMC_Denoise.DataGenerator.DeepSNF_DataGenerator import DeepSNF_DataGenerator
