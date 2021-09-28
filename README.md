@@ -110,39 +110,41 @@ In order to generate training set for DeepSNF, the directory structure of raw IM
   - [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
 ### Implement IMC-Denoise with scripts
-- Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. Here we take CD38 channel as an example.
-```
-python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38' --Raw_directory "D:\python_file_folder\IMC_learning\IMC_Denoise\Raw_IMC_for_training" 
- 
-```
-- Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted.
-```
-python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_CD38.npz' --weights_name 'weights_CD38.hdf5' --train_epoches '50'
+- Training data generation and training for DeepSNF
+  - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. Here we take CD38 channel as an example.
+  ```
+  python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38' --Raw_directory "D:\python_file_folder\IMC_learning\IMC_Denoise\Raw_IMC_for_training" 
 
-```
-- Generate training set for a specific marker channel and then train a DeepSNF network. In this process, the generated training set will not be saved in a directory.
-```
-python scripts/Generate_data_and_training_DeepSNF_script.py --marker_name 'CD38' 
-                                                            --weights_name 'weights_CD38.hdf5'
-                                                            --Raw_directory "Raw_IMC_for_training" 
-                                                            --train_epoches '50' 
-                                                            --train_batch_size '128'
-```                                             
-- Implement DIMR for a single IMC image if the SNR of the image is good.
-```
-python scipts/Predict_DIMR_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
-                                     --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
-                                     --neighbours '4' --n_lambda '5' --slide_window_size '3'
-```
-- Implement IMC-Denoise including DIMR and DeepSNF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
-```
-python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
-                                             --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
-                                             --weights_name "weights_CD38.hdf5"   
-                                             --neighbours '4' --n_lambda '5' --slide_window_size '3' 
-```
+  ```
+  - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted.
+  ```
+  python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_CD38.npz' --weights_name 'weights_CD38.hdf5' --train_epoches '50'
+
+  ```
+  - Generate training set for a specific marker channel and then train a DeepSNF network. In this process, the generated training set will not be saved in a directory.
+  ```
+  python scripts/Generate_data_and_training_DeepSNF_script.py --marker_name 'CD38' 
+                                                              --weights_name 'weights_CD38.hdf5'
+                                                              --Raw_directory "Raw_IMC_for_training" 
+                                                              --train_epoches '50' 
+                                                              --train_batch_size '128'
+  ```                                             
+- Implement IMC-Denoise to enhance IMC images.
+  - Implement DIMR for a single IMC image if the SNR of the image is good.
+  ```
+  python scipts/Predict_DIMR_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
+                                       --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
+                                       --neighbours '4' --n_lambda '5' --slide_window_size '3'
+  ```
+  - Implement IMC-Denoise including DIMR and DeepSNF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
+  ```
+  python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
+                                               --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
+                                               --weights_name "weights_CD38.hdf5"   
+                                               --neighbours '4' --n_lambda '5' --slide_window_size '3' 
+  ```
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
-<!-- LICENSE -->
+
 ## License
 
 <!-- CONTACT -->
