@@ -104,9 +104,10 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 ### Download example data
 
 ### IMC-Denoise tutorials with Jupyter Notebook
-- Note: before running the notebooks, run
+- To start Jupyter Notebooks and run the examples.
 ```
 $ conda activate IMC_Denoise
+$ jupyter notebook --notebook -dir=your_folder_of_notebook_examples
 ```
 - Train and predict the DeepSNF algorithm separately, in which the generated dataset and trained weights will be saved.
   - [DeepSNF: generate data and training](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
@@ -115,7 +116,7 @@ $ conda activate IMC_Denoise
   - [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
 ### Implement IMC-Denoise with scripts
-- Note: before running the scripts, run
+- Activate the IMC_Denoise environment.
 ```
 $ conda activate IMC_Denoise
 ```
