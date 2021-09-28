@@ -16,7 +16,8 @@ class DeepSNF_DataGenerator():
     
     """
     def __init__(self, patch_row_size = 64, patch_col_size = 64, row_step = 60, col_step = 60, 
-                 ratio_thresh = 0.9, marker_name = None, is_augment = True, n_neighbours = 4, n_lambda = 5):
+                 ratio_thresh = 0.9, marker_name = None, is_augment = True, 
+                 n_neighbours = 4, n_lambda = 5, window_size = 3):
         
         """
         Initialize class parameters.
@@ -84,6 +85,7 @@ class DeepSNF_DataGenerator():
         self.is_augment = is_augment
         self.n_neighbours = n_neighbours
         self.n_lambda = n_lambda
+        self.window_size = window_size
         
         if marker_name is None:
             raise ValueError('Please provide the marker name!')
@@ -128,10 +130,10 @@ class DeepSNF_DataGenerator():
 
         """
         patch_collect = []
-        dimr = DIMR(n_neighbours = self.n_neighbours, n_lambda = self.n_lambda)
+        dimr = DIMR(n_neighbours = self.n_neighbours, n_lambda = self.n_lambda, window_size = self.window_size)
         for Img in Img_collect:
             Img_Anscombe = Anscombe_forward(Img)
-            Img_DIMR = np.array(dimr.predict(Img_Anscombe))
+            Img_DIMR = np.array(dimr.predict_augment(Img_Anscombe))
             Rows, Cols = np.shape(Img_DIMR)
             Row_range = list(range(self.patch_row_size//2, Rows - self.patch_row_size//2, self.row_step))
             Col_range = list(range(self.patch_col_size//2, Cols - self.patch_col_size//2, self.col_step))
