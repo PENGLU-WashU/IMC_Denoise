@@ -72,7 +72,7 @@ $ pip install jupyter
 ```
 - Download the source code and install the package
 ```
-$ git clone git://github.com/PENGLU-WashU/IMC_Denoise
+$ git clone https://github.com/PENGLU-WashU/IMC_Denoise.git
 $ cd IMC_Denoise
 $ pip install -e .
 ```
