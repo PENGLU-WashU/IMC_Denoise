@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Example:  python Predict_DIMR_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
-                                        --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
-                                        --neighbours '4' --n_lambda '5' --slide_window_size '3' 
+python scipts/Predict_DIMR_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
+                                     --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
+                                     --neighbours '4' --n_lambda '5' --slide_window_size '3' 
 """
 
 import tifffile as tp

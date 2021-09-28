@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-python Training_DeepSNF_script.py --train_set_name 'training_set_CD38.npz' --weights_name 'weights_CD38.hdf5' --train_epoches '50'
+python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_CD38.npz' --weights_name 'weights_CD38.hdf5' --train_epoches '50'
 
 """
 
