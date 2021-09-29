@@ -122,7 +122,7 @@ $ conda activate IMC_Denoise
 - Generating training set and train a DeepSNF model.
   - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. Here we take CD38 channel as an example.
   ```
-  python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38' --Raw_directory "Raw_IMC_for_training"  --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
+  python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38' --Raw_directory 'Your_raw_img_directory'  --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```
   - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted.
   ```
@@ -132,7 +132,7 @@ $ conda activate IMC_Denoise
   ```
   python scripts/Generate_data_and_training_DeepSNF_script.py --marker_name 'CD38' 
                                                               --weights_name 'weights_CD38.hdf5'
-                                                              --Raw_directory "Raw_IMC_for_training" 
+                                                              --Raw_directory 'Your_raw_img_directory'
                                                               --train_epoches '50' 
                                                               --train_batch_size '128'
                                                               --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
