@@ -59,6 +59,7 @@ IMC_Denoise
 - Tensorflow 2.2.0
 - Keras 2.3.1
 - NVIDIA GPU (24 GB Memory) + CUDA
+- We run all the codes in a Anaconda Powershell Prompt
 
 ### Installation
 - Create a virtual environment and install tensorflow-gpu and keras.
