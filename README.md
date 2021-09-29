@@ -115,6 +115,7 @@ $ jupyter notebook --notebook -dir=your_folder_of_notebook_examples
   - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
 ### Implement IMC_Denoise with scripts
+- Here we take CD38 channel as an example.
 - Activate the IMC_Denoise environment.
 ```
 $ conda activate IMC_Denoise
