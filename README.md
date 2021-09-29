@@ -1,6 +1,6 @@
 # IMC-Denoise: a content aware denoising pipeline to enhance Imaging Mass Cytometry
 
-<img src="images/IMC_paper_fig-1.png" alt="Logo" width="650" align = "right">
+<img src="images/IMC_paper_fig-1.png" alt="Logo" width="550" align = "right">
 
 Imaging Mass Cytometry (IMC) is an emerging multiplexed imaging technology for analyzing complex microenvironments that has the ability to detect the spatial distribution of at least 40 cell markers. However, this new modality has unique image data processing requirements, particularly when applying this
 technology to patient tissue specimens. In these cases, signal-to-noise ratio (SNR) for particular markers can be low despite optimization of staining conditions, and the presence of pixel intensity artifacts can deteriorate image quality and the performance of downstream analysis. Here we demonstrate a content aware
