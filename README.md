@@ -141,15 +141,15 @@ $ conda activate IMC_Denoise
 - Implement IMC_Denoise to enhance IMC images.
   - Implement DIMR for a single IMC image if the SNR of the image is good.
   ```
-  python scipts/Predict_DIMR_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
-                                       --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
+  python scipts/Predict_DIMR_script.py --Raw_img_name 'your_raw_img_name(.tiff)' 
+                                       --Denoised_img_name 'your_denoised_img_name(.tiff)' 
                                        --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```
   - Implement IMC_Denoise including DIMR and DeepSNF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
-  python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
-                                               --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
-                                               --weights_name "weights_CD38.hdf5"   
+  python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'your_raw_img_name(.tiff)' 
+                                               --Denoised_img_name 'your_denoised_img_name(.tiff)' 
+                                               --weights_name 'weights_CD38.hdf5'   
                                                --n_neighbours '4' --n_lambda '5' --slide_window_size '3' 
   ```
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
