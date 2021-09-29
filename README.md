@@ -3,15 +3,15 @@
 ## Contents
 
 - [Introduction to the project](#introduction-to-the-project)
-- [Directory structure of IMC-Denoise](#directory-structure-of-imc-denoise)
-- [Customize environment for IMC-Denoise](#customize-environment-for-imc-denoise)
-  - [Our IMC-Denoise environment](#our-imc-denoise-environment)
+- [Directory structure of IMC_Denoise](#directory-structure-of-imc-denoise)
+- [Customize environment for IMC_Denoise](#customize-environment-for-imc-denoise)
+  - [Our IMC_Denoise environment](#our-imc-denoise-environment)
   - [Installation](#installation)
-- [Implement IMC-Denoise](#implement-imc-denoise)
+- [Implement IMC_Denoise](#implement-imc-denoise)
   - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
   - [Download example data](#download-example-data)
-  - [IMC-Denoise tutorials with Jupyter Notebook](#imc-denoise-tutorials-with-jupyter-notebook)
-  - [Implement IMC-Denoise with scripts](#implement-imc-denoise-with-scripts)
+  - [IMC_Denoise tutorials with Jupyter Notebook](#imc-denoise-tutorials-with-jupyter-notebook)
+  - [Implement IMC_Denoise with scripts](#implement-imc-denoise-with-scripts)
 - [License](#license)
 - [Contact](#contact)
 - [References](#references)
@@ -27,7 +27,7 @@ pipeline, IMCDenoise, to restore IMC images. Specifically, we deploy a different
 ```
 IMC_Denoise
 |---IMC_Denoise
-|---|---IMC-Denoise_main
+|---|---IMC_Denoise_main
 |---|---|---DeepSNF.py
 |---|---|---DeepSNF_model.py
 |---|---|---DIMR.py
@@ -54,8 +54,8 @@ IMC_Denoise
 - **IMC_Denoise** implements DIMR and DeepSNF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
 - **scripts** and **Jupyter Notebooks** include several examples to implement IMC_Denoise algorithms.
 
-## Customize environment for IMC-Denoise
-### Our IMC-Denoise environment
+## Customize environment for IMC_Denoise
+### Our IMC_Denoise environment
 - Windows 10 64bit
 - Python 3.6
 - Tensorflow 2.2.0
@@ -111,11 +111,11 @@ $ jupyter notebook --notebook -dir=your_folder_of_notebook_examples
 ```
 - Train and predict the DeepSNF algorithm separately, in which the generated dataset and trained weights will be saved.
   - [DeepSNF: generate data and training](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
-  - [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
+  - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
 - Train and predict the DeepSNF algorithm in the same notebook, in which the generated dataset and trained weights will not be saved.
-  - [IMC-Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
+  - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
-### Implement IMC-Denoise with scripts
+### Implement IMC_Denoise with scripts
 - Activate the IMC_Denoise environment.
 ```
 $ conda activate IMC_Denoise
@@ -138,14 +138,14 @@ $ conda activate IMC_Denoise
                                                               --train_batch_size '128'
                                                               --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```                                             
-- Implement IMC-Denoise to enhance IMC images.
+- Implement IMC_Denoise to enhance IMC images.
   - Implement DIMR for a single IMC image if the SNR of the image is good.
   ```
   python scipts/Predict_DIMR_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
                                        --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
                                        --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```
-  - Implement IMC-Denoise including DIMR and DeepSNF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
+  - Implement IMC_Denoise including DIMR and DeepSNF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
   python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
                                                --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
