@@ -1,6 +1,5 @@
 # IMC-Denoise: a content aware denoising pipeline to enhance Imaging Mass Cytometry
 
-## Introduction to the project
 <img src="images/IMC_paper_fig-1.png" alt="Logo" width="650" align = "right">
 
 Imaging Mass Cytometry (IMC) is an emerging multiplexed imaging technology for analyzing complex microenvironments that has the ability to detect the spatial distribution of at least 40 cell markers. However, this new modality has unique image data processing requirements, particularly when applying this
