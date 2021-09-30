@@ -161,3 +161,5 @@ $ conda activate IMC_Denoise
 Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
 <br/>Project Link: [https://github.com/PENGLU-WashU/IMC_Denoise](https://github.com/PENGLU-WashU/IMC_Denoise)
 <br/>Lab Website: [Thorek Lab WashU](https://sites.wustl.edu/thoreklab/)
+
+## References
