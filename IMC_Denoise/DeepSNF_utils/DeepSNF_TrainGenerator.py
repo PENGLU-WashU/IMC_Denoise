@@ -5,8 +5,9 @@ Reference:
 [1] Krull, Alexander, Tim-Oliver Buchholz, and Florian Jug. "Noise2void-learning denoising from single noisy images." 
 Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2019.
 
-We modified the original Noise2Void code so that it can fit in our IMC-Denoise framework. 
-The license has been included in the folder.
+Parts of the codes for generating training and validation data in this file are modified from Noise2Void. 
+We assumble and implement the modified codes in our IMC_Denoise package. The license file of Noise2Void 
+has been included in the folder.
 
 """
 
@@ -27,6 +28,10 @@ def get_subpatch(patch, coord, local_sub_patch_radius):
     return patch[tuple(slices)]
 
 def pm_uniform_withCP(local_sub_patch_radius):
+    """
+    The dafault pixel manipulation method. Works well for IMC denoising.
+
+    """
     def random_neighbor_withCP_uniform(patch, coords, dims):
         vals = []
         for coord in zip(*coords):
@@ -38,25 +43,27 @@ def pm_uniform_withCP(local_sub_patch_radius):
 
 class DeepSNF_Training_DataGenerator(Sequence):
     """
-    The DeepSNF_Training_DataGenerator extracts random sub-patches from the given data and manipulates 'num_pix' pixels in the
-    input.
+    The DeepSNF_Training_DataGenerator manipulates random pixels of the input patches by a stratfied strategy. The 
+    manipulated patches are then set as the input of the network and the raw patches as the output, respectively. 
+    
     Parameters
     ----------
-    X          : array(floats)
+    X          : array(float)
                  The noisy input data.
-    Y          : array(floats)
-                 The same as X plus a masking channel.
+    Y          : array(float)
+                 X plus a masking channel.
     batch_size : int
                  Number of samples per batch.
-    num_pix    : int, optional(default=1)
-                 Number of pixels to manipulate.
-    shape      : tuple(int), optional(default=(64, 64))
-                 Shape of the randomly extracted patches.
-    value_manipulator : function, optional(default=None)
+    perc_pix    : int, optional
+                 Number of pixels to manipulate. The default is 0.2.
+    shape      : tuple(int), optional
+                 Shape of the randomly extracted patches. The default is (64, 64).
+    value_manipulator : function, optional
                         The manipulator used for the pixel replacement.
+                        The default is pm_uniform_withCP(5).
     """
 
-    def __init__(self, X,Y, batch_size, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+    def __init__(self, X, Y, batch_size, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
         self.X1 = X[:,:,:,0]
         self.X_rest = X[:,:,:,1:]   
         
@@ -164,6 +171,10 @@ class DeepSNF_Training_DataGenerator(Sequence):
             yield (np.random.rand() * boxsize, np.random.rand() * boxsize)
 
 def manipulate_val_data(X_val,Y_val, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+    """
+    Manipulate pixels to generate validation data.
+
+    """
     dims = len(shape)
     if dims == 2:
         box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
