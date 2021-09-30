@@ -36,8 +36,7 @@ IMC_Denoise
 |---|---|---Anscombe_transform.py
 |---|---|---Anscombe_vectors.mat
 |---|---|---place_holder.py
-|---|---N2V_utils
-|---|---|---N2V_util.py
+|---|---DeepSNF_utils
 |---|---|---N2V_DataWrapper.py
 |---Jupyter_Notebook_examples
 |---|---IMC_Denoise_Train_and_Predict.ipynb
