@@ -6,7 +6,7 @@ Reference:
 Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2019.
 
 Parts of the codes for generating training and validation data in this file are modified from Noise2Void. 
-We assumble and implement the modified codes in our IMC_Denoise package. The license file of Noise2Void 
+We assemble and implement the modified codes in our IMC_Denoise package. The license file of Noise2Void 
 has been included in the folder.
 
 """
