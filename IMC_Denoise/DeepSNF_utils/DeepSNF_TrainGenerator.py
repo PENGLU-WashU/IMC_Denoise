@@ -167,8 +167,8 @@ def manipulate_val_data(X_val,Y_val, perc_pix=0.2, shape=(64, 64), value_manipul
     dims = len(shape)
     if dims == 2:
         box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
-        get_stratified_coords = N2V_DataWrapper.__get_stratified_coords2D__
-        rand_float = N2V_DataWrapper.__rand_float_coords2D__(box_size)
+        get_stratified_coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__
+        rand_float = DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size)
 
     X_val1 = X_val[:,:,:,0]
     if np.ndim(X_val1)==3:
