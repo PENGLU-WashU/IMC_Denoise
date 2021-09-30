@@ -11,7 +11,7 @@ from keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
 from .DIMR import DIMR
 from .DeepSNF_model import DeepSNF_net
 from .loss_functions import create_weighted_binary_crossentropy, create_mse
-from ..DeepSNF_utils.N2V_DataWrapper import N2V_DataWrapper, pm_uniform_withCP, manipulate_val_data
+from ..DeepSNF_utils.DeepSNF_Training_DataGenerator import DeepSNF_Training_DataGenerator, manipulate_val_data
 from ..Anscombe_transform_function.Anscombe_transform import Anscombe_forward
 from ..Anscombe_transform_function.3rd_party.Exact_unbiased_Anscombe_transform import Anscombe_inverse_exact_unbiased
 
@@ -175,12 +175,10 @@ class DeepSNF():
         else:
             callback_list = [history, change_lr]
            
-        manipulator = eval('pm_{0}({1})'.format('uniform_withCP', str(5)))
-       
         Y_train = np.concatenate((X_train, np.zeros(X_train.shape, dtype = X_train.dtype)),axis = -1)
-        training_data = N2V_DataWrapper(X_train, Y_train,
+        training_data = DeepSNF_Training_DataGenerator(X_train, Y_train,
                                         self.train_batch_size, self.mask_perc_pix,
-                                        (p_row_size, p_col_size), manipulator)
+                                        (p_row_size, p_col_size))
         
         Y_test = np.concatenate((X_test, np.zeros(X_test.shape, dtype=X_test.dtype)), axis=-1)
         X_test, Y_test = manipulate_val_data(X_test,Y_test,
