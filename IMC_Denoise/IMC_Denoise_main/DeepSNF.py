@@ -12,7 +12,8 @@ from .DIMR import DIMR
 from .DeepSNF_model import DeepSNF_net
 from .loss_functions import create_weighted_binary_crossentropy, create_mse
 from ..DeepSNF_utils.N2V_DataWrapper import N2V_DataWrapper, pm_uniform_withCP, manipulate_val_data
-from ..Anscombe_transform_function.Anscombe_transform import Anscombe_forward, Anscombe_inverse_exact_unbiased
+from ..Anscombe_transform_function.Anscombe_transform import Anscombe_forward
+from ..Anscombe_transform_function.3rd_party.Exact_unbiased_Anscombe_transform import Anscombe_inverse_exact_unbiased
 
 class LossHistory(Callback):
     def on_train_begin(self, logs={}):
