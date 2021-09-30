@@ -11,8 +11,7 @@ from keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
 from .DIMR import DIMR
 from .DeepSNF_model import DeepSNF_net
 from .loss_functions import create_weighted_binary_crossentropy, create_mse
-from ..N2V_utils.N2V_DataWrapper import N2V_DataWrapper
-from ..N2V_utils.N2V_util import pm_uniform_withCP, manipulate_val_data
+from ..DeepSNF_utils.N2V_DataWrapper import N2V_DataWrapper, pm_uniform_withCP, manipulate_val_data
 from ..Anscombe_transform_function.Anscombe_transform import Anscombe_forward, Anscombe_inverse_exact_unbiased
 
 class LossHistory(Callback):
@@ -180,7 +179,7 @@ class DeepSNF():
         Y_train = np.concatenate((X_train, np.zeros(X_train.shape, dtype = X_train.dtype)),axis = -1)
         training_data = N2V_DataWrapper(X_train, Y_train,
                                         self.train_batch_size, self.mask_perc_pix,
-                                        (p_row_size, p_col_size), manipulator, structN2Vmask = None)
+                                        (p_row_size, p_col_size), manipulator)
         
         Y_test = np.concatenate((X_test, np.zeros(X_test.shape, dtype=X_test.dtype)), axis=-1)
         X_test, Y_test = manipulate_val_data(X_test,Y_test,
@@ -268,7 +267,7 @@ class DeepSNF():
         """
         
         if X.ndim != 2:
-            raise ValueError("For DeepSNF deneising, the input must be a 2d image!")
+            raise Exception("For DeepSNF deneising, the input must be a 2d image!")
             
         if self.range_val is None:
             print('In prediction, range value for the marker channel must be defined!')
@@ -329,7 +328,7 @@ class DeepSNF():
     
         """
         if X.ndim != 3:
-            raise ValueError("For DeepSNF batch processing, the input must be a 3d array ([N, R, C])!")
+            raise Exception("For DeepSNF batch processing, the input must be a 3d array ([N, R, C])!")
             
         if self.range_val is None:
             print('In prediction, range values for the marker channel must be defined!')
@@ -445,7 +444,7 @@ class DeepSNF():
 
         """
         if X.ndim != 3:
-            raise ValueError("For DIMR batch processing, the input must be a 3d array ([N, R, C])!")
+            raise Exception("For DIMR batch processing, the input must be a 3d array ([N, R, C])!")
         
         X_Anscombe_transformed = Anscombe_forward(X)
         dimr = DIMR(n_neighbours = n_neighbours, n_lambda = n_lambda, window_size = 3)
