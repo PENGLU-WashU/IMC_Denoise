@@ -54,7 +54,7 @@ class DIMR():
     
         """
         if X.ndim != 2:
-            raise ValueError("For DIMR, the input must be a 2d image!")
+            raise Exception("For DIMR, the input must be a 2d image!")
         
         # image size
         n_rows, n_cols = np.shape(X)
@@ -119,7 +119,7 @@ class DIMR():
     
         """
         if X.ndim != 2:
-            raise ValueError("For DIMR, the input must be a 2d image!")
+            raise Exception("For DIMR, the input must be a 2d image!")
             
         # image size
         n_rows, n_cols = np.shape(X)
@@ -205,7 +205,7 @@ class DIMR():
 
         """
         if X.ndim != 3:
-            raise ValueError("For DIMR batch processing, the input must be a 3d array ([N, R, C])!")
+            raise Exception("For DIMR batch processing, the input must be a 3d array ([N, R, C])!")
         
         X_Anscombe_transformed = Anscombe_forward(X)
         X_DIMR = np.zeros(np.shape(X_Anscombe_transformed))
