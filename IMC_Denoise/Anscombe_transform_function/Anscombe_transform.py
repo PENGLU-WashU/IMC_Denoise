@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 import scipy.io as sio
-from ..third_party import place_holder
+from ..Anscombe_transform_function import place_holder
 
 vector_path = place_holder.__file__
 vector_path = vector_path.replace('place_holder.py','\\')
