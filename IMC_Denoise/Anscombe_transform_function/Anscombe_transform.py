@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
+import os
 import numpy as np
 from scipy.interpolate import interp1d
 import scipy.io as sio
-from ..Anscombe_transform_function import place_holder
-
-vector_path = place_holder.__file__
-vector_path = vector_path.replace('place_holder.py','\\')
 
 def Anscombe_forward(Img_in):
     
@@ -54,7 +51,8 @@ def load_Anscombe_inv_exact_params():
         vol. 35, no. 3/4, pp. 246-254, Dec. 1948.
 
     """
-    Anscombe_vectors = sio.loadmat(vector_path + 'Anscombe_vectors.mat')
+    mat_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)),'Anscombe_vectors.mat')
+    Anscombe_vectors = sio.loadmat(mat_dir)
     Efz = np.array(Anscombe_vectors['Efz'])
     Ez = np.array(Anscombe_vectors['Ez'])
     Efz = Efz[:, 0]
