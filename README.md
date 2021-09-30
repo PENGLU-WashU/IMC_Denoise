@@ -36,10 +36,8 @@ IMC_Denoise
 |---|---|---DeepSNF_TrainGenerator.py
 |---|---Anscombe_transform_function
 |---|---|---Anscombe_transform.py
-|---|---|---third_party
-|---|---|---|---Exact_unbiased_Anscombe_transform
-|---|---|---|---Anscombe_vectors.mat
-|---|---|---|---place_holder.py
+|---|---|---Anscombe_vectors.mat
+|---|---|---place_holder.py
 |---Jupyter_Notebook_examples
 |---|---IMC_Denoise_Train_and_Predict.ipynb
 |---|---IMC_Denoise_Train.ipynb
@@ -157,11 +155,6 @@ $ conda activate IMC_Denoise
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
 
 ## License
-
-## References
-We modified the third party codes and assembled them in our package. The licenses have been included in the corresponding sub-directories. For the original version of the codes, please refer to:
-- Manipulate training patches to enable self-supervised learning: [https://github.com/juglab/n2v/tree/master/n2v/internals](https://github.com/juglab/n2v/tree/master/n2v/internals).
-- Implement exact unbiased Anscombe inverse transform: [https://webpages.tuni.fi/foi/invansc/](https://webpages.tuni.fi/foi/invansc/).
 
 ## Contact
 
