@@ -183,7 +183,7 @@ class DeepSNF():
         Y_test = np.concatenate((X_test, np.zeros(X_test.shape, dtype=X_test.dtype)), axis=-1)
         X_test, Y_test = manipulate_val_data(X_test,Y_test,
                              perc_pix=self.mask_perc_pix,
-                             shape=(p_row_size, p_col_size), value_manipulation=manipulator)
+                             shape=(p_row_size, p_col_size))
     
         # Inform user training begun
         print('Training model...')
