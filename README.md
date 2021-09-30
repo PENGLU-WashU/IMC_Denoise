@@ -105,7 +105,7 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 - To start Jupyter Notebooks and run the examples.
 ```
 $ conda activate IMC_Denoise
-$ jupyter notebook --notebook -dir=your_folder_of_notebook_examples
+$ jupyter notebook --notebook-dir=your_folder_of_notebook_examples
 ```
 - Train and predict the DeepSNF algorithm separately, in which the generated dataset and trained weights will be saved.
   - [DeepSNF: generate data and training](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
