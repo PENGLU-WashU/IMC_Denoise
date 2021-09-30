@@ -158,12 +158,13 @@ $ conda activate IMC_Denoise
 
 ## License
 
+## References
+We modified the third party codes and assembled them in our package. The licenses have been included in the corresponding sub-directories. For the original version of the codes, please refer to:
+- Manipulate training patches to enable self-supervised learning: [https://github.com/juglab/n2v/tree/master/n2v/internals](https://github.com/juglab/n2v/tree/master/n2v/internals).
+- Implement exact unbiased Anscombe inverse transform: [https://webpages.tuni.fi/foi/invansc/](https://webpages.tuni.fi/foi/invansc/).
+
 ## Contact
 
 Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
 <br/>Project Link: [https://github.com/PENGLU-WashU/IMC_Denoise](https://github.com/PENGLU-WashU/IMC_Denoise)
 <br/>Lab Website: [Thorek Lab WashU](https://sites.wustl.edu/thoreklab/)
-
-## References
-
-
