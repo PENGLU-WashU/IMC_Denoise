@@ -33,7 +33,7 @@ IMC_Denoise
 |---|---DataGenerator
 |---|---|---DeepSNF_DataGenerator.py
 |---|---DeepSNF_utils
-|---|---|---DeepSNF_Training_DataGenerator.py
+|---|---|---DeepSNF_TrainGenerator.py
 |---|---Anscombe_transform_function
 |---|---|---Anscombe_transform.py
 |---|---|---3rd_party
