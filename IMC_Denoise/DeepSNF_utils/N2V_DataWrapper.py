@@ -7,9 +7,8 @@ Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognitio
 
 """
 
-from keras.utils import Sequence
-
 import numpy as np
+from keras.utils import Sequence
 
 class N2V_DataWrapper(Sequence):
     """
