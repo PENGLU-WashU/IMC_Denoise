@@ -36,7 +36,7 @@ IMC_Denoise
 |---|---|---DeepSNF_TrainGenerator.py
 |---|---Anscombe_transform_function
 |---|---|---Anscombe_transform.py
-|---|---|---3rd_party
+|---|---|---third_party
 |---|---|---|---Exact_unbiased_Anscombe_transform
 |---|---|---|---Anscombe_vectors.mat
 |---|---|---|---place_holder.py
@@ -45,10 +45,11 @@ IMC_Denoise
 |---|---IMC_Denoise_Train.ipynb
 |---|---IMC_Denoise_Predict.ipynb
 |---scripts
-|---|---Data_generation_script.py
-|---|---Training_script.py
-|---|---Generate_data_and_training.py
-|---|---Predict_script.py
+|---|---Data_generation_DeepSNF_script.py
+|---|---Training_DeepSNF_script.py
+|---|---Generate_data_and_training_DeepSNF_script.py
+|---|---Predict_DIMR_script.py
+|---|---Predict_IMC_Denoise_script.py
 ```
 - **IMC_Denoise** implements DIMR and DeepSNF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
 - **scripts** and **Jupyter Notebooks** include several examples to implement IMC_Denoise algorithms.
