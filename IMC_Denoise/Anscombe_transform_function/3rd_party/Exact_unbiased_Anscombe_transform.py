@@ -8,6 +8,10 @@ August 2009. doi:10.1109/LNLA.2009.5278406
 [2] M. Makitalo and A. Foi, "Optimal inversion of the Anscombe transformation in low-count Poisson image denoising", 
 IEEE Trans. Image Process., vol. 20, no. 1, pp. 99-109, January 2011. doi:10.1109/TIP.2010.2056693
 
+The Matlab version of the exact unbiased Anscombe inverse transformation code can be downloaded from from http://www.cs.tut.fi/~foi/invansc/.
+We modified the code and developed the python version of this inverse transformation. The original license 
+has been included in the 3rd party folder.
+
 """
 
 import numpy as np
