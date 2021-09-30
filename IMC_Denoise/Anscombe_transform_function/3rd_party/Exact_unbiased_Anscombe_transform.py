@@ -2,9 +2,11 @@
 
 """
 References:
-[1] M. Makitalo and A. Foi, "Optimal inversion of the Anscombe transformation in low-count Poisson image denoising", 
+[1] M. Makitalo and A. Foi, "On the inversion of the Anscombe transformation in low-count Poisson image denoising", 
+Proc. Int. Workshop on Local and Non-Local Approx. in Image Process., LNLA 2009, Tuusula, Finland, pp. 26-32, 
+August 2009. doi:10.1109/LNLA.2009.5278406
+[2] M. Makitalo and A. Foi, "Optimal inversion of the Anscombe transformation in low-count Poisson image denoising", 
 IEEE Trans. Image Process., vol. 20, no. 1, pp. 99-109, January 2011. doi:10.1109/TIP.2010.2056693
-[2] Anscombe, F.J., "The transformation of Poisson, binomial and negative-binomial data", Biometrika, vol. 35, no. 3/4, pp. 246-254, Dec. 1948.
 
 """
 
