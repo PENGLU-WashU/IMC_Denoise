@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
+Parts of the codes for generating training and validation data in this file are modified from Noise2Void: https://github.com/juglab/n2v.
+We assumble and implement the modified codes in our IMC_Denoise package.
+
 Reference:
 [1] Krull, Alexander, Tim-Oliver Buchholz, and Florian Jug. "Noise2void-learning denoising from single noisy images." 
 Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2019.
-
-Parts of the codes for generating training and validation data in this file are modified from Noise2Void. 
-We assemble and implement the modified codes in our IMC_Denoise package. The license file of Noise2Void 
-has been included in the folder.
 
 """
 
@@ -17,12 +16,10 @@ from keras.utils import Sequence
 def get_subpatch(patch, coord, local_sub_patch_radius):
     start = np.maximum(0, np.array(coord) - local_sub_patch_radius)
     end = start + local_sub_patch_radius*2 + 1
-
     shift = np.minimum(0, patch.shape - end)
 
     start += shift
     end += shift
-
     slices = [ slice(s, e) for s, e in zip(start, end)]
 
     return patch[tuple(slices)]
@@ -32,16 +29,17 @@ def pm_uniform_withCP(local_sub_patch_radius):
     The dafault pixel manipulation method. Works well for IMC denoising.
 
     """
-    def random_neighbor_withCP_uniform(patch, coords, dims):
+    def random_neighbor_withCP_uniform(patch, coords):
         vals = []
         for coord in zip(*coords):
-            sub_patch = get_subpatch(patch, coord,local_sub_patch_radius)
-            rand_coords = [np.random.randint(0, s) for s in sub_patch.shape[0:dims]]
+            sub_patch = get_subpatch(patch, coord, local_sub_patch_radius)
+            rand_coords = [np.random.randint(0, s) for s in sub_patch.shape[0:2]]
             vals.append(sub_patch[tuple(rand_coords)])
         return vals
     return random_neighbor_withCP_uniform
 
 class DeepSNF_Training_DataGenerator(Sequence):
+    
     """
     The DeepSNF_Training_DataGenerator manipulates random pixels of the input patches by a stratfied strategy. The 
     manipulated patches are then set as the input of the network and the raw patches as the output, respectively. 
@@ -64,34 +62,28 @@ class DeepSNF_Training_DataGenerator(Sequence):
     """
 
     def __init__(self, X, Y, batch_size, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+        
         self.X1 = X[:,:,:,0]
         self.X_rest = X[:,:,:,1:]   
         
         if np.ndim(self.X1)==3:
-            self.X1 = np.expand_dims(self.X1,axis = -1)
+            self.X1 = np.expand_dims(self.X1, axis = -1)
         if np.ndim(self.X_rest)==3:
-            self.X_rest = np.expand_dims(self.X_rest,axis = -1)
+            self.X_rest = np.expand_dims(self.X_rest, axis = -1)
         self.Y = Y
         
         self.batch_size = batch_size
-        self.perm = np.random.permutation(len(self.X1))
+        self.rnd_idx = np.random.permutation(self.X1.shape[0])
         self.shape = shape
         self.value_manipulation = value_manipulation
-        self.range = np.array(self.X1.shape[1:-1]) - np.array(self.shape)
-        self.dims = len(shape)
 
         num_pix = int(np.product(shape)/100.0 * perc_pix)
         assert num_pix >= 1, "Number of blind-spot pixels is below one. At least {}% of pixels should be replaced.".format(100.0/np.product(shape))
         print("{} blind-spots will be generated per training patch of size {}.".format(num_pix, shape))
 
-        if self.dims == 2:
-            self.patch_sampler = self.__subpatch_sampling2D__
-            self.patch_sampler_rest = self.__subpatch_sampling2D_rest__
-            self.box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
-            self.get_stratified_coords = self.__get_stratified_coords2D__
-            self.rand_float = self.__rand_float_coords2D__(self.box_size)
-        else:
-            raise Exception('Dimensionality not supported.')
+        self.box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
+        self.get_stratified_coords = self.__get_stratified_coords2D__
+        self.rand_float = self.__rand_float_coords2D__(self.box_size)
         
         # X Y zeros
         self.X_Batches1 = np.zeros((self.X1.shape[0], *self.shape, 1), dtype=np.float32)
@@ -103,7 +95,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
         return int(np.ceil(len(self.X1) / float(self.batch_size)))
 
     def on_epoch_end(self):
-        self.perm = np.random.permutation(len(self.X1))
+        self.rnd_idx = np.random.permutation(len(self.X1))
         self.X_Batches1 *= 0
         self.X_rest_Batches *= 0
         self.Y_Batches1 *= 0
@@ -111,43 +103,35 @@ class DeepSNF_Training_DataGenerator(Sequence):
 
     def __getitem__(self, i):
         idx = slice(i * self.batch_size, (i + 1) * self.batch_size)
-        idx = self.perm[idx]
-        self.patch_sampler_rest(self.X1, self.X_Batches1, indices=idx, range=self.range, shape=self.shape)
-        self.patch_sampler_rest(self.X_rest, self.X_rest_Batches, indices=idx, range=self.range, shape=self.shape)
-        self.patch_sampler_rest(self.Y[:,:,:,0], self.Y_Batches1, indices=idx, range=self.range, shape=self.shape)
+        idx = self.rnd_idx[idx]
+        self.__subpatch_sampling2D_augment__(self.X1, self.X_Batches1, indices=idx, shape=self.shape)
+        self.__subpatch_sampling2D_augment__(self.X_rest, self.X_rest_Batches, indices=idx, shape=self.shape)
+        self.__subpatch_sampling2D_augment__(self.Y[:,:,:,0], self.Y_Batches1, indices=idx, shape=self.shape)
         
         for j in idx:
-            coords = self.get_stratified_coords(self.rand_float, box_size=self.box_size,
-                                                shape=self.shape)
-
+            coords = self.get_stratified_coords(self.rand_float, box_size=self.box_size, shape=self.shape)
             indexing = (j,) + coords + (0,)
-            x_val = self.value_manipulation(self.X_Batches1[j, ..., 0], coords, self.dims)
+            x_val = self.value_manipulation(self.X_Batches1[j, ..., 0], coords)
             
             self.Y_Batches2[indexing] = 1
             self.X_Batches1[indexing] = x_val
                     
         mask_Batches = np.concatenate((self.X_Batches1[idx], self.X_rest_Batches[idx]), axis = -1)
-        label_Batches = np.concatenate((self.Y_Batches1[idx], self.Y_Batches2[idx]),axis = -1)
+        label_Batches = np.concatenate((self.Y_Batches1[idx], self.Y_Batches2[idx]), axis = -1)
 
         return mask_Batches, label_Batches
-
-    @staticmethod
-    def __subpatch_sampling2D__(X, X_Batches, indices, range, shape):
-        for j in indices:
-            y_start = np.random.randint(0, range[0] + 1)
-            x_start = np.random.randint(0, range[1] + 1)
-            X_Batches[j] = np.expand_dims(np.copy(X[j, y_start:y_start + shape[0], x_start:x_start + shape[1]]),axis = -1)
     
     @staticmethod
-    def __subpatch_sampling2D_rest__(X_rest, X_rest_Batches, indices, range, shape):
-        if np.ndim(X_rest)==3:
-            X_rest = np.expand_dims(X_rest,axis=-1)
-        if np.ndim(X_rest_Batches)==3:
-            X_rest_Batches = np.expand_dims(X_rest_Batches,axis=-1)
+    def __subpatch_sampling2D_augment__(X, X_Batches, indices, shape):
+        if np.ndim(X)==3:
+            X = np.expand_dims(X, axis=-1)
+        if np.ndim(X_Batches)==3:
+            X_Batches = np.expand_dims(X_Batches, axis=-1)
+        
         for j in indices:
-            y_start = np.random.randint(0, range[0] + 1)
-            x_start = np.random.randint(0, range[1] + 1)
-            X_rest_Batches[j] = np.copy(X_rest[j, y_start:y_start + shape[0], x_start:x_start + shape[1],:])
+            y_start = np.random.randint(0, 1)
+            x_start = np.random.randint(0, 1)
+            X_Batches[j] = np.copy(X[j, y_start:y_start + shape[0], x_start:x_start + shape[1],:])
 
     @staticmethod
     def __get_stratified_coords2D__(coord_gen, box_size, shape):
@@ -175,11 +159,10 @@ def manipulate_val_data(X_val,Y_val, perc_pix=0.2, shape=(64, 64), value_manipul
     Manipulate pixels to generate validation data.
 
     """
-    dims = len(shape)
-    if dims == 2:
-        box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
-        get_stratified_coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__
-        rand_float = DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size)
+   
+    box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
+    get_stratified_coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__
+    rand_float = DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size)
 
     X_val1 = X_val[:,:,:,0]
     if np.ndim(X_val1)==3:
@@ -190,11 +173,10 @@ def manipulate_val_data(X_val,Y_val, perc_pix=0.2, shape=(64, 64), value_manipul
     Y_val[:,:,:,1] *= 0
 
     for j in range(X_val1.shape[0]):
-        coords = get_stratified_coords(rand_float, box_size=box_size,
-                                            shape=np.array(X_val1.shape)[1:-1])
+        coords = get_stratified_coords(rand_float, box_size=box_size, shape=np.array(X_val1.shape)[1:-1])
         indexing = (j,) + coords + (0,)
         indexing_mask = (j,) + coords + (1,)
-        x_val = value_manipulation(X_val1[j, ..., 0], coords, dims)
+        x_val = value_manipulation(X_val1[j, ..., 0], coords)
 
         Y_val[indexing_mask] = 1
         X_val1[indexing] = x_val
