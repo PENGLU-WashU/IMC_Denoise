@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Parts of the codes for generating training and validation data in this file are modified from Noise2Void: https://github.com/juglab/n2v.
+The codes for generating training and validation data in this file are modified from Noise2Void: https://github.com/juglab/n2v.
 We assumble and implement the modified codes in our IMC_Denoise package.
 
 Reference:
