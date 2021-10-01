@@ -61,75 +61,48 @@ class DeepSNF_Training_DataGenerator(Sequence):
                         The default is pm_uniform_withCP(5).
     """
 
-    def __init__(self, X, Y, batch_size, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+    def __init__(self, X, batch_size, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
         
-        self.X1 = X[:,:,:,0]
-        self.X_rest = X[:,:,:,1:]   
-        
-        if np.ndim(self.X1)==3:
-            self.X1 = np.expand_dims(self.X1, axis = -1)
-        if np.ndim(self.X_rest)==3:
-            self.X_rest = np.expand_dims(self.X_rest, axis = -1)
-        self.Y = Y
+        self.X = X
+        if np.ndim(self.X)==3:
+            self.X = np.expand_dims(self.X, axis = -1)
         
         self.batch_size = batch_size
-        self.rnd_idx = np.random.permutation(self.X1.shape[0])
+        self.rnd_idx = np.random.permutation(self.X.shape[0])
         self.shape = shape
         self.value_manipulation = value_manipulation
 
         num_pix = int(np.product(shape)/100.0 * perc_pix)
-        assert num_pix >= 1, "Number of blind-spot pixels is below one. At least {}% of pixels should be replaced.".format(100.0/np.product(shape))
-        print("{} blind-spots will be generated per training patch of size {}.".format(num_pix, shape))
+        assert num_pix >= 1, "No pixel is masked. perc_pix should be at least {}.".format(100.0/np.product(shape))
+        print("Each training patch with shape of {} will mask {} pixels.".format(shape, num_pix))
 
         self.box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
-        self.get_stratified_coords = self.__get_stratified_coords2D__
         self.rand_float = self.__rand_float_coords2D__(self.box_size)
         
         # X Y zeros
-        self.X_Batches1 = np.zeros((self.X1.shape[0], *self.shape, 1), dtype=np.float32)
-        self.X_rest_Batches = np.zeros((self.X_rest.shape[0], *self.shape, np.shape(self.X_rest)[-1]), dtype=np.float32)
-        self.Y_Batches1 = np.zeros((self.Y.shape[0], *self.shape, 1), dtype=np.float32)
-        self.Y_Batches2 = np.zeros((self.Y.shape[0], *self.shape, 1), dtype=np.float32)
+        self.X_Batches = np.zeros((self.X.shape[0], *self.shape, 1), dtype=np.float32)
+        self.Y_Batches = np.zeros((self.X.shape[0], *self.shape, 2), dtype=np.float32)
 
     def __len__(self):
-        return int(np.ceil(len(self.X1) / float(self.batch_size)))
+        return int(np.ceil(self.X.shape[0] / float(self.batch_size)))
 
     def on_epoch_end(self):
-        self.rnd_idx = np.random.permutation(len(self.X1))
-        self.X_Batches1 *= 0
-        self.X_rest_Batches *= 0
-        self.Y_Batches1 *= 0
-        self.Y_Batches2 *= 0
+        self.rnd_idx = np.random.permutation(self.X.shape[0])
+        self.X_Batches *= 0
+        self.Y_Batches *= 0
 
     def __getitem__(self, i):
         idx = slice(i * self.batch_size, (i + 1) * self.batch_size)
         idx = self.rnd_idx[idx]
-        self.__subpatch_sampling2D_augment__(self.X1, self.X_Batches1, indices=idx, shape=self.shape)
-        self.__subpatch_sampling2D_augment__(self.X_rest, self.X_rest_Batches, indices=idx, shape=self.shape)
-        self.__subpatch_sampling2D_augment__(self.Y[:,:,:,0], self.Y_Batches1, indices=idx, shape=self.shape)
+        self.X_Batches[idx,:,:,:] = np.copy(self.X[idx,:,:,:])
+        self.Y_Batches[idx,:,:,0] = np.copy(self.X[idx,:,:,0])
         
         for j in idx:
-            coords = self.get_stratified_coords(self.rand_float, box_size=self.box_size, shape=self.shape)
-            indexing = (j,) + coords + (0,)
-            x_val = self.value_manipulation(self.X_Batches1[j, ..., 0], coords)
-            
-            self.Y_Batches2[indexing] = 1
-            self.X_Batches1[indexing] = x_val
-                    
-        mask_Batches = np.concatenate((self.X_Batches1[idx], self.X_rest_Batches[idx]), axis = -1)
-        label_Batches = np.concatenate((self.Y_Batches1[idx], self.Y_Batches2[idx]), axis = -1)
+            coords = self.__get_stratified_coords2D__(self.rand_float, box_size=self.box_size, shape=self.shape)
+            self.X_Batches[(j,) + coords + (0,)] = self.value_manipulation(self.X_Batches[j, ..., 0], coords)
+            self.Y_Batches[(j,) + coords + (1,)] = 1
 
-        return mask_Batches, label_Batches
-    
-    @staticmethod
-    def __subpatch_sampling2D_augment__(X, X_Batches, indices, shape):
-        if np.ndim(X)==3:
-            X = np.expand_dims(X, axis=-1)
-        if np.ndim(X_Batches)==3:
-            X_Batches = np.expand_dims(X_Batches, axis=-1)
-        
-        for j in indices:
-            X_Batches[j] = np.copy(X[j, 0:shape[0], 0:shape[1], :])
+        return self.X_Batches[idx], self.Y_Batches[idx]
 
     @staticmethod
     def __get_stratified_coords2D__(coord_gen, box_size, shape):
@@ -152,7 +125,8 @@ class DeepSNF_Training_DataGenerator(Sequence):
         while True:
             yield (np.random.rand() * boxsize, np.random.rand() * boxsize)
 
-def manipulate_val_data(X_val,Y_val, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+def manipulate_val_data(X_val, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+    
     """
     Manipulate pixels to generate validation data.
 
@@ -162,24 +136,13 @@ def manipulate_val_data(X_val,Y_val, perc_pix=0.2, shape=(64, 64), value_manipul
     get_stratified_coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__
     rand_float = DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size)
 
-    X_val1 = X_val[:,:,:,0]
-    if np.ndim(X_val1)==3:
-        X_val1 = np.expand_dims(X_val1,axis = -1)
-    X_val_rest = X_val[:,:,:,1:]
-    if np.ndim(X_val_rest)==3:
-        X_val_rest = np.expand_dims(X_val_rest,axis = -1)
-    Y_val[:,:,:,1] *= 0
+    if np.ndim(X_val)==3:
+        X_val = np.expand_dims(X_val, axis = -1)
+    Y_val = np.concatenate((X_val, np.zeros(np.shape(X_val))), axis=-1)
 
-    for j in range(X_val1.shape[0]):
-        coords = get_stratified_coords(rand_float, box_size=box_size, shape=np.array(X_val1.shape)[1:-1])
-        indexing = (j,) + coords + (0,)
-        indexing_mask = (j,) + coords + (1,)
-        x_val = value_manipulation(X_val1[j, ..., 0], coords)
-
-        Y_val[indexing_mask] = 1
-        X_val1[indexing] = x_val
-    
-    mask_val = np.concatenate((X_val1, X_val_rest), axis = -1)
-    X_val = mask_val
+    for j in range(X_val.shape[0]):
+        coords = get_stratified_coords(rand_float, box_size=box_size, shape=np.array(X_val.shape)[1:-1])
+        X_val[(j,) + coords + (0,)] = value_manipulation(X_val[j, ..., 0], coords)
+        Y_val[(j,) + coords + (1,)] = 1
     
     return X_val, Y_val
