@@ -174,15 +174,8 @@ class DeepSNF():
         else:
             callback_list = [history, change_lr]
            
-        Y_train = np.concatenate((X_train, np.zeros(X_train.shape, dtype = X_train.dtype)),axis = -1)
-        training_data = DeepSNF_Training_DataGenerator(X_train, Y_train,
-                                        self.train_batch_size, self.mask_perc_pix,
-                                        (p_row_size, p_col_size))
-        
-        Y_test = np.concatenate((X_test, np.zeros(X_test.shape, dtype=X_test.dtype)), axis=-1)
-        X_test, Y_test = manipulate_val_data(X_test,Y_test,
-                             perc_pix=self.mask_perc_pix,
-                             shape=(p_row_size, p_col_size))
+        training_data = DeepSNF_Training_DataGenerator(X_train, self.train_batch_size, self.mask_perc_pix, (p_row_size, p_col_size))
+        X_test, Y_test = manipulate_val_data(X_test, perc_pix=self.mask_perc_pix, shape=(p_row_size, p_col_size))
     
         # Inform user training begun
         print('Training model...')
