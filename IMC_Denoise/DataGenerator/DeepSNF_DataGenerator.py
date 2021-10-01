@@ -168,7 +168,7 @@ class DeepSNF_DataGenerator():
         for sub_img_folder in img_folders:
             Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & f.endswith(".tiff")]
             for Img_file in Img_list:
-                if self.marker_name in Img_file:
+                if self.marker_name.lower() in Img_file.lower():
                     Img_read = self.load_single_img(sub_img_folder + Img_file)
                     print(sub_img_folder + Img_file)
                     Img_collect.append(Img_read)
