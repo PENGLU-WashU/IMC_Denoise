@@ -212,18 +212,29 @@ class DeepSNF():
 
         """
         if self.weights_name is None:
-            print('\033[91m' + 'when loading a model, a legal .hdf5 file must be provided! Weights loaded failed!' + '\033[0m')
+            print('\033[91m' + 'when loading a model, a legal .hdf5 file must be provided. Weights loaded failed.' + '\033[0m')
             return
-        print("The used weights name is " + self.weights_name)
         
         # Build the DeepSNF network structure
         model = self.buildModel((None, None, 1))
         
         # Load the trained weights
-        model.load_weights(self.weights_dir + '\\' + self.weights_name)
-        loaded_range_val = np.load(self.weights_dir + '\\' + self.weights_name.replace('.hdf5', '_range_val.npz'))
-        self.range_val = loaded_range_val['range_val']
-        print('Pre-trained model loaded successfully!')
+        load_weights_name = self.weights_dir + '\\' + self.weights_name
+        if os.path.exists(load_weights_name): 
+            model.load_weights(load_weights_name)
+            print('Pre-trained model {} loaded successfully.'.format(load_weights_name))
+        else:
+            print('Pre-trained model loaded fail. Please check if the file {} exists.'.format(load_weights_name))
+            return
+           
+        load_range_name = self.weights_dir + '\\' + self.weights_name.replace('.hdf5', '_range_val.npz')
+        if os.path.exists(load_range_name): 
+            loaded_range_val = np.load(load_range_name)
+            self.range_val = loaded_range_val['range_val']
+            print('Pre-calculated range value file {} loaded successfully.'.format(load_range_name))
+        else:
+            print('Pre-calculated range value file loaded fail. Please check if the file {} exists.'.format(load_range_name))
+            return
         
         return model
     
