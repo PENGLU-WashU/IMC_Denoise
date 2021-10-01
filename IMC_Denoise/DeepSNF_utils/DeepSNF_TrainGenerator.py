@@ -129,9 +129,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
             X_Batches = np.expand_dims(X_Batches, axis=-1)
         
         for j in indices:
-            y_start = np.random.randint(0, 1)
-            x_start = np.random.randint(0, 1)
-            X_Batches[j] = np.copy(X[j, y_start:y_start + shape[0], x_start:x_start + shape[1],:])
+            X_Batches[j] = np.copy(X[j, 0:shape[0], 0:shape[1], :])
 
     @staticmethod
     def __get_stratified_coords2D__(coord_gen, box_size, shape):
