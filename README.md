@@ -37,7 +37,6 @@ IMC_Denoise
 |---|---Anscombe_transform_function
 |---|---|---Anscombe_transform.py
 |---|---|---Anscombe_vectors.mat
-|---|---|---place_holder.py
 |---Jupyter_Notebook_examples
 |---|---IMC_Denoise_Train_and_Predict.ipynb
 |---|---IMC_Denoise_Train.ipynb
