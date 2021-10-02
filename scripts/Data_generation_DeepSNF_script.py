@@ -5,7 +5,7 @@ python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38'
                                                  --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
 """
          
-from IMC_Denoise.DataGenerator.DeepSNF_DataGenerator import DeepSNF_DataGenerator
+from IMC_Denoise.DeepSNF_utils.DeepSNF_DataGenerator import DeepSNF_DataGenerator
 import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
