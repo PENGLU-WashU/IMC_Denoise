@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Parts of the codes for generating training and validation data in this file are inherited or modified from Noise2Void: 
-https://github.com/juglab/n2v. Please cite the reference below if using this software.
+Several functions in this file (get_subpatch, pm_uniform_withCP, __get_stratified_coords2D__ and __rand_float_coords2D__)
+are inherited or modified from Noise2Void: https://github.com/juglab/n2v. 
 
 Reference:
 [1] Krull, Alexander, Tim-Oliver Buchholz, and Florian Jug. "Noise2void-learning denoising from single noisy images." 
@@ -85,7 +85,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
                  X plus a masking channel.
     batch_size : int
                  Number of samples per batch.
-    perc_pix    : int, optional
+    pix_perc    : int, optional
                  Number of pixels to manipulate. The default is 0.2.
     shape      : tuple(int), optional
                  Shape of the randomly extracted patches. The default is (64, 64).
@@ -94,7 +94,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
                         The default is pm_uniform_withCP(5).
     """
 
-    def __init__(self, X, batch_size, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+    def __init__(self, X, batch_size, pix_perc = 0.2, shape = (64, 64), pix_masking = pm_uniform_withCP(5)):
         
         self.X = X
         if np.ndim(self.X)==3:
@@ -103,13 +103,16 @@ class DeepSNF_Training_DataGenerator(Sequence):
         self.batch_size = batch_size
         self.rnd_idx = np.random.permutation(self.X.shape[0])
         self.shape = shape
-        self.value_manipulation = value_manipulation
+        self.pix_masking = pix_masking
 
-        num_pix = int(np.product(shape)/100.0 * perc_pix)
-        assert num_pix >= 1, "No pixel is masked. perc_pix should be at least {}.".format(100.0/np.product(shape))
-        print("Each training patch with shape of {} will mask {} pixels.".format(shape, num_pix))
+        num_pix = int(np.product(shape)/100.0 * pix_perc)
+        if num_pix >= 1:
+            print("No pixel is masked. pix_perc should be at least {}.".format(100.0/np.product(shape)))
+            return
+        else:
+            print("Each training patch with shape of {} will mask {} pixels.".format(shape, num_pix))
 
-        self.box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
+        self.box_size = np.round(np.sqrt(100/pix_perc)).astype(np.int)
         self.rand_float = self.__rand_float_coords2D__(self.box_size)
         
         # X Y zeros
@@ -132,7 +135,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
         
         for j in idx:
             coords = self.__get_stratified_coords2D__(self.rand_float, box_size=self.box_size, shape=self.shape)
-            self.X_Batches[(j,) + coords + (0,)] = self.value_manipulation(self.X_Batches[j, ..., 0], coords)
+            self.X_Batches[(j,) + coords + (0,)] = self.pix_masking(self.X_Batches[j, ..., 0], coords)
             self.Y_Batches[(j,) + coords + (1,)] = 1
 
         return self.X_Batches[idx], self.Y_Batches[idx]
@@ -158,24 +161,23 @@ class DeepSNF_Training_DataGenerator(Sequence):
         while True:
             yield (np.random.rand() * boxsize, np.random.rand() * boxsize)
 
-def manipulate_val_data(X_val, perc_pix=0.2, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
+def DeepSNF_Validation_DataGenerator(X_val, pix_perc = 0.2, shape = (64, 64), pix_masking = pm_uniform_withCP(5)):
     
     """
     Manipulate pixels to generate validation data.
 
     """
    
-    box_size = np.round(np.sqrt(100/perc_pix)).astype(np.int)
-    get_stratified_coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__
-    rand_float = DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size)
-
+    box_size = int(np.round(np.sqrt(100/pix_perc)))
+   
     if np.ndim(X_val)==3:
         X_val = np.expand_dims(X_val, axis = -1)
     Y_val = np.concatenate((X_val, np.zeros(np.shape(X_val))), axis=-1)
 
     for j in range(X_val.shape[0]):
-        coords = get_stratified_coords(rand_float, box_size=box_size, shape=np.array(X_val.shape)[1:-1])
-        X_val[(j,) + coords + (0,)] = value_manipulation(X_val[j, ..., 0], coords)
+        coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__(DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size), \
+                                                                            box_size=box_size, shape=np.array(X_val.shape)[1:-1])
+        X_val[(j,) + coords + (0,)] = pix_masking(X_val[j, ..., 0], coords)
         Y_val[(j,) + coords + (1,)] = 1
     
     return X_val, Y_val
