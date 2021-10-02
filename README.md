@@ -30,9 +30,8 @@ IMC_Denoise
 |---|---|---DeepSNF_model.py
 |---|---|---DIMR.py
 |---|---|---loss_functions.py
-|---|---DataGenerator
-|---|---|---DeepSNF_DataGenerator.py
 |---|---DeepSNF_utils
+|---|---|---DeepSNF_DataGenerator.py
 |---|---|---DeepSNF_TrainGenerator.py
 |---|---Anscombe_transform_function
 |---|---|---Anscombe_transform.py
