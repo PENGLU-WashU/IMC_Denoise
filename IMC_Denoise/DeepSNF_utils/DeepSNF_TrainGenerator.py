@@ -127,8 +127,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
         self.Y_Batches *= 0
 
     def __getitem__(self, i):
-        idx = slice(i * self.batch_size, (i + 1) * self.batch_size)
-        idx = self.rnd_idx[idx]
+        idx = self.rnd_idx[i*self.batch_size:(i + 1)*self.batch_size]
         self.X_Batches[idx,:,:,:] = np.copy(self.X[idx,:,:,:])
         self.Y_Batches[idx,:,:,0] = np.copy(self.X[idx,:,:,0])
         
