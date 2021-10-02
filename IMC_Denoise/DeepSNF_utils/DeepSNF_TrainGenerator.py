@@ -2,7 +2,7 @@
 
 """
 The codes for generating training and validation data in this file are modified from Noise2Void: https://github.com/juglab/n2v.
-We assemble and implement the modified codes in our IMC_Denoise package.
+We assemble and implement the modified codes in our IMC_Denoise package. Please cite the references below if using this software.
 
 Reference:
 [1] Krull, Alexander, Tim-Oliver Buchholz, and Florian Jug. "Noise2void-learning denoising from single noisy images." 
