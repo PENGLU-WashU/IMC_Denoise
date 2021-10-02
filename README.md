@@ -8,11 +8,11 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy a **D**iff
 
 ## Contents
 
-- [Directory structure of IMC_Denoise](#directory-structure-of-imc-denoise)
-- [Customize environment for IMC_Denoise](#customize-environment-for-imc-denoise)
-  - [Our IMC_Denoise environment](#our-imc-denoise-environment)
+- [Directory structure of IMC_Denoise](#directory-structure-of-imc_denoise)
+- [Customize environment for IMC_Denoise](#customize-environment-for-imc_denoise)
+  - [Our IMC_Denoise environment](#our-imc_denoise-environment)
   - [Installation](#installation)
-- [Implement IMC_Denoise](#implement-imc-denoise)
+- [Implement IMC_Denoise](#implement-imc_denoise)
   - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
   - [Download example data](#download-example-data)
   - [IMC_Denoise tutorials with Jupyter Notebook](#imc_denoise-tutorials-with-jupyter-notebook)
@@ -26,9 +26,9 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy a **D**iff
 IMC_Denoise
 |---IMC_Denoise
 |---|---IMC_Denoise_main
+|---|---|---DIMR.py
 |---|---|---DeepSNF.py
 |---|---|---DeepSNF_model.py
-|---|---|---DIMR.py
 |---|---|---loss_functions.py
 |---|---DeepSNF_utils
 |---|---|---DeepSNF_DataGenerator.py
