@@ -9,7 +9,7 @@ python scripts/Generate_data_and_training_DeepSNF_script.py --marker_name 'CD38'
                                              
 """
 from IMC_Denoise.IMC_Denoise_main.DeepSNF import DeepSNF
-from IMC_Denoise.DataGenerator.DeepSNF_DataGenerator import DeepSNF_DataGenerator
+from IMC_Denoise.DeepSNF_utils.DeepSNF_DataGenerator import DeepSNF_DataGenerator
 import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
