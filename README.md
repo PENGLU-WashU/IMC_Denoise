@@ -33,8 +33,8 @@ IMC_Denoise
 |---|---DeepSNF_utils
 |---|---|---DeepSNF_DataGenerator.py
 |---|---|---DeepSNF_TrainGenerator.py
-|---|---Anscombe_transform_function
-|---|---|---Anscombe_transform.py
+|---|---Anscombe_transform
+|---|---|---Anscombe_transform_functions.py
 |---|---|---Anscombe_vectors.mat
 |---Jupyter_Notebook_examples
 |---|---IMC_Denoise_Train_and_Predict.ipynb
