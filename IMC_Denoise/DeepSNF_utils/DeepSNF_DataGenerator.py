@@ -176,7 +176,7 @@ class DeepSNF_DataGenerator():
                     Img_collect.append(Img_read)
                     break
         
-        print('\nImage data loaded completed!')
+        print('\n' + 'Image data loaded completed!')
         if not Img_collect:
             print('\033[91m' + "No such markers! Please check the marker name again!" + '\033[0m')
             return
