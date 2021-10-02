@@ -2,7 +2,7 @@
 
 import numpy as np
 import scipy.signal as sps
-from ..Anscombe_transform_function.Anscombe_transform import Anscombe_forward, Anscombe_inverse_direct
+from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_direct
 
 class DIMR():
     
