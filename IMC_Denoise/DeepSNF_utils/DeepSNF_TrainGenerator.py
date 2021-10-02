@@ -112,7 +112,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
         else:
             print("Each training patch with shape of {} will mask {} pixels.".format(shape, num_pix))
 
-        self.box_size = np.round(np.sqrt(100/pix_perc)).astype(np.int)
+        self.box_size = int(np.round(np.sqrt(100/pix_perc)))
         self.rand_float = self.__rand_float_coords2D__(self.box_size)
         
         # X Y zeros
