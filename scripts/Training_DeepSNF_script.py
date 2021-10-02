@@ -5,7 +5,7 @@ python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_CD38.np
 """
 
 from IMC_Denoise.IMC_Denoise_main.DeepSNF import DeepSNF
-from IMC_Denoise.DataGenerator.DeepSNF_DataGenerator import load_training_patches
+from IMC_Denoise.DeepSNF_utils.DeepSNF_DataGenerator import load_training_patches
 import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
