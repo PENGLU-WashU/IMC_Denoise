@@ -149,9 +149,12 @@ class DeepSNF_DataGenerator():
         del Img_collect
         
         if self.is_augment:
+            print('Augmenting the generated patches!\n')
             patch_collect = self.__augment_patches__(patch_collect)
+            print('The generated patches augmented!\n')
         
         np.random.shuffle(patch_collect)
+        print('The generated patches shuffled!\n')
         
         return patch_collect
     
@@ -173,6 +176,7 @@ class DeepSNF_DataGenerator():
                     print(sub_img_folder + Img_file)
                     Img_collect.append(Img_read)
                     break
+        print('\n')
         print('Image data loaded completed!\n')
         if not Img_collect:
             print('\033[91m' + "No such markers! Please check the marker name again!" + '\033[0m')
