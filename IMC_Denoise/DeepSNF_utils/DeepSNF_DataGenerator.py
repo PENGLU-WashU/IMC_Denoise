@@ -7,7 +7,7 @@ from os import listdir
 from os.path import isfile, join
 from glob import glob
 from ..IMC_Denoise_main.DIMR import DIMR
-from ..Anscombe_transform_function.Anscombe_transform import Anscombe_forward
+from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward
 
 class DeepSNF_DataGenerator():
     
