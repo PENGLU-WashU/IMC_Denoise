@@ -11,7 +11,7 @@ from keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
 from .DIMR import DIMR
 from .DeepSNF_model import DeepSNF_net
 from .loss_functions import create_weighted_binary_crossentropy, create_mse
-from ..DeepSNF_utils.DeepSNF_TrainGenerator import DeepSNF_Training_DataGenerator, manipulate_val_data
+from ..DeepSNF_utils.DeepSNF_TrainGenerator import DeepSNF_Training_DataGenerator, DeepSNF_Validation_DataGenerator
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased
 
 class LossHistory(Callback):
@@ -175,7 +175,7 @@ class DeepSNF():
             callback_list = [history, change_lr]
            
         training_data = DeepSNF_Training_DataGenerator(X_train, self.train_batch_size, self.mask_perc_pix, (p_row_size, p_col_size))
-        X_test, Y_test = manipulate_val_data(X_test, perc_pix=self.mask_perc_pix, shape=(p_row_size, p_col_size))
+        X_test, Y_test = DeepSNF_Validation_DataGenerator(X_test, self.mask_perc_pix, (p_row_size, p_col_size))
     
         # Inform user training begun
         print('Training model...')
