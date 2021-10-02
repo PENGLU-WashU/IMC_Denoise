@@ -105,12 +105,11 @@ class DeepSNF_Training_DataGenerator(Sequence):
         self.shape = shape
         self.pix_masking = pix_masking
 
-        num_pix = int(np.product(shape)/100.0 * pix_perc)
-        if num_pix < 1:
-            print("No pixel is masked. pix_perc should be at least {}.".format(100.0/np.product(shape)))
-            return
+        pix_num = int(np.product(shape)/100.0 * pix_perc)
+        if pix_num < 1:
+            raise Exception("No pixel is masked. pix_perc should be at least {}.".format(100.0/np.product(shape)))
         else:
-            print("Each training patch with shape of {} will mask {} pixels.".format(shape, num_pix))
+            print("Each training patch with shape of {} will mask {} pixels.".format(shape, pix_num))
 
         self.box_size = int(np.round(np.sqrt(100/pix_perc)))
         self.rand_float = self.__rand_float_coords2D__(self.box_size)
@@ -176,7 +175,7 @@ def DeepSNF_Validation_DataGenerator(X_val, pix_perc = 0.2, shape = (64, 64), pi
 
     for j in range(X_val.shape[0]):
         coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__(DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size), \
-                                                                            box_size=box_size, shape=np.array(X_val.shape)[1:-1])
+                                                                            box_size = box_size, shape = np.array(X_val.shape)[1:-1])
         X_val[(j,) + coords + (0,)] = pix_masking(X_val[j, ..., 0], coords)
         Y_val[(j,) + coords + (1,)] = 1
     
