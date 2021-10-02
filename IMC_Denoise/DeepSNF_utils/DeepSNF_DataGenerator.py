@@ -67,10 +67,10 @@ class DeepSNF_DataGenerator():
         """
         if not isinstance(patch_row_size, int) or not isinstance(patch_col_size, int) \
             or not isinstance(row_step, int) or not isinstance(col_step, int):
-            raise ValueError('patch_row_size, patch_col_size, row_step and col_step must be int!')
+            raise Exception('patch_row_size, patch_col_size, row_step and col_step must be int!')
             
         if not isinstance(is_augment, bool):
-            raise ValueError('is_augment must be bool!')
+            raise Exception('is_augment must be bool!')
             
         assert ratio_thresh >= 0 and ratio_thresh <= 1, "thresh value must be between 0 and 1."
         if patch_col_size%16 != 0 or patch_row_size%16 != 0:
@@ -88,7 +88,7 @@ class DeepSNF_DataGenerator():
         self.window_size = window_size
         
         if marker_name is None:
-            raise ValueError('Please provide the marker name!')
+            raise Exception('Please provide the marker name!')
         self.marker_name = marker_name
         
     def load_single_img(self, filename):
@@ -110,9 +110,9 @@ class DeepSNF_DataGenerator():
         if filename.endswith('.tiff'):
             Img_in = tp.imread(filename).astype('float32')
         else:
-            raise ValueError('Raw file should end with tiff!')
+            raise Exception('Raw file should end with tiff!')
         if Img_in.ndim != 2:
-            raise ValueError('Single image should be 2d!')
+            raise Exception('Single image should be 2d!')
         return Img_in
     
     def generate_patches(self, Img_collect):
@@ -271,7 +271,7 @@ def load_training_patches(filename, save_directory = None):
     if save_directory is None:
         save_directory = os.path.abspath(os.getcwd()) + '\\Generated_training_set'
     elif not os.path.exists(save_directory):
-        raise ValueError('No such dataset!')
+        raise Exception('No such dataset!')
     if not filename.endswith('.npz'):
         print('The generated training set should be .npz format!')
         return
