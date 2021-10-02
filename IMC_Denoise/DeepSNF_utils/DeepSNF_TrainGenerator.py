@@ -106,7 +106,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
         self.pix_masking = pix_masking
 
         num_pix = int(np.product(shape)/100.0 * pix_perc)
-        if num_pix >= 1:
+        if num_pix < 1:
             print("No pixel is masked. pix_perc should be at least {}.".format(100.0/np.product(shape)))
             return
         else:
