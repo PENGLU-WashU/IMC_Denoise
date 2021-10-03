@@ -67,10 +67,10 @@ class DeepSNF_DataGenerator():
         """
         if not isinstance(patch_row_size, int) or not isinstance(patch_col_size, int) \
             or not isinstance(row_step, int) or not isinstance(col_step, int):
-            raise Exception('patch_row_size, patch_col_size, row_step and col_step must be int!')
+            raise ValueError('patch_row_size, patch_col_size, row_step and col_step must be int!')
             
         if not isinstance(is_augment, bool):
-            raise Exception('is_augment must be bool!')
+            raise ValueError('is_augment must be bool!')
             
         assert ratio_thresh >= 0 and ratio_thresh <= 1, "thresh value must be between 0 and 1."
         if patch_col_size%16 != 0 or patch_row_size%16 != 0:
@@ -88,7 +88,7 @@ class DeepSNF_DataGenerator():
         self.window_size = window_size
         
         if marker_name is None:
-            raise Exception('Please provide the marker name!')
+            raise ValueError('Please provide the marker name!')
         self.marker_name = marker_name
         
     def load_single_img(self, filename):
@@ -110,9 +110,9 @@ class DeepSNF_DataGenerator():
         if filename.endswith('.tiff'):
             Img_in = tp.imread(filename).astype('float32')
         else:
-            raise Exception('Raw file should end with tiff!')
+            raise ValueError('Raw file should end with tiff!')
         if Img_in.ndim != 2:
-            raise Exception('Single image should be 2d!')
+            raise ValueError('Single image should be 2d!')
         return Img_in
     
     def generate_patches(self, Img_collect):
@@ -170,11 +170,14 @@ class DeepSNF_DataGenerator():
         for sub_img_folder in img_folders:
             Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & f.endswith(".tiff")]
             for Img_file in Img_list:
-                if self.marker_name.lower() in Img_file.lower():
-                    Img_read = self.load_single_img(sub_img_folder + Img_file)
-                    print(sub_img_folder + Img_file)
-                    Img_collect.append(Img_read)
-                    break
+                marker_name_lower = self.marker_name.lower()
+                Img_file_lower = Img_file.lower()
+                if marker_name_lower in Img_file_lower and Img_file_lower.rfind(marker_name_lower)+len(marker_name_lower) < len(Img_file_lower):
+                    if not Img_file_lower[Img_file_lower.rfind(marker_name_lower)+len(marker_name_lower)].isnumeric():
+                        Img_read = self.load_single_img(sub_img_folder + Img_file)
+                        print(sub_img_folder + Img_file)
+                        Img_collect.append(Img_read)
+                        break
         
         print('\n' + 'Image data loaded completed!')
         if not Img_collect:
@@ -271,7 +274,7 @@ def load_training_patches(filename, save_directory = None):
     if save_directory is None:
         save_directory = os.path.abspath(os.getcwd()) + '\\Generated_training_set'
     elif not os.path.exists(save_directory):
-        raise Exception('No such dataset!')
+        raise ValueError('No such dataset!')
     if not filename.endswith('.npz'):
         print('The generated training set should be .npz format!')
         return
