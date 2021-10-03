@@ -94,49 +94,44 @@ class DeepSNF_Training_DataGenerator(Sequence):
                         The default is pm_uniform_withCP(5).
     """
 
-    def __init__(self, X, batch_size, pix_perc = 0.2, shape = (64, 64), pix_masking = pm_uniform_withCP(5)):
+    def __init__(self, X, batch_size, pix_perc = 0.2, shape = (64, 64), pix_masking_func = pm_uniform_withCP(5)):
         
         self.X = X
         if np.ndim(self.X)==3:
             self.X = np.expand_dims(self.X, axis = -1)
         
         self.batch_size = batch_size
-        self.rnd_idx = np.random.permutation(self.X.shape[0])
         self.shape = shape
-        self.pix_masking = pix_masking
+        self.pix_masking_func = pix_masking_func
+        self.idx_list = list(range(self.X.shape[0]))
 
         pix_num = int(np.product(shape)/100.0 * pix_perc)
         if pix_num < 1:
             raise Exception("No pixel is masked. pix_perc should be at least {}.".format(100.0/np.product(shape)))
         else:
             print("Each training patch with shape of {} will mask {} pixels.".format(shape, pix_num))
-
-        self.box_size = int(np.round(np.sqrt(100/pix_perc)))
-        self.rand_float = self.__rand_float_coords2D__(self.box_size)
         
-        # X Y zeros
-        self.X_Train_Batches = np.zeros((self.X.shape[0], *self.shape, 1), dtype=np.float32)
-        self.Y_Train_Batches = np.zeros((self.X.shape[0], *self.shape, 2), dtype=np.float32)
+        self.box_size = int(np.round(np.sqrt(100/pix_perc)))
 
     def __len__(self):
         return int(np.ceil(self.X.shape[0] / float(self.batch_size)))
 
     def on_epoch_end(self):
-        self.rnd_idx = np.random.permutation(self.X.shape[0])
-        self.X_Train_Batches *= 0
-        self.Y_Train_Batches *= 0
+        np.random.shuffle(self.X)
 
-    def __getitem__(self, i):
-        idx = self.rnd_idx[i*self.batch_size:(i + 1)*self.batch_size]
-        self.X_Train_Batches[idx,:,:,:] = np.copy(self.X[idx,:,:,:])
-        self.Y_Train_Batches[idx,:,:,0] = np.copy(self.X[idx,:,:,0])
+    def __getitem__(self, ii):
+        idx = self.idx_list[ii*self.batch_size:(ii + 1)*self.batch_size]
+        X_Train_Batches = np.copy(self.X[idx])
+        Y_Train_Batches = np.copy(self.X[idx])
+        Y_Train_Batches = np.concatenate((Y_Train_Batches, np.zeros(np.shape(Y_Train_Batches))), axis=-1)
         
-        for j in idx:
-            masked_coords = self.__get_stratified_coords2D__(self.rand_float, box_size=self.box_size, shape=self.shape)
-            self.X_Train_Batches[(j,) + masked_coords + (0,)] = self.pix_masking(self.X_Train_Batches[j, ..., 0], masked_coords)
-            self.Y_Train_Batches[(j,) + masked_coords + (1,)] = 1
+        for jj in range(len(idx)):
+            masked_coords = self.__get_stratified_coords2D__(self.__rand_float_coords2D__(self.box_size),\
+                                                             box_size=self.box_size, shape=self.shape)
+            X_Train_Batches[(jj,) + masked_coords + (0,)] = self.pix_masking_func(X_Train_Batches[jj, ..., 0], masked_coords)
+            Y_Train_Batches[(jj,) + masked_coords + (1,)] = 1
 
-        return self.X_Train_Batches[idx], self.Y_Train_Batches[idx]
+        return X_Train_Batches, Y_Train_Batches
 
     @staticmethod
     def __get_stratified_coords2D__(coord_gen, box_size, shape):
@@ -159,7 +154,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
         while True:
             yield (np.random.rand() * boxsize, np.random.rand() * boxsize)
 
-def DeepSNF_Validation_DataGenerator(X, pix_perc = 0.2, shape = (64, 64), pix_masking = pm_uniform_withCP(5)):
+def DeepSNF_Validation_DataGenerator(X, pix_perc = 0.2, shape = (64, 64), pix_masking_func = pm_uniform_withCP(5)):
     
     """
     Manipulate pixels to generate validation data.
@@ -170,12 +165,12 @@ def DeepSNF_Validation_DataGenerator(X, pix_perc = 0.2, shape = (64, 64), pix_ma
    
     if np.ndim(X)==3:
         X = np.expand_dims(X, axis = -1)
-    Y = np.concatenate((X, np.zeros(np.shape(X))), axis=-1)
+    Y = np.concatenate((np.copy(X), np.zeros(np.shape(X))), axis=-1)
 
-    for j in range(X.shape[0]):
+    for ii in range(X.shape[0]):
         masked_coords = DeepSNF_Training_DataGenerator.__get_stratified_coords2D__(DeepSNF_Training_DataGenerator.__rand_float_coords2D__(box_size), \
                                                                             box_size = box_size, shape = np.array(X.shape)[1:-1])
-        X[(j,) + masked_coords + (0,)] = pix_masking(X[j, ..., 0], masked_coords)
-        Y[(j,) + masked_coords + (1,)] = 1
+        X[(ii,) + masked_coords + (0,)] = pix_masking_func(X[ii, ..., 0], masked_coords)
+        Y[(ii,) + masked_coords + (1,)] = 1
     
     return X, Y
