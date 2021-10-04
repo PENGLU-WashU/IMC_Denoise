@@ -82,21 +82,21 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 ```
 |---Raw_image_directory
 |---|---Tissue1_sub_directory
-|---|---|---Marker1_img.tiff
-|---|---|---Marker2_img.tiff
+|---|---|---Channel1_img.tiff
+|---|---|---Channel2_img.tiff
              ...
-|---|---|---Marker_n_img.tiff
+|---|---|---Channel_n_img.tiff
 |---|---Tissue2_sub_directory
-|---|---|---Marker1_img.tiff
-|---|---|---Marker2_img.tiff
+|---|---|---Channel1_img.tiff
+|---|---|---Channel2_img.tiff
              ...
-|---|---|---Marker_n_img.tiff
+|---|---|---Channel_n_img.tiff
              ...
 |---|---Tissue_m_sub_directory
-|---|---|---Marker1_img.tiff
-|---|---|---Marker2_img.tiff
+|---|---|---Channel1_img.tiff
+|---|---|---Channel2_img.tiff
              ...
-|---|---|---Marker_n_img.tiff
+|---|---|---Channel_n_img.tiff
 ```
 ### Download example data
 
@@ -113,24 +113,24 @@ $ jupyter notebook --notebook-dir=your_folder_of_notebook_examples
   - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
 ### Implement IMC_Denoise with scripts
-- Here we take CD38 channel as an example.
+- Here we take CD38 channel as an example. In this case, the "channel_name" should be set as its corresponding channel "141Pr".
 - Activate the IMC_Denoise environment.
 ```
 $ conda activate IMC_Denoise
 ```
 - Generating training set and train a DeepSNF model.
-  - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. Here we take CD38 channel as an example.
+  - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. For CD38, the saved name will be "training_set_141Pr.npz".
   ```
-  python scripts/Data_generation_DeepSNF_script.py --marker_name 'CD38' --Raw_directory 'Your_raw_img_directory'  --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
+  python scripts/Data_generation_DeepSNF_script.py --channel_name '141Pr' --Raw_directory 'Your_raw_img_directory'  --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```
-  - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted.
+  - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted. Note that when implementing prediction, input the same "trained_weights" name.
   ```
-  python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_CD38.npz' --weights_name 'weights_CD38.hdf5' --train_epoches '50' --train_batch_size '128'
+  python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_141Pr.npz' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '50' --train_batch_size '128'
   ```
   - Generate training set for a specific marker channel and then train a DeepSNF network. In this process, the generated training set will not be saved in a directory.
   ```
-  python scripts/Generate_data_and_training_DeepSNF_script.py --marker_name 'CD38' 
-                                                              --weights_name 'weights_CD38.hdf5'
+  python scripts/Generate_data_and_training_DeepSNF_script.py --channel_name '141Pr' 
+                                                              --weights_name 'weights_141Pr-CD38.hdf5'
                                                               --Raw_directory 'Your_raw_img_directory'
                                                               --train_epoches '50' 
                                                               --train_batch_size '128'
@@ -147,7 +147,7 @@ $ conda activate IMC_Denoise
   ```
   python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'your_raw_img_name(.tiff)' 
                                                --Denoised_img_name 'your_denoised_img_name(.tiff)' 
-                                               --weights_name 'weights_CD38.hdf5'   
+                                               --weights_name 'weights_141Pr-CD38.hdf5'   
                                                --n_neighbours '4' --n_lambda '5' --slide_window_size '3' 
   ```
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
