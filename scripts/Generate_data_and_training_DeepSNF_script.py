@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-python scripts/Generate_data_and_training_DeepSNF_script.py --marker_name 'CD38' 
+python scripts/Generate_data_and_training_DeepSNF_script.py --channel_name '141Pr' 
                                                             --weights_name 'weights_CD38.hdf5'
                                                             --Raw_directory "Raw_IMC_for_training" 
                                                             --train_epoches '50' 
@@ -14,7 +14,7 @@ import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("--marker_name", help = "marker used to generate training set")
+parser.add_argument("--channel_name", help = "channel used to generate training set, e.g. 141Pr")
 parser.add_argument("--Raw_directory", help = "The directory which contained raw IMC images used to generate training set")
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_lambda", help = "DIMR algorithm parameter", default = 5)
@@ -35,7 +35,7 @@ parser.add_argument("--loss_function", help = "loss function used, bce or mse", 
 args = parser.parse_args()
 print(args)
 
-DataGenerator = DeepSNF_DataGenerator(marker_name = args.marker_name, n_neighbours = args.n_neighbours, \
+DataGenerator = DeepSNF_DataGenerator(channel_name = args.channel_name, n_neighbours = args.n_neighbours, \
                                       n_lambda = args.n_lambda, window_size = args.slide_window_size)
 generated_patches = DataGenerator.generate_patches_from_directory(load_directory = args.Raw_directory)
 
