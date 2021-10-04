@@ -51,6 +51,6 @@ deepsnf = DeepSNF(train_epoches = args.train_epoches,
                   loss_name = args.loss_name,
                   weights_dir = args.weights_save_directory,
                   is_load_weights = args.is_load_weights,
-                  amp_max_rate = self.amp_max_rate)
+                  amp_max_rate = args.amp_max_rate)
 
 deepsnf.train(train_data)
