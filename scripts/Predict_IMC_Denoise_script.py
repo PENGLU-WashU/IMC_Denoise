@@ -2,7 +2,7 @@
 """
 python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'D:\IMC analysis\Raw_IMC_dataset\H1527528\141Pr-CD38_Pr141.tiff' 
                                              --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
-                                             --weights_name "weights_CD38.hdf5"   
+                                             --weights_name "weights_141Pr-CD38.hdf5"   
                                              --n_neighbours '4' --n_lambda '5' --slide_window_size '3' 
 """
 

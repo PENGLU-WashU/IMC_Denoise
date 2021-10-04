@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 python scripts/Generate_data_and_training_DeepSNF_script.py --channel_name '141Pr' 
-                                                            --weights_name 'weights_CD38.hdf5'
+                                                            --weights_name 'weights_141Pr-CD38.hdf5'
                                                             --Raw_directory "Raw_IMC_for_training" 
                                                             --train_epoches '50' 
                                                             --train_batch_size '128'
