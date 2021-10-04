@@ -78,7 +78,7 @@ $ pip install -e .
 
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
-In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the channel image names should contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
+In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the Channel_img names must contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
 ```
 |---Raw_image_directory
 |---|---Tissue1_sub_directory
@@ -113,11 +113,11 @@ $ jupyter notebook --notebook-dir=your_folder_of_notebook_examples
   - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
 ### Implement IMC_Denoise with scripts
-- Here we take images with marker CD38 as an example. For our dataset, CD38 is conjucted with 141Pr. In this case, the "channel_name" should be set as its corresponding isotope "141Pr".
 - Activate the IMC_Denoise environment.
 ```
 $ conda activate IMC_Denoise
 ```
+- Here we take the images with marker CD38 as an example. For our dataset, CD38 is conjucted with 141Pr. In this case, the "channel_name" should be set as its corresponding isotope name "141Pr".
 - Generating training set and train a DeepSNF model.
   - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. For CD38, the saved name will be "training_set_141Pr.npz".
   ```
