@@ -25,8 +25,8 @@ class DeepSNF():
     
     # DeepSNF class, including DeepSNF training, prediction, etc.
     
-    def __init__(self, train_epoches = 100, train_learning_rate = 0.0005, train_batch_size = 256, mask_perc_pix = 0.2, 
-                 val_perc = 0.15, loss_func = "bce", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False):
+    def __init__(self, train_epoches = 100, train_learning_rate = 0.0005, train_batch_size = 256, mask_perc_pix = 0.2, val_perc = 0.15,
+                 loss_func = "bce", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, amp_max_rate = 1.1):
         
         """
         Parameters
@@ -53,6 +53,12 @@ class DeepSNF():
             True: load pre-trained weights file from disk for transfer learning and prediction.
             False: not load any pre-trained weights. 
             The default is False.
+        amp_max_rate: float, optional
+            the max_val of the channel is amp_max_rate*max(images, 0.99999 maximum truncated).
+            The default is 1.1. It should work in most cases.
+            When the maximum of the predicted image is much higher, the value may be set higher during 
+            training. But the values which is out of the range of the training set may not be predicted
+            well. Therefore, the selection of a good training set is important.
 
         """
         if not isinstance(train_epoches, int):
@@ -74,6 +80,7 @@ class DeepSNF():
         self.loss_function = loss_func
         self.loss_name = loss_name
         self.min_val = 2*np.sqrt(3/8)
+        self.amp_max_rate = amp_max_rate
         
         assert isinstance(is_load_weights, bool), "is_load_weights must be a bool value!"
         self.is_load_weights = is_load_weights
@@ -246,7 +253,7 @@ class DeepSNF():
         """
         patches_sort = np.sort(patches, axis = None)
         truncated_maxval = patches_sort[int(0.99999*np.shape(patches_sort)[0])]
-        max_val = 1.1*truncated_maxval
+        max_val = self.amp_max_rate*truncated_maxval
         range_val = max_val - self.min_val
         patches_normalized = self.__Normalize__(patches, range_val, self.min_val)
         
