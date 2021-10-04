@@ -10,13 +10,13 @@ import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--channel_name", help = "Channel used to generate training set, e.g. 141Pr", type = str)
-parser.add_argument("--is_augment", help = "Augment data?", default = True, type = bool)
-parser.add_argument("--ratio_thresh", help = "The threshold of the sparsity of the generated patch. If larger than this threshold, \
-            the corresponding patch will be omitted. The default is 0.95.", default = 0.95, type = float)
-parser.add_argument("--patch_row_size ", help = "The row size of generated patch.", default = 64, type = int)
-parser.add_argument("--patch_col_size ", help = "The column size of generated patch.", default = 64, type = int)
+parser.add_argument("--patch_row_size", help = "The row size of generated patch.", default = 64, type = int)
+parser.add_argument("--patch_col_size", help = "The column size of generated patch.", default = 64, type = int)
 parser.add_argument("--row_step", help = "Row step length when generating training patches from imgs.", default = 60, type = int)
 parser.add_argument("--col_step", help = "Column step length when generating training patches from imgs.", default = 60, type = int)
+parser.add_argument("--is_augment", help = "Augment data", default = True, type = bool)
+parser.add_argument("--ratio_thresh", help = "The threshold of the sparsity of the generated patch. If larger than this threshold, \
+            the corresponding patch will be omitted. The default is 0.95.", default = 0.95, type = float)
 parser.add_argument("--Raw_directory", help = "The directory which contained raw IMC images used to generate training set", type = str)
 parser.add_argument("--Save_directory", help = "The directory which saves the generated training set. If None, the generated \
                     training set will be saved in the default directory", default = None, type = str)
