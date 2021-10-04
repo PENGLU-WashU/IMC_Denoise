@@ -54,7 +54,7 @@ class DeepSNF_DataGenerator():
             Column step length when generating training patches from imgs. The default is 60.
         ratio_thresh : float, optional
             The threshold of the sparsity of the generated patch. If larger than this threshold,
-            the corresponding patch will be omitted. The default is 0.9.
+            the corresponding patch will be omitted. The default is 0.95.
         channel_name : string, optional
             The channel you want to generate a dataset. The default is None.
         is_augment : bool, optional
