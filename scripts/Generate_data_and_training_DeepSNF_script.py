@@ -14,23 +14,23 @@ import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("--channel_name", help = "channel used to generate training set, e.g. 141Pr")
-parser.add_argument("--Raw_directory", help = "The directory which contained raw IMC images used to generate training set")
+parser.add_argument("--channel_name", help = "channel used to generate training set, e.g. 141Pr", type = str)
+parser.add_argument("--Raw_directory", help = "The directory which contained raw IMC images used to generate training set", type = str)
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
-parser.add_argument("--n_lambda", help = "DIMR algorithm parameter", default = 5)
+parser.add_argument("--n_lambda", help = "DIMR algorithm parameter", default = 5, type = float)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default = 3, type = int)
                     
-parser.add_argument("--weights_name", help = "trained network weights. hdf5 format")
+parser.add_argument("--weights_name", help = "trained network weights. hdf5 format", type = str)
 parser.add_argument("--loss_name", help = "training and validation losses saved here, either .mat or .npz format. \
-                    If not defined, the losses will not be saved.", default = None)
+                    If not defined, the losses will not be saved.", default = None, type = str)
 parser.add_argument("--weights_save_directory", help = "location where 'weights_name' and 'loss_name' saved. If the \
-                    value is None, the files will be saved in the current file folder.", default = None)
+                    value is None, the files will be saved in the current file folder.", default = None, type = str)
 parser.add_argument("--train_epoches", help = "training_epoches", default = 100, type = int)
-parser.add_argument("--train_initial_lr", help = "initial learning rate", default = 5e-4)
+parser.add_argument("--train_initial_lr", help = "initial learning rate", default = 5e-4, type = float)
 parser.add_argument("--train_batch_size", help = "batch size", default=256, type = int)
-parser.add_argument("--pixel_mask_percent", help = "percentage of the masked pixels in each patch", default = 0.2)
-parser.add_argument("--val_set_percent", help = "percentage of validation set", default = 0.15)
-parser.add_argument("--loss_function", help = "loss function used, bce or mse", default = "bce")
+parser.add_argument("--pixel_mask_percent", help = "percentage of the masked pixels in each patch", default = 0.2, type = float)
+parser.add_argument("--val_set_percent", help = "percentage of validation set", default = 0.15, type = float)
+parser.add_argument("--loss_function", help = "loss function used, bce or mse", default = "bce", type = str)
 
 args = parser.parse_args()
 print(args)

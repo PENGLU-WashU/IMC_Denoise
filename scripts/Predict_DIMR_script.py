@@ -11,10 +11,10 @@ import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("--Raw_img_name", help = "the raw IMC image. tiff format")
-parser.add_argument("--Denoised_img_name", help = "the denoised IMC image. tiff format")
+parser.add_argument("--Raw_img_name", help = "the raw IMC image. tiff format", type = str)
+parser.add_argument("--Denoised_img_name", help = "the denoised IMC image. tiff format", type = str)
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
-parser.add_argument("--n_lambda", help = "DIMR algorithm parameter", default = 5)
+parser.add_argument("--n_lambda", help = "DIMR algorithm parameter", default = 5,  type = float)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
                     
 args = parser.parse_args()
