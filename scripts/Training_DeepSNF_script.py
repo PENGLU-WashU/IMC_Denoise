@@ -24,6 +24,13 @@ parser.add_argument("--train_batch_size", help = "batch size", default = 256, ty
 parser.add_argument("--pixel_mask_percent", help = "percentage of the masked pixels in each patch", default = 0.2, type = float)
 parser.add_argument("--val_set_percent", help = "percentage of validation set", default = 0.15, type = float)
 parser.add_argument("--loss_function", help = "loss function used, bce or mse", default = "bce", type = str)
+parser.add_argument("--is_load_weights", help = "If True, the pre-trained will be loaded, which is fit for \
+                    prediction or transfer learning", default = False, type = bool)
+parser.add_argument("--amp_max_rate", help = "the max_val of the channel is amp_max_rate*max(images, 0.99999 maximum truncated). \
+                    The default is 1.1. It should work in most cases. \
+                    When the maximum of the predicted image is much higher, the value may be set higher during \
+                    training. But the values which is out of the range of the training set may not be predicted \
+                    well. Therefore, the selection of a good training set is important.", default = 1.1, type = float)   
 
 args = parser.parse_args()
 print(args)
@@ -42,6 +49,8 @@ deepsnf = DeepSNF(train_epoches = args.train_epoches,
                   loss_func = args.loss_function,
                   weights_name = args.weights_name,
                   loss_name = args.loss_name,
-                  weights_dir = args.weights_save_directory)
+                  weights_dir = args.weights_save_directory,
+                  is_load_weights = args.is_load_weights,
+                  amp_max_rate = self.amp_max_rate)
 
 deepsnf.train(train_data)
