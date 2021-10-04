@@ -16,7 +16,7 @@ setup(name='IMC_Denoise',
           "matplotlib",
           "jupyter",
           "sklearn",
-          "tensorflow-gpu==2.2.0",
+          "tensorflow==2.2.0",
           "keras==2.3.1",
           "tifffile"
         ]
