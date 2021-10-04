@@ -123,7 +123,7 @@ $ conda activate IMC_Denoise
   ```
   python scripts/Data_generation_DeepSNF_script.py --channel_name '141Pr' --Raw_directory 'Your_raw_img_directory'  --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```
-  - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted. Note that when implementing prediction, input the same "trained_weights" name.
+  - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted. Note that when implementing prediction, input the same "trained_weights" name. If your GPU has smaller memory so that it cannot afford a large "train_batch_size" such as 128, please use a smaller one, e.g. 64, 32.
   ```
   python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_141Pr.npz' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '50' --train_batch_size '128'
   ```
