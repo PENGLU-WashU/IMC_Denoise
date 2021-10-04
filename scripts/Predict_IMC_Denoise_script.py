@@ -15,8 +15,8 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--Raw_img_name", help = "the raw IMC image. tiff format")
 parser.add_argument("--Denoised_img_name", help = "the denoised IMC image. tiff format")
 parser.add_argument("--weights_name", help = "trained network weights. hdf5 format")
-parser.add_argument("--weights_save_directory", help = "location where 'weights_name' and 'loss_name' saved. If the \
-                    value is None, the files will be saved in the current file folder.", default = None)
+parser.add_argument("--weights_save_directory", help = "location where 'weights_name' saved. If the \
+                    value is None, the files will be loaded from the default directory.", default = None)
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_lambda", help = "DIMR algorithm parameter", default = 5)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
