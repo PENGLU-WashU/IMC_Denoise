@@ -48,7 +48,7 @@ IMC_Denoise
 |---|---Predict_IMC_Denoise_script.py
 ```
 - **IMC_Denoise** implements DIMR and DeepSNF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
-- **scripts** and **Jupyter Notebooks** include several examples to implement IMC_Denoise algorithms.
+- **Jupyter Notebooks** and **scripts** include several examples to implement IMC_Denoise algorithms.
 
 ## Customize environment for IMC_Denoise
 ### Our IMC_Denoise environment
