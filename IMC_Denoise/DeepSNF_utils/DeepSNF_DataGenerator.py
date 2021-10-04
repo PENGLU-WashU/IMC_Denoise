@@ -16,7 +16,7 @@ class DeepSNF_DataGenerator():
     
     """
     def __init__(self, patch_row_size = 64, patch_col_size = 64, row_step = 60, col_step = 60, 
-                 ratio_thresh = 0.9, marker_name = None, is_augment = True, 
+                 ratio_thresh = 0.95, channel_name = None, is_augment = True, 
                  n_neighbours = 4, n_lambda = 5, window_size = 3):
         
         """
@@ -55,8 +55,8 @@ class DeepSNF_DataGenerator():
         ratio_thresh : float, optional
             The threshold of the sparsity of the generated patch. If larger than this threshold,
             the corresponding patch will be omitted. The default is 0.9.
-        marker_name : string, optional
-            The marker name of the channel you want to generate a dataset. The default is None.
+        channel_name : string, optional
+            The channel you want to generate a dataset. The default is None.
         is_augment : bool, optional
             DESCRIPTION. The default is True.
         n_neighbours : int, optional
@@ -87,9 +87,9 @@ class DeepSNF_DataGenerator():
         self.n_lambda = n_lambda
         self.window_size = window_size
         
-        if marker_name is None:
-            raise ValueError('Please provide the marker name!')
-        self.marker_name = marker_name
+        if channel_name is None:
+            raise ValueError('Please provide the channel name!')
+        self.channel_name = channel_name
         
     def load_single_img(self, filename):
         
@@ -170,18 +170,15 @@ class DeepSNF_DataGenerator():
         for sub_img_folder in img_folders:
             Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & f.endswith(".tiff")]
             for Img_file in Img_list:
-                marker_name_lower = self.marker_name.lower()
-                Img_file_lower = Img_file.lower()
-                if marker_name_lower in Img_file_lower and Img_file_lower.rfind(marker_name_lower)+len(marker_name_lower) < len(Img_file_lower):
-                    if not Img_file_lower[Img_file_lower.rfind(marker_name_lower)+len(marker_name_lower)].isnumeric():
-                        Img_read = self.load_single_img(sub_img_folder + Img_file)
-                        print(sub_img_folder + Img_file)
-                        Img_collect.append(Img_read)
-                        break
+                if self.channel_name.lower() in Img_file.lower():
+                    Img_read = self.load_single_img(sub_img_folder + Img_file)
+                    print(sub_img_folder + Img_file)
+                    Img_collect.append(Img_read)
+                    break
         
         print('\n' + 'Image data loaded completed!')
         if not Img_collect:
-            print('\033[91m' + "No such markers! Please check the marker name again!" + '\033[0m')
+            print('\033[91m' + "No such channels! Please check the channel name again!" + '\033[0m')
             return
                 
         return Img_collect
@@ -261,7 +258,7 @@ class DeepSNF_DataGenerator():
             save_directory = os.path.abspath(os.getcwd()) + '\\Generated_training_set'
         if not os.path.exists(save_directory):
             os.makedirs(save_directory)
-        np.savez(save_directory + '\\training_set_' + self.marker_name + '.npz', patches = generated_patches)
+        np.savez(save_directory + '\\training_set_' + self.channel_name + '.npz', patches = generated_patches)
         print('The shape of the generated training set is ' + str(generated_patches.shape) + '.')
         return True
         
