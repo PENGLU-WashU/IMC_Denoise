@@ -129,25 +129,25 @@ $ conda activate IMC_Denoise
   ```
   - Generate training set for a specific marker channel and then train a DeepSNF network. In this process, the generated training set will not be saved in a directory.
   ```
-  python scripts/Generate_data_and_training_DeepSNF_script.py --channel_name '141Pr' 
-                                                              --weights_name 'weights_141Pr-CD38.hdf5'
-                                                              --Raw_directory 'Your_raw_img_directory'
-                                                              --train_epoches '50' 
-                                                              --train_batch_size '128'
+  python scripts/Generate_data_and_training_DeepSNF_script.py --channel_name '141Pr' \
+                                                              --weights_name 'weights_141Pr-CD38.hdf5' \
+                                                              --Raw_directory 'Your_raw_img_directory' \
+                                                              --train_epoches '50' \
+                                                              --train_batch_size '128' \
                                                               --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```                                             
 - Implement IMC_Denoise to enhance IMC images.
   - Implement DIMR for a single IMC image if the SNR of the image is good.
   ```
-  python scipts/Predict_DIMR_script.py --Raw_img_name 'your_raw_img_name(.tiff)' 
-                                       --Denoised_img_name 'your_denoised_img_name(.tiff)' 
+  python scipts/Predict_DIMR_script.py --Raw_img_name 'your_raw_img_name(.tiff)' \
+                                       --Denoised_img_name 'your_denoised_img_name(.tiff)' \
                                        --n_neighbours '4' --n_lambda '5' --slide_window_size '3'
   ```
   - Implement IMC_Denoise including DIMR and DeepSNF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
-  python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'your_raw_img_name(.tiff)' 
-                                               --Denoised_img_name 'your_denoised_img_name(.tiff)' 
-                                               --weights_name 'weights_141Pr-CD38.hdf5'   
+  python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'your_raw_img_name(.tiff)' \
+                                               --Denoised_img_name 'your_denoised_img_name(.tiff)' \
+                                               --weights_name 'weights_141Pr-CD38.hdf5' \
                                                --n_neighbours '4' --n_lambda '5' --slide_window_size '3' 
   ```
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
