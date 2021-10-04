@@ -78,7 +78,7 @@ $ pip install -e .
 
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
-In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the channel image names should contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_141Pr.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
+In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the channel image names should contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
 ```
 |---Raw_image_directory
 |---|---Tissue1_sub_directory
