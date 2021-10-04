@@ -26,21 +26,21 @@ class DeepSNF_DataGenerator():
         
             |---Raw_image_directory
             |---|---Tissue1
-            |---|---|---Marker1_img.tiff
-            |---|---|---Marker2_img.tiff
+            |---|---|---Channel1_img.tiff
+            |---|---|---Channel2_img.tiff
                          ...
-            |---|---|---Marker_n_img.tiff
+            |---|---|---Channel_n_img.tiff
             |---|---Tissue2
-            |---|---|---Marker1_img.tiff
-            |---|---|---Marker2_img.tiff
+            |---|---|---Channel1_img.tiff
+            |---|---|---Channel2_img.tiff
                          ...
-            |---|---|---Marker_n_img.tiff
+            |---|---|---Channel_n_img.tiff
                          ...
             |---|---Tissue_m
-            |---|---|---Marker1_img.tiff
-            |---|---|---Marker2_img.tiff
+            |---|---|---Channel1_img.tiff
+            |---|---|---Channel2_img.tiff
                          ...
-            |---|---|---Marker_n_img.tiff
+            |---|---|---Channel_n_img.tiff
 
         Parameters
         ----------
@@ -222,21 +222,21 @@ class DeepSNF_DataGenerator():
         
             |---Raw_image_directory
             |---|---Tissue1
-            |---|---|---Marker1_img.tiff
-            |---|---|---Marker2_img.tiff
+            |---|---|---Channel1_img.tiff
+            |---|---|---Channel2_img.tiff
                          ...
-            |---|---|---Marker_n_img.tiff
+            |---|---|---Channel_n_img.tiff
             |---|---Tissue2
-            |---|---|---Marker1_img.tiff
-            |---|---|---Marker2_img.tiff
+            |---|---|---Channel1_img.tiff
+            |---|---|---Channel2_img.tiff
                          ...
-            |---|---|---Marker_n_img.tiff
+            |---|---|---Channel_n_img.tiff
                          ...
             |---|---Tissue_m
-            |---|---|---Marker1_img.tiff
-            |---|---|---Marker2_img.tiff
+            |---|---|---Channel1_img.tiff
+            |---|---|---Channel2_img.tiff
                          ...
-            |---|---|---Marker_n_img.tiff
+            |---|---|---Channel_n_img.tiff
             
             
         Returns
