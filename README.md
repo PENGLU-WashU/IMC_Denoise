@@ -65,7 +65,7 @@ IMC_Denoise
 $ conda create -n 'IMC_Denoise' python=3.6
 $ conda activate IMC_Denoise
 $ conda install -c anaconda brotlipy
-$ pip install tensorflow-gpu==2.2.0 keras==2.3.1
+$ pip install tensorflow==2.2.0 keras==2.3.1
 $ conda install -c anaconda cudnn 
 $ conda install -c anaconda cudatoolkit=10.1 
 ```
