@@ -27,5 +27,5 @@ dimr = DIMR(n_neighbours = args.n_neighbours,
 Img_raw = tp.imread(args.Raw_img_name)
 Img_DIMR = dimr.perform_DIMR(Img_raw)
 
-if tp.imsave(args.Denoised_img_name, Img_DIMR.astype('float32')):
-    print('The denoised image has been saved!')
+tp.imsave(args.Denoised_img_name, Img_DIMR.astype('float32'))
+print('The denoised image has been saved!')

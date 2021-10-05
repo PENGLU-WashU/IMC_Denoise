@@ -31,5 +31,5 @@ deepsnf = DeepSNF(weights_name = args.weights_name,
 Img_raw = tp.imread(args.Raw_img_name)
 Img_DIMR_DeepSNF = deepsnf.perform_IMC_Denoise(Img_raw, n_neighbours = args.n_neighbours, n_lambda = args.n_lambda, window_size = args.slide_window_size)
 
-if tp.imsave(args.Denoised_img_name, Img_DIMR_DeepSNF.astype('float32')):
-    print('The denoised image has been saved!')
+tp.imsave(args.Denoised_img_name, Img_DIMR_DeepSNF.astype('float32'))
+print('The denoised image has been saved!')
