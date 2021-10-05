@@ -54,7 +54,7 @@ class DeepSNF_DataGenerator():
             Column step length when generating training patches from imgs. The default is 60.
         ratio_thresh : float, optional
             The threshold of the sparsity of the generated patch. If larger than this threshold,
-            the corresponding patch will be omitted. The default is 0.95.
+            the corresponding patch will be omitted. The default is 0.9.
         channel_name : string, optional
             The channel you want to generate a dataset. The default is None.
         is_augment : bool, optional
@@ -129,7 +129,7 @@ class DeepSNF_DataGenerator():
             Generated patches for training.
 
         """
-        patch_collect = []
+        patch_collect = np.zeros((1, self.patch_row_size, self.patch_col_size), dtype = np.float32)
         dimr = DIMR(n_neighbours = self.n_neighbours, n_lambda = self.n_lambda, window_size = self.window_size)
         for Img in Img_collect:
             Img_Anscombe = Anscombe_forward(Img)
@@ -143,9 +143,9 @@ class DeepSNF_DataGenerator():
                 Col_range.append(Cols - self.patch_col_size//2 - 1)
                 
             patch_collect_sub = self.__extract_patches_from_img__(Img_DIMR, Row_range, Col_range)
-            patch_collect.append(patch_collect_sub)
+            patch_collect = np.concatenate((patch_collect, patch_collect_sub), axis = 0)
         
-        patch_collect = np.concatenate(patch_collect, axis = 0)
+        patch_collect = patch_collect[1:]
         del Img_collect
         
         if self.is_augment:
@@ -189,13 +189,15 @@ class DeepSNF_DataGenerator():
         Extract patches from a single image and then save them into a list.
 
         """
-        patch_collect = []
+        kk = 0
+        patch_collect = np.zeros((len(Rows_range)*len(Cols_range), self.patch_row_size, self.patch_col_size), dtype = np.float32)
         for ii in Rows_range:
                 for jj in Cols_range:
                     sub_Img = Img[ii-self.patch_row_size//2:ii+self.patch_row_size//2, jj-self.patch_col_size//2:jj+self.patch_col_size//2]
                     if np.sum(sub_Img < 2*np.sqrt(1.375)) / np.prod(np.shape(sub_Img)) < self.ratio_thresh:
-                        patch_collect.append(sub_Img)
-        return patch_collect
+                        patch_collect[kk, :, :] = sub_Img
+                        kk += 1
+        return patch_collect[0:kk]
         
     
     def __augment_patches__(self, generated_patches):
