@@ -326,7 +326,7 @@ class DeepSNF():
         Input_channel = Input_img_pad_dims.astype('float32')
             
         # Make a prediction
-        predicted = self.trained_model.predict(Input_channel, batch_size=1)
+        predicted = self.trained_model.predict_on_batch(Input_channel)
         predicted = predicted[0,Rows_diff1:(-Rows_diff2),Cols_diff1:(-Cols_diff2),0]
         predicted_img = self.__Denormalize__(predicted, self.range_val, self.min_val)
         
