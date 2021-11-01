@@ -77,7 +77,7 @@ class DIMR():
         d_sum = np.reshape(d_sum, (1, n_size, 8), order = 'F')
         
         # remove the very low intensity pixels which cannot be outliers
-        idx_remain = X>=2*np.sqrt(4+3/8)
+        idx_remain = X>=2*np.sqrt(0+3/8)
         idx_remain = np.reshape(idx_remain, (1, n_size), order = 'F')
         d_sum = d_sum[:, idx_remain[0,:], :]
                 
@@ -143,7 +143,7 @@ class DIMR():
         d_sum = np.reshape(d_sum, (1, n_size, self.window_size**2-1), order = 'F')
         
         # remove the very low intensity pixels which cannot be outliers
-        idx_remain = X >= 2*np.sqrt(4 + 3/8)
+        idx_remain = X >= 2*np.sqrt(0 + 3/8)
         idx_remain = np.reshape(idx_remain, (1, n_size), order = 'F')
         d_sum = d_sum[:, idx_remain[0,:], :]
                 
