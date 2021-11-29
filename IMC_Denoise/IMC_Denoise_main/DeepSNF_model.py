@@ -40,8 +40,8 @@ def ResBlock2(nb_filter, rk, ck, st, res_names):
 
 def DeepSNF_net(input, names, loss_func):
     filter_num = 64
-    Features1 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock1')(input)
-    Features2 = ResBlock2(filter_num, 3, 3, 1, res_names=names+'ResBlock2')(Features1)
+    #Features1 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock1')(input)
+    Features2 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock2')(input)
     
     pool1 = MaxPooling2D(pool_size=(2,2),name=names+'Pool1')(Features2)
     Features3 = ResBlock(filter_num*2, 3, 3, 1, res_names=names+'ResBlock3')(pool1)
