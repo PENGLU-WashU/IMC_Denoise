@@ -2,6 +2,8 @@
 import numpy as np
 import scipy.io as sio
 import os
+import gc
+
 from sklearn.model_selection import train_test_split
 from keras import optimizers
 from keras.models import Model
@@ -12,7 +14,7 @@ from .DIMR import DIMR
 from .DeepSNF_model import DeepSNF_net
 from .loss_functions import create_weighted_binary_crossentropy, create_mse
 from ..DeepSNF_utils.DeepSNF_TrainGenerator import DeepSNF_Training_DataGenerator, DeepSNF_Validation_DataGenerator
-from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased
+from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased, Anscombe_inverse_direct
 
 import tensorflow as tf
 gpus = tf.config.list_physical_devices('GPU')
@@ -36,8 +38,9 @@ class DeepSNF():
     
     # DeepSNF class, including DeepSNF training, prediction, etc.
     
-    def __init__(self, train_epoches = 100, train_learning_rate = 0.0005, train_batch_size = 256, mask_perc_pix = 0.2, val_perc = 0.15,
-                 loss_func = "bce", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, amp_max_rate = 1.1):
+    def __init__(self, train_epoches = 100, train_learning_rate = 0.001, train_batch_size = 256, mask_perc_pix = 0.2, val_perc = 0.1,
+                 loss_func = "bce", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, 
+                 truncated_max_rate = 0.9999, lambda_HF = 0):
         
         """
         Parameters
@@ -52,7 +55,10 @@ class DeepSNF():
             Percentage of the masked pixels for every patch. The default is 0.2.
         val_perc : float, optional
             Percentage of the training set as the validation set. The default is 0.15.
-        loss_func : "mse" or "bce", optional
+        loss_func : "mse", "mse_relu" or "bce", optional
+            If "bce", the framework will be DeepSNF;
+            If "mse", the framework will be Noise2Void;
+            If "mse_relu", the framework will be Noise2Void with Anscombe transformation and Relu activation
             The default is "bce".
         weights_name : string, optional
             The file name of the saved weights. .hdf5 format. The default is None.
@@ -64,12 +70,14 @@ class DeepSNF():
             True: load pre-trained weights file from disk for transfer learning and prediction.
             False: not load any pre-trained weights. 
             The default is False.
-        amp_max_rate: float, optional
-            the max_val of the channel is amp_max_rate*max(images, 0.99999 maximum truncated).
-            The default is 1.1. It should work in most cases.
+        truncated_max_rate: float, optional
+            The max_val of the channel is 1.1*max(images, truncated_max_rate*maximum).
+            The default is 0.99999. It should work in most cases.
             When the maximum of the predicted image is much higher, the value may be set higher during 
             training. But the values which is out of the range of the training set may not be predicted
             well. Therefore, the selection of a good training set is important.
+        lambda_HF: float, optional
+            The parameter for Hessian regularization. The best value is around 3e-6.
 
         """
         if not isinstance(train_epoches, int):
@@ -88,10 +96,16 @@ class DeepSNF():
         assert val_perc >=0 and val_perc <= 1, "val_perc must be between 0 and 1!"
         self.val_perc = val_perc
         
+        assert truncated_max_rate >=0 and truncated_max_rate <= 1, "truncated_max_rate must be between 0 and 1!"
+        self.truncated_max_rate = truncated_max_rate
+        
         self.loss_function = loss_func
         self.loss_name = loss_name
-        self.min_val = 2*np.sqrt(3/8)
-        self.amp_max_rate = amp_max_rate
+        
+        if self.loss_function == "mse_relu":
+            self.min_val = 2*np.sqrt(3/8)
+        else:
+            self.min_val = 0
         
         assert isinstance(is_load_weights, bool), "is_load_weights must be a bool value!"
         self.is_load_weights = is_load_weights
@@ -108,6 +122,8 @@ class DeepSNF():
             if not self.weights_name.endswith('.hdf5'):
                 print('the weights file should end with .hdf5!')
                 return
+            
+        self.lambda_HF = lambda_HF
         
         if is_load_weights:
             self.trained_model = self.load_model()
@@ -119,17 +135,22 @@ class DeepSNF():
 
         """
         input_ = Input (shape = (input_dim))
-        act_ = DeepSNF_net(input_, 'DeepSNF_', loss_func = self.loss_function)
+        if self.loss_function == "mse_relu": 
+            network_name = 'N2V_Anscombe_relu_'
+        elif self.loss_function == "mse": 
+            network_name = 'N2V_'
+        else:
+            self.loss_function == "bce"
+            network_name = 'DeepSNF_'
+            
+        act_ = DeepSNF_net(input_, network_name, loss_func = self.loss_function)
         model = Model (inputs= input_, outputs=act_)  
         
         opt = optimizers.Adam(lr=self.train_learning_rate)
-        if self.loss_function == "bce":    
-            model.compile(optimizer=opt, loss = create_weighted_binary_crossentropy())
-        elif self.loss_function == "mse":
-            model.compile(optimizer=opt, loss = create_mse())
+        if self.loss_function != "bce":    
+            model.compile(optimizer=opt, loss = create_mse(lambda_HF = self.lambda_HF))
         else:
-            print('\033[91m' + "Please select bce or mse as the loss function." + '\033[0m')
-            return
+            model.compile(optimizer=opt, loss = create_weighted_binary_crossentropy(lambda_HF = self.lambda_HF))
             
         return model
     
@@ -154,9 +175,13 @@ class DeepSNF():
         
         if self.is_load_weights:
             model = self.trained_model
+            if self.loss_function == "mse_relu":
+                X = Anscombe_forward(X)
             X = self.__Normalize__(X, self.range_val, self.min_val)
         else:
             model = self.buildModel((None, None, 1)) 
+            if self.loss_function == "mse_relu":
+                X = Anscombe_forward(X)
             X, self.range_val = self.normalize_patches(X)  
         
         print('The range value to the corresponding model is ' + str(self.range_val) + '.')
@@ -164,6 +189,10 @@ class DeepSNF():
         X[X > 1.0] = 1.0
         X[X < 0.0] = 0.0
         X = np.expand_dims(X, axis = -1)
+        
+        # print(self.min_val)
+        # print(np.max(X))
+        # print(np.min(X))
         
         print("Input Channel Shape => " + str(X.shape))
           
@@ -180,9 +209,9 @@ class DeepSNF():
         
         # loss history recorder
         history = LossHistory()
-             
+        
         # Change learning when loss reaches a plataeu
-        change_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = 0.1, patience = 5, min_lr=0.0000005)
+        change_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = 0.5, patience = 20, min_lr = 0.0000005, verbose = 1)
         
         # Save the model weights after each epoch
         if self.weights_name is not None: 
@@ -263,8 +292,8 @@ class DeepSNF():
 
         """
         patches_sort = np.sort(patches, axis = None)
-        truncated_maxval = patches_sort[int(0.99999*np.shape(patches_sort)[0])]
-        max_val = self.amp_max_rate*truncated_maxval
+        truncated_maxval = patches_sort[int(self.truncated_max_rate*np.shape(patches_sort)[0])] #0.99999
+        max_val = 1.1*truncated_maxval
         range_val = max_val - self.min_val
         patches_normalized = self.__Normalize__(patches, range_val, self.min_val)
         
@@ -326,7 +355,10 @@ class DeepSNF():
         Input_channel = Input_img_pad_dims.astype('float32')
             
         # Make a prediction
-        predicted = self.trained_model.predict_on_batch(Input_channel)
+        Input_channel_tensor = tf.convert_to_tensor(Input_channel, dtype=tf.float32)
+        predicted = self.trained_model.predict_on_batch(Input_channel_tensor)
+        _ = gc.collect()
+        # K.clear_session()
         predicted = predicted[0,Rows_diff1:(-Rows_diff2),Cols_diff1:(-Cols_diff2),0]
         predicted_img = self.__Denormalize__(predicted, self.range_val, self.min_val)
         
@@ -385,7 +417,10 @@ class DeepSNF():
         Input_channel = Input_img_pad_dims.astype('float32')
             
         # Make a prediction
-        predicted = self.trained_model.predict(Input_channel)
+        Input_channel_tensor = tf.convert_to_tensor(Input_channel, dtype=tf.float32)
+        predicted = self.trained_model.predict(Input_channel_tensor)
+        _ = gc.collect()
+        # K.clear_session()
         predicted = predicted[:,Rows_diff1:(-Rows_diff2),Cols_diff1:(-Cols_diff2),0]
         predicted_img = self.__Denormalize__(predicted, self.range_val, self.min_val)
          
@@ -405,9 +440,14 @@ class DeepSNF():
         X_denoised : float
            
         """
-        X_Anscombe_transformed = Anscombe_forward(X)
-        X_SNF = self.predict(X_Anscombe_transformed)
-        X_denoised = Anscombe_inverse_exact_unbiased(X_SNF)
+        if self.loss_function == "mse_relu":
+            X = Anscombe_forward(X)
+            
+        X_denoised = self.predict(X)
+        
+        if self.loss_function == "mse_relu":
+            X_denoised = Anscombe_inverse_exact_unbiased(X_denoised)
+            
         return X_denoised
     
     def perform_DeepSNF_batch(self, X):
@@ -424,12 +464,17 @@ class DeepSNF():
         X_denoised : float
            
         """
-        X_Anscombe_transformed = Anscombe_forward(X)
-        X_SNF = self.predict_batch(X_Anscombe_transformed)
-        X_denoised = Anscombe_inverse_exact_unbiased(X_SNF)
+        if self.loss_function == "mse_relu":
+            X = Anscombe_forward(X)
+            
+        X_denoised = self.predict_batch(X)
+        
+        if self.loss_function == "mse_relu":
+            X_denoised = Anscombe_inverse_exact_unbiased(X_denoised)
+            
         return X_denoised
     
-    def perform_IMC_Denoise(self, X, n_neighbours = 4, n_lambda = 5, window_size = 3):
+    def perform_IMC_Denoise(self, X, n_neighbours = 4, n_iter = 3, window_size = 3):
         
         """
         Perform IMC_Denoise for a single image.
@@ -444,12 +489,17 @@ class DeepSNF():
 
         """
         X_Anscombe_transformed = Anscombe_forward(X)
-        X_DIMR = DIMR(n_neighbours = n_neighbours, n_lambda = n_lambda, window_size = window_size).predict_augment(X_Anscombe_transformed)
-        X_SNF = self.predict(X_DIMR)
-        X_denoised = Anscombe_inverse_exact_unbiased(X_SNF)
+        X_DIMR = DIMR(n_neighbours = n_neighbours, n_iter = n_iter, window_size = window_size).predict_augment(X_Anscombe_transformed)
+        if self.loss_function == "mse_relu":
+            X_SNF = self.predict(X_DIMR)
+            X_denoised = Anscombe_inverse_exact_unbiased(X_SNF)
+        else:
+            X_DIMR = Anscombe_inverse_direct(X_DIMR)
+            X_denoised = self.predict(X_DIMR)
+        
         return X_denoised
     
-    def perform_IMC_Denoise_batch(self, X, n_neighbours = 4, n_lambda = 5, window_size = 3):
+    def perform_IMC_Denoise_batch(self, X, n_neighbours = 4, n_iter = 3, window_size = 3):
         
         """
         Perform IMC_Denoise for a batch of images.
@@ -467,13 +517,18 @@ class DeepSNF():
             raise Exception("For DIMR batch processing, the input must be a 3d array ([N, R, C])!")
         
         X_Anscombe_transformed = Anscombe_forward(X)
-        dimr = DIMR(n_neighbours = n_neighbours, n_lambda = n_lambda, window_size = 3)
+        dimr = DIMR(n_neighbours = n_neighbours, n_iter = n_iter, window_size = 3)
         X_DIMR = np.zeros(np.shape(X_Anscombe_transformed))
         for ii in range(np.shape(X_Anscombe_transformed)[0]):
             X_DIMR[ii, :, :] = dimr.predict_augment(X_Anscombe_transformed[ii, :, :])
         
-        X_SNF = self.predict_batch(X_DIMR)
-        X_denoised = Anscombe_inverse_exact_unbiased(X_SNF)
+        if self.loss_function == "mse_relu":
+            X_SNF = self.predict_batch(X_DIMR)
+            X_denoised = Anscombe_inverse_exact_unbiased(X_SNF)
+        else:
+            X_DIMR = Anscombe_inverse_direct(X_DIMR)
+            X_denoised = self.predict(X_DIMR)
+        
         return X_denoised
     
     def __Normalize__(self, img, range_val, min_val):

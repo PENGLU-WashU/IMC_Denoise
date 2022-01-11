@@ -40,48 +40,54 @@ def ResBlock2(nb_filter, rk, ck, st, res_names):
 
 def DeepSNF_net(input, names, loss_func):
     filter_num = 64
-    #Features1 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock1')(input)
-    Features2 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock2')(input)
+    Features1 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock1')(input)
     
-    pool1 = MaxPooling2D(pool_size=(2,2),name=names+'Pool1')(Features2)
-    Features3 = ResBlock(filter_num*2, 3, 3, 1, res_names=names+'ResBlock3')(pool1)
+    pool1 = MaxPooling2D(pool_size=(2,2),name=names+'Pool1')(Features1)
+    Features2 = ResBlock(filter_num*2, 3, 3, 1, res_names=names+'ResBlock2')(pool1)
     
-    pool2 = MaxPooling2D(pool_size=(2, 2),name=names+'Pool2')(Features3)
-    Features4 = ResBlock(filter_num*4, 3, 3, 1, res_names=names+'ResBlock4')(pool2)
+    pool2 = MaxPooling2D(pool_size=(2, 2),name=names+'Pool2')(Features2)
+    Features3 = ResBlock(filter_num*4, 3, 3, 1, res_names=names+'ResBlock3')(pool2)
     
-    pool3 = MaxPooling2D(pool_size=(2, 2),name=names+'Pool3')(Features4)
-    Features5 = ResBlock(filter_num*8, 3, 3, 1, res_names=names+'ResBlock5')(pool3)
-    drop2 = Dropout(0.5)(Features5)
+    pool3 = MaxPooling2D(pool_size=(2, 2),name=names+'Pool3')(Features3)
+    Features4 = ResBlock(filter_num*8, 3, 3, 1, res_names=names+'ResBlock4')(pool3)
+    drop2 = Dropout(0.5)(Features4)
     
     pool4 = MaxPooling2D(pool_size=(2, 2),name=names+'Pool4')(drop2)
-    Features6 = ResBlock(filter_num*16, 3, 3, 1, res_names=names+'ResBlock6')(pool4)
-    drop1 = Dropout(0.5)(Features6)
+    Features5 = ResBlock(filter_num*16, 3, 3, 1, res_names=names+'ResBlock5')(pool4)
+    drop1 = Dropout(0.5)(Features5)
     
     up1 = UpSampling2D(size=(2, 2),name=names+'Upsample1')(drop1)
     merge1 = concatenate([drop2,up1], axis = 3)
-    Features7 = ResBlock(filter_num*8, 3, 3, 1, res_names=names+'ResBlock7')(merge1)
+    Features6 = ResBlock(filter_num*8, 3, 3, 1, res_names=names+'ResBlock6')(merge1)
     
-    up2 = UpSampling2D(size=(2, 2),name=names+'Upsample2')(Features7)
-    merge2 = concatenate([Features4,up2], axis = 3)  
-    Features8 = ResBlock(filter_num*4, 3, 3, 1, res_names=names+'ResBlock8')(merge2)
+    up2 = UpSampling2D(size=(2, 2),name=names+'Upsample2')(Features6)
+    merge2 = concatenate([Features3,up2], axis = 3)  
+    Features7 = ResBlock(filter_num*4, 3, 3, 1, res_names=names+'ResBlock7')(merge2)
     
-    up3 = UpSampling2D(size=(2, 2),name=names+'Upsample3')(Features8)
-    merge3 = concatenate([Features3,up3], axis = 3)
-    Features9 = ResBlock(filter_num*2, 3, 3, 1, res_names=names+'ResBlock9')(merge3)
+    up3 = UpSampling2D(size=(2, 2),name=names+'Upsample3')(Features7)
+    merge3 = concatenate([Features2,up3], axis = 3)
+    Features8 = ResBlock(filter_num*2, 3, 3, 1, res_names=names+'ResBlock8')(merge3)
     
-    up4 = UpSampling2D(size=(2, 2),name=names+'Upsample4')(Features9)
-    merge4 = concatenate([Features2,up4], axis = 3)
-    Features10 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock10')(merge4)
+    up4 = UpSampling2D(size=(2, 2),name=names+'Upsample4')(Features8)
+    merge4 = concatenate([Features1,up4], axis = 3)
+    Features9 = ResBlock(filter_num, 3, 3, 1, res_names=names+'ResBlock9')(merge4)
     
     if loss_func == "bce":
-        Features11 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features10 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="sigmoid", use_bias = False, 
                                kernel_initializer="truncated_normal",
-                               name='Prediction_sigmoid')(Features10)
+                               name='Prediction_sigmoid')(Features9)
     elif loss_func == "mse":
-        Features11 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+        Features10 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
                                activation="linear", use_bias = False, 
                                kernel_initializer="truncated_normal",
-                               name='Prediction_linear')(Features10)
+                               name='Prediction_linear')(Features9)
+        
+    elif loss_func == "mse_relu":
+        Features10 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+                               activation="relu", use_bias = False, 
+                               kernel_initializer="truncated_normal",
+                               name='Prediction_relu')(Features9)
 
-    return Features11
+    return Features10
+# glorot_uniform
