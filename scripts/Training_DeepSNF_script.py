@@ -8,6 +8,16 @@ from IMC_Denoise.IMC_Denoise_main.DeepSNF import DeepSNF
 from IMC_Denoise.DeepSNF_utils.DeepSNF_DataGenerator import load_training_patches
 import argparse
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("--train_set_name", help = "the pre-generated training set. npz format", type = str)
@@ -19,18 +29,19 @@ parser.add_argument("--loss_name", help = "training and validation losses saved 
 parser.add_argument("--weights_save_directory", help = "location where 'weights_name' and 'loss_name' saved. If the \
                     value is None, the files will be saved in the current file folder.", default = None, type = str)
 parser.add_argument("--train_epoches", help = "training_epoches", default = 100, type = int)
-parser.add_argument("--train_initial_lr", help = "initial learning rate", default = 5e-4, type = float)
+parser.add_argument("--train_initial_lr", help = "initial learning rate", default = 1e-3, type = float)
 parser.add_argument("--train_batch_size", help = "batch size", default = 256, type = int)
 parser.add_argument("--pixel_mask_percent", help = "percentage of the masked pixels in each patch", default = 0.2, type = float)
 parser.add_argument("--val_set_percent", help = "percentage of validation set", default = 0.15, type = float)
-parser.add_argument("--loss_function", help = "loss function used, bce or mse", default = "bce", type = str)
+parser.add_argument("--loss_function", help = "loss function used, bce, mse or mse_relu", default = "bce", type = str)
 parser.add_argument("--is_load_weights", help = "If True, the pre-trained will be loaded, which is fit for \
-                    prediction or transfer learning", default = False, type = bool)
-parser.add_argument("--amp_max_rate", help = "the max_val of the channel is amp_max_rate*max(images, 0.99999 maximum truncated). \
-                    The default is 1.1. It should work in most cases. \
+                    prediction or transfer learning", default = False, type = str2bool)
+parser.add_argument("--truncated_max_rate", help = "the max_val of the channel is 1.1*max(images, truncated_max_rate*maximum truncated). \
+                    The default is 0.99999. It should work in most cases. \
                     When the maximum of the predicted image is much higher, the value may be set higher during \
                     training. But the values which is out of the range of the training set may not be predicted \
-                    well. Therefore, the selection of a good training set is important.", default = 1.1, type = float)   
+                    well. Therefore, the selection of a good training set is important.", default = 0.99999, type = float)   
+parser.add_argument("--lambda_HF", help = "The parameter for Hessian regularization", default = 0, type = float)
 
 args = parser.parse_args()
 print(args)
@@ -51,6 +62,7 @@ deepsnf = DeepSNF(train_epoches = args.train_epoches,
                   loss_name = args.loss_name,
                   weights_dir = args.weights_save_directory,
                   is_load_weights = args.is_load_weights,
-                  amp_max_rate = args.amp_max_rate)
+                  truncated_max_rate = args.truncated_max_rate,
+                  lambda_HF = args.lambda_HF)
 
 deepsnf.train(train_data)
