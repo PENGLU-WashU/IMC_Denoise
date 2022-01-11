@@ -7,7 +7,7 @@ from os import listdir
 from os.path import isfile, join
 from glob import glob
 from ..IMC_Denoise_main.DIMR import DIMR
-from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward
+from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_direct
 
 class DeepSNF_DataGenerator():
     
@@ -16,8 +16,8 @@ class DeepSNF_DataGenerator():
     
     """
     def __init__(self, patch_row_size = 64, patch_col_size = 64, row_step = 60, col_step = 60, 
-                 ratio_thresh = 0.95, channel_name = None, is_augment = True, 
-                 n_neighbours = 4, n_lambda = 5, window_size = 3):
+                 ratio_thresh = 0.8, channel_name = None, is_augment = True, 
+                 n_neighbours = 4, n_iter = 3, window_size = 3):
         
         """
         Initialize class parameters.
@@ -54,15 +54,15 @@ class DeepSNF_DataGenerator():
             Column step length when generating training patches from imgs. The default is 60.
         ratio_thresh : float, optional
             The threshold of the sparsity of the generated patch. If larger than this threshold,
-            the corresponding patch will be omitted. The default is 0.9.
+            the corresponding patch will be omitted. The default is 0.5.
         channel_name : string, optional
             The channel you want to generate a dataset. The default is None.
         is_augment : bool, optional
             DESCRIPTION. The default is True.
         n_neighbours : int, optional
             See DIMR. The default is 4.
-        n_lambda : float, optional
-            See DIMR. The default is 5.
+        n_iter : float, optional
+            See DIMR. The default is 3.
 
         """
         if not isinstance(patch_row_size, int) or not isinstance(patch_col_size, int) \
@@ -84,7 +84,7 @@ class DeepSNF_DataGenerator():
         self.ratio_thresh = ratio_thresh
         self.is_augment = is_augment
         self.n_neighbours = n_neighbours
-        self.n_lambda = n_lambda
+        self.n_iter = n_iter
         self.window_size = window_size
         
         if channel_name is None:
@@ -130,10 +130,11 @@ class DeepSNF_DataGenerator():
 
         """
         patch_collect = np.zeros((1, self.patch_row_size, self.patch_col_size), dtype = np.float32)
-        dimr = DIMR(n_neighbours = self.n_neighbours, n_lambda = self.n_lambda, window_size = self.window_size)
+        dimr = DIMR(n_neighbours = self.n_neighbours, n_iter = self.n_iter, window_size = self.window_size)
         for Img in Img_collect:
             Img_Anscombe = Anscombe_forward(Img)
             Img_DIMR = np.array(dimr.predict_augment(Img_Anscombe))
+            Img_DIMR = Anscombe_inverse_direct(Img_DIMR)
             Rows, Cols = np.shape(Img_DIMR)
             Row_range = list(range(self.patch_row_size//2, Rows - self.patch_row_size//2, self.row_step))
             Col_range = list(range(self.patch_col_size//2, Cols - self.patch_col_size//2, self.col_step))
@@ -194,7 +195,7 @@ class DeepSNF_DataGenerator():
         for ii in Rows_range:
                 for jj in Cols_range:
                     sub_Img = Img[ii-self.patch_row_size//2:ii+self.patch_row_size//2, jj-self.patch_col_size//2:jj+self.patch_col_size//2]
-                    if np.sum(sub_Img < 2*np.sqrt(1.375)) / np.prod(np.shape(sub_Img)) < self.ratio_thresh:
+                    if np.sum(sub_Img < 1.0) / np.prod(np.shape(sub_Img)) < self.ratio_thresh:
                         patch_collect[kk, :, :] = sub_Img
                         kk += 1
         return patch_collect[0:kk]

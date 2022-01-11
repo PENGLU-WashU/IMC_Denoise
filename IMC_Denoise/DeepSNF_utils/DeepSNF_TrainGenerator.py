@@ -71,6 +71,18 @@ def pm_uniform_withCP(local_sub_patch_radius):
         return vals
     return random_neighbor_withCP_uniform
 
+def pm_uniform_withoutCP(local_sub_patch_radius):
+    def random_neighbor_withoutCP_uniform(patch, coords):
+        vals = []
+        for coord in zip(*coords):
+            sub_patch = get_subpatch(patch, coord,local_sub_patch_radius)
+            rand_coords = [np.random.randint(0, s) for s in sub_patch.shape[0:2]]
+            while np.any(rand_coords == coord):
+                rand_coords = [np.random.randint(0, s) for s in sub_patch.shape[0:2]]
+            vals.append(sub_patch[tuple(rand_coords)])
+        return vals
+    return random_neighbor_withoutCP_uniform
+
 class DeepSNF_Training_DataGenerator(Sequence):
     
     """
@@ -91,10 +103,10 @@ class DeepSNF_Training_DataGenerator(Sequence):
                  Shape of the randomly extracted patches. The default is (64, 64).
     value_manipulator : function, optional
                         The manipulator used for the pixel replacement.
-                        The default is pm_uniform_withCP(5).
+                        The default is pm_uniform_withoutCP(5).
     """
 
-    def __init__(self, X, batch_size, pix_perc = 0.2, shape = (64, 64), pix_masking_func = pm_uniform_withCP(5)):
+    def __init__(self, X, batch_size, pix_perc = 0.2, shape = (64, 64), pix_masking_func = pm_uniform_withoutCP(5)):
         
         self.X = X
         if np.ndim(self.X)==3:
@@ -154,7 +166,7 @@ class DeepSNF_Training_DataGenerator(Sequence):
         while True:
             yield (np.random.rand() * boxsize, np.random.rand() * boxsize)
 
-def DeepSNF_Validation_DataGenerator(X, pix_perc = 0.2, shape = (64, 64), pix_masking_func = pm_uniform_withCP(5)):
+def DeepSNF_Validation_DataGenerator(X, pix_perc = 0.2, shape = (64, 64), pix_masking_func = pm_uniform_withoutCP(5)):
     
     """
     Manipulate pixels to generate validation data.
