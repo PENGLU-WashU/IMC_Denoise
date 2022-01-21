@@ -355,8 +355,7 @@ class DeepSNF():
         Input_channel = Input_img_pad_dims.astype('float32')
             
         # Make a prediction
-        Input_channel_tensor = tf.convert_to_tensor(Input_channel, dtype=tf.float32)
-        predicted = self.trained_model.predict_on_batch(Input_channel_tensor)
+        predicted = self.trained_model.predict_on_batch(Input_channel)
         _ = gc.collect()
         # K.clear_session()
         predicted = predicted[0,Rows_diff1:(-Rows_diff2),Cols_diff1:(-Cols_diff2),0]
@@ -417,8 +416,7 @@ class DeepSNF():
         Input_channel = Input_img_pad_dims.astype('float32')
             
         # Make a prediction
-        Input_channel_tensor = tf.convert_to_tensor(Input_channel, dtype=tf.float32)
-        predicted = self.trained_model.predict(Input_channel_tensor)
+        predicted = self.trained_model.predict(Input_channel)
         _ = gc.collect()
         # K.clear_session()
         predicted = predicted[:,Rows_diff1:(-Rows_diff2),Cols_diff1:(-Cols_diff2),0]
