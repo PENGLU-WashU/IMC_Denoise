@@ -27,7 +27,7 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--channel_name", help = "channel used to generate training set, e.g. 141Pr", type = str)
 parser.add_argument("--is_augment", help = "Augment data?", default = True, type = str2bool)
 parser.add_argument("--ratio_thresh", help = "The threshold of the sparsity of the generated patch. If larger than this threshold, \
-            the corresponding patch will be omitted. The default is 0.95.", default = 0.95, type = float)
+            the corresponding patch will be omitted. The default is 0.8.", default = 0.8, type = float)
 parser.add_argument("--patch_row_size", help = "The row size of generated patch.", default = 64, type = int)
 parser.add_argument("--patch_col_size", help = "The column size of generated patch.", default = 64, type = int)
 parser.add_argument("--row_step", help = "Row step length when generating training patches from imgs.", default = 60, type = int)
