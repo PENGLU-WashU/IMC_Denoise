@@ -14,9 +14,11 @@ def HF_regularization(Img_in):
 def create_weighted_binary_crossentropy(lambda_HF):
   def weighted_ce(y_true, y_pred):  
     target, mask = tf.split(y_true, 2, axis = -1)
-    loss1 = tf.multiply(target, tf.math.log(y_pred + 1e-15))
-    loss2 = tf.multiply(1.0 - target, tf.math.log(1.0 - y_pred + 1e-15))
-    bce = tf.multiply(-(loss1 + loss2), mask)
+    # loss1 = tf.multiply(target, tf.math.log(y_pred + 1e-15))
+    # loss2 = tf.multiply(1.0 - target, tf.math.log(1.0 - y_pred + 1e-15))
+    loss1 = tf.multiply(target, tf.math.log(target+1e-15))
+    loss2 = tf.multiply(target, tf.math.log(y_pred))
+    bce = tf.multiply((loss1 - loss2 - target + y_pred), mask)
     return tf.reduce_sum(bce)/ tf.reduce_sum(mask) + lambda_HF*K.mean(HF_regularization(y_pred))
   return weighted_ce
   

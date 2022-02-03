@@ -74,7 +74,7 @@ def DeepSNF_net(input, names, loss_func):
     
     if loss_func == "bce":
         Features10 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
-                               activation="sigmoid", use_bias = False, 
+                               activation="softplus", use_bias = False, 
                                kernel_initializer="truncated_normal",
                                name='Prediction_sigmoid')(Features9)
     elif loss_func == "mse":
