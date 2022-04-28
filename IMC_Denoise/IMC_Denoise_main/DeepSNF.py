@@ -12,7 +12,7 @@ from keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
 
 from .DIMR import DIMR
 from .DeepSNF_model import DeepSNF_net
-from .loss_functions import create_weighted_binary_crossentropy, create_mse
+from .loss_functions import create_I_divergence, create_mse
 from ..DeepSNF_utils.DeepSNF_TrainGenerator import DeepSNF_Training_DataGenerator, DeepSNF_Validation_DataGenerator
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased, Anscombe_inverse_direct
 
@@ -38,9 +38,9 @@ class DeepSNF():
     
     # DeepSNF class, including DeepSNF training, prediction, etc.
     
-    def __init__(self, train_epoches = 100, train_learning_rate = 0.001, train_batch_size = 256, mask_perc_pix = 0.2, val_perc = 0.1,
-                 loss_func = "bce", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, 
-                 truncated_max_rate = 0.9999, lambda_HF = 0):
+    def __init__(self, train_epoches = 200, train_learning_rate = 0.001, lr_decay_rate = 0.6, train_batch_size = 128, mask_perc_pix = 0.2, val_perc = 0.1,
+                 loss_func = "I_divergence", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, 
+                 truncated_max_rate = 0.99999, lambda_HF = 0):
         
         """
         Parameters
@@ -48,18 +48,20 @@ class DeepSNF():
         train_epoches : int, optional
             The default is 100.
         train_learning_rate : float, optional
-            The default is 0.0005.
+            The default is 0.001.
+        lr_decay_rate: float, optional
+            The default is 0.6.
         train_batch_size : int, optional
             The default is 256.
         mask_perc_pix : float, optional
             Percentage of the masked pixels for every patch. The default is 0.2.
         val_perc : float, optional
             Percentage of the training set as the validation set. The default is 0.15.
-        loss_func : "mse", "mse_relu" or "bce", optional
-            If "bce", the framework will be DeepSNF;
+        loss_func : "mse", "mse_relu" or "I_divergence", optional
+            If "I_divergence", the framework will be DeepSNF;
             If "mse", the framework will be Noise2Void;
             If "mse_relu", the framework will be Noise2Void with Anscombe transformation and Relu activation
-            The default is "bce".
+            The default is "I_divergence".
         weights_name : string, optional
             The file name of the saved weights. .hdf5 format. The default is None.
         loss_name : string, optional
@@ -85,6 +87,8 @@ class DeepSNF():
         self.train_epoches = train_epoches
         
         self.train_learning_rate = train_learning_rate
+        
+        self.lr_decay_rate = lr_decay_rate
         
         if not isinstance(train_batch_size, int):
             raise ValueError('The train_batch_size must be an integer!')
@@ -140,17 +144,17 @@ class DeepSNF():
         elif self.loss_function == "mse": 
             network_name = 'N2V_'
         else:
-            self.loss_function == "bce"
+            self.loss_function == "I_divergence"
             network_name = 'DeepSNF_'
             
-        act_ = DeepSNF_net(input_, network_name, loss_func = self.loss_function)
+        act_ = DeepSNF_net(input_, network_name, loss_func = self.loss_function, trainable_label = True)
         model = Model (inputs= input_, outputs=act_)  
         
         opt = optimizers.Adam(lr=self.train_learning_rate)
-        if self.loss_function != "bce":    
+        if self.loss_function != "I_divergence":    
             model.compile(optimizer=opt, loss = create_mse(lambda_HF = self.lambda_HF))
         else:
-            model.compile(optimizer=opt, loss = create_weighted_binary_crossentropy(lambda_HF = self.lambda_HF))
+            model.compile(optimizer=opt, loss = create_I_divergence(lambda_HF = self.lambda_HF))
             
         return model
     
@@ -186,13 +190,10 @@ class DeepSNF():
         
         print('The range value to the corresponding model is ' + str(self.range_val) + '.')
         
-        X[X > 1.0] = 1.0
-        X[X < 0.0] = 0.0
+        if not self.is_load_weights:
+            X[X > 1.0] = 1.0
+            X[X < 0.0] = 0.0
         X = np.expand_dims(X, axis = -1)
-        
-        # print(self.min_val)
-        # print(np.max(X))
-        # print(np.min(X))
         
         print("Input Channel Shape => " + str(X.shape))
           
@@ -211,7 +212,7 @@ class DeepSNF():
         history = LossHistory()
         
         # Change learning when loss reaches a plataeu
-        change_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = 0.5, patience = 20, min_lr = 0.0000005, verbose = 1)
+        change_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = self.lr_decay_rate, patience = 20, min_lr = 0.0000005, verbose = 1)
         
         # Save the model weights after each epoch
         if self.weights_name is not None: 
