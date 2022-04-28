@@ -107,10 +107,10 @@ class DeepSNF_DataGenerator():
             Loaded image data.
 
         """
-        if filename.endswith('.tiff'):
+        if filename.endswith('.tiff') or filename.endswith('.tif'):
             Img_in = tp.imread(filename).astype('float32')
         else:
-            raise ValueError('Raw file should end with tiff!')
+            raise ValueError('Raw file should end with tiff or tif!')
         if Img_in.ndim != 2:
             raise ValueError('Single image should be 2d!')
         return Img_in
@@ -169,7 +169,7 @@ class DeepSNF_DataGenerator():
     
         print('Image data loaded from ...\n')
         for sub_img_folder in img_folders:
-            Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & f.endswith(".tiff")]
+            Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
             for Img_file in Img_list:
                 if self.channel_name.lower() in Img_file.lower():
                     Img_read = self.load_single_img(sub_img_folder + Img_file)
@@ -261,7 +261,7 @@ class DeepSNF_DataGenerator():
             save_directory = os.path.abspath(os.getcwd()) + '\\Generated_training_set'
         if not os.path.exists(save_directory):
             os.makedirs(save_directory)
-        saved_name = save_directory + '\\training_set_' + self.channel_name + '.npz'
+        saved_name = save_directory + '\\training_set_justtest_' + self.channel_name + '.npz'
         np.savez(saved_name, patches = generated_patches)
         print('The generated training set with shape of {} is saved as {}.'.format(generated_patches.shape, saved_name))
         return True
