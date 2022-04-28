@@ -27,7 +27,7 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--channel_name", help = "the denoised channel name", type = str)
 parser.add_argument("--load_directory", help = "the folder of the raw IMC images", type = str)
 parser.add_argument("--save_directory", help = "the folder to save the denoised IMC images", type = str)
-parser.add_argument("--loss_func", help = "the folder to save the denoised IMC images", type = str, default = "bce")
+parser.add_argument("--loss_func", help = "the folder to save the denoised IMC images", type = str, default = "I_divergence")
 parser.add_argument("--weights_name", help = "trained network weights. hdf5 format", type = str)
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_iter", help = "DIMR algorithm parameter", default = 3, type = int)
@@ -58,19 +58,21 @@ myDIMR = DIMR(n_neighbours = args.n_neighbours, n_iter = args.n_iter, window_siz
 
 img_folders = glob(join(args.load_directory, "*", ""))
 for sub_img_folder in img_folders:
-    Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & f.endswith(".tiff")]
+    Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
     for Img_file in Img_list:
         if args.channel_name.lower() in Img_file.lower():
             Img_read = tp.imread(sub_img_folder + Img_file).astype('float32')
             
             Img_DIMR = myDIMR.perform_DIMR(Img_read)
+            # Img_DIMR = Img_read
             
             if args.loss_func == 'mse_relu':
                 Img_DIMR = Anscombe_forward(Img_DIMR)
                 Img_DIMR = np.divide(Img_DIMR - 2*np.sqrt(3/8), myrange)
             else:
                 Img_DIMR = np.divide(Img_DIMR, myrange)
-            
+                
+            # Img_DIMR[Img_DIMR>1] = 1
             Rows, Cols = np.shape(Img_DIMR)
             Rows_new = int((Rows//16+1)*16)
             Cols_new = int((Cols//16+1)*16)

@@ -27,7 +27,7 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--channel_name", help = "channel used to generate training set, e.g. 141Pr", type = str)
 parser.add_argument("--is_augment", help = "Augment data?", default = True, type = str2bool)
 parser.add_argument("--ratio_thresh", help = "The threshold of the sparsity of the generated patch. If larger than this threshold, \
-            the corresponding patch will be omitted. The default is 0.8.", default = 0.8, type = float)
+            the corresponding patch will be omitted. The default is 0.95.", default = 0.95, type = float)
 parser.add_argument("--patch_row_size", help = "The row size of generated patch.", default = 64, type = int)
 parser.add_argument("--patch_col_size", help = "The column size of generated patch.", default = 64, type = int)
 parser.add_argument("--row_step", help = "Row step length when generating training patches from imgs.", default = 60, type = int)
@@ -47,7 +47,7 @@ parser.add_argument("--train_initial_lr", help = "initial learning rate", defaul
 parser.add_argument("--train_batch_size", help = "batch size", default = 256, type = int)
 parser.add_argument("--pixel_mask_percent", help = "percentage of the masked pixels in each patch", default = 0.2, type = float)
 parser.add_argument("--val_set_percent", help = "percentage of validation set", default = 0.15, type = float)
-parser.add_argument("--loss_function", help = "loss function used, bce or mse", default = "bce", type = str)
+parser.add_argument("--loss_function", help = "loss function used, I_divergence or mse", default = "I_divergence", type = str)
 parser.add_argument("--is_load_weights", help = "If True, the pre-trained will be loaded, which is fit for \
                     prediction or transfer learning", default = False, type = str2bool)
 parser.add_argument("--truncated_max_rate", help = "the max_val of the channel is 1.1*max(images, truncated_max_rate*maximum truncated). \
