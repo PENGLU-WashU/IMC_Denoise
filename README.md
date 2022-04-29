@@ -142,8 +142,6 @@ $ conda activate IMC_Denoise
   ```
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
 
-## License
-
 ## Contact
 
 Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
