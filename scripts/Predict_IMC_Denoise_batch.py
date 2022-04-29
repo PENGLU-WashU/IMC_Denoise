@@ -18,7 +18,7 @@ from keras import optimizers
 from keras.models import Model
 from keras.layers import Input
 from IMC_Denoise.IMC_Denoise_main.DeepSNF_model import DeepSNF_net
-from IMC_Denoise.IMC_Denoise_main.loss_functions import create_weighted_binary_crossentropy
+from IMC_Denoise.IMC_Denoise_main.loss_functions import create_I_divergence, create_mse
 from IMC_Denoise.IMC_Denoise_main.DIMR import DIMR
 from IMC_Denoise.Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased
 
@@ -49,7 +49,7 @@ act_ = DeepSNF_net(input_, 'Pred_', loss_func = args.loss_func)
 model = Model (inputs= input_, outputs=act_)  
 
 opt = optimizers.Adam(lr=1e-3)
-model.compile(optimizer=opt, loss = create_weighted_binary_crossentropy(lambda_HF = 0))
+model.compile(optimizer=opt, loss = create_I_divergence(lambda_HF = 0))
 
 # Load the trained weights
 model.load_weights(weights_dir + args.weights_name)
