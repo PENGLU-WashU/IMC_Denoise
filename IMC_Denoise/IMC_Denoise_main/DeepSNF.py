@@ -325,7 +325,6 @@ class DeepSNF():
         
         # Normalize the input image
         Input_img_norm = self.__Normalize__(X, self.range_val, self.min_val)
-        Input_img_norm[Input_img_norm > 1.0] = 1.0 
         Input_img_norm[Input_img_norm < 0.0] = 0.0 
          
         # Pad image to suppress batch effect         
@@ -367,7 +366,7 @@ class DeepSNF():
     def predict_batch(self, X):
         
         """
-        Using trained model to denoise a batch of IMC images for a specific marker channel
+        Using trained model to denoise a batch of IMC images with the same shape for a specific marker channel
     
         Parameters
         ----------
@@ -388,7 +387,6 @@ class DeepSNF():
             
         # Normalize the input image
         Input_img_norm = self.__Normalize__(X, self.range_val, self.min_val)
-        Input_img_norm[Input_img_norm > 1.0] = 1.0 
         Input_img_norm[Input_img_norm < 0.0] = 0.0 
          
         # Pad image to suppress batch effect         
@@ -452,7 +450,7 @@ class DeepSNF():
     def perform_DeepSNF_batch(self, X):
         
         """
-        Perform DeepSNF for a batch of images.
+        Perform DeepSNF for a batch of images with the same shape.
 
         Parameters
         ----------
@@ -501,7 +499,7 @@ class DeepSNF():
     def perform_IMC_Denoise_batch(self, X, n_neighbours = 4, n_iter = 3, window_size = 3):
         
         """
-        Perform IMC_Denoise for a batch of images.
+        Perform IMC_Denoise for a batch of images with the same shape.
 
         Parameters
         ----------
