@@ -72,7 +72,6 @@ for sub_img_folder in img_folders:
             else:
                 Img_DIMR = np.divide(Img_DIMR, myrange)
                 
-            # Img_DIMR[Img_DIMR>1] = 1
             Rows, Cols = np.shape(Img_DIMR)
             Rows_new = int((Rows//16+1)*16)
             Cols_new = int((Cols//16+1)*16)
