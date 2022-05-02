@@ -14,7 +14,7 @@ parser.add_argument("--saved_training_set_name", help = "the name of the saved I
 args = parser.parse_args()
 print(args)
 
-if not args.save_training_set_name.endswith(".npz"):
+if not args.saved_training_set_name.endswith(".npz"):
     print('The saved training set name must end with .npz!')
     quit()
 
