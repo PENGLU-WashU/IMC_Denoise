@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import numpy as np
 import argparse
 import sys
+import numpy as np
+import os
 from os import listdir
 from os.path import isfile, join
 
@@ -17,13 +18,15 @@ print(args)
 if not args.saved_training_set_name.endswith(".npz"):
     print('The saved training set name must end with .npz!')
     quit()
+    
+if not os.path.exists(args.save_directory):
+    os.makedirs(args.save_directory)
 
-data_folder = args.load_directory
-dataset_list = [f for f in listdir(data_folder) if isfile(join(data_folder, f)) & f.endswith(".npz")]
+dataset_list = [f for f in listdir(args.load_directory) if isfile(join(args.load_directory, f)) & f.endswith(".npz")]
 for ii in range(len(dataset_list)):
     data_file = dataset_list[ii]
     print('Loading {}'.format(data_file))
-    cur_dataset = np.load(data_folder + '\\' + data_file)
+    cur_dataset = np.load(args.load_directory + '\\' + data_file)
     cur_dataset = cur_dataset['patches']
     if ii == 0:
         combined_dataset = cur_dataset
