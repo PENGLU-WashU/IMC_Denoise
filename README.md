@@ -130,7 +130,11 @@ $ conda activate IMC_Denoise
   - Generate training set for a specific marker channel and then train a DeepSNF network. In this process, the generated training set will not be saved in a directory.
   ```
   python scripts/Generate_data_and_training_DeepSNF_script.py --channel_name '141Pr' --weights_name 'weights_141Pr-CD38.hdf5' --Raw_directory 'Your_raw_img_directory' --train_epoches '200' --train_batch_size '64' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8' --lambda_HF '3e-6'
-  ```                                             
+  ```   
+- Combine multiple generated training sets from different channels into a single training set.
+  ```
+  python scripts/Combine_multiple_datasets.py --load_directory 'the_folder_of_the_training_sets_to_be_combined' --save_directory 'the_folder_to_save_the_combined_training_set' --saved_training_set_name" 'the_name_of_the_combined_training_set'
+  ```
 - Implement IMC_Denoise to enhance IMC images.
   - Implement DIMR for a single IMC image if the SNR of the image is good.
   ```
