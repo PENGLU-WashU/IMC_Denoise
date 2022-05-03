@@ -91,7 +91,7 @@ $ LSF_DOCKER_PORTS="8888:8888" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "nu
 
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
-In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the Channel_img names must contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
+In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the Channel_img names should contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
 ```
 |---Raw_image_directory
 |---|---Tissue1_sub_directory
@@ -112,7 +112,7 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 |---|---|---Channel_n_img.tiff
 ```
 ### Download example data
-Please go to https://zenodo.org/record/6513175#.YnC2-JLMLpA and download Raw_IMC_dataset_for_training_supp_table5.zip. Then unzip the file in a proper folder.
+Please go to https://zenodo.org/record/6513175#.YnC2-JLMLpA and download **Raw_IMC_dataset_for_training_supp_table5.zip**. Then unzip the file in a proper folder.
 ### IMC_Denoise tutorials with Jupyter Notebook
 - To start Jupyter Notebooks and run the examples.
 ```
