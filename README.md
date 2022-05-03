@@ -79,7 +79,6 @@ $ pip install -e .
 
 ### Docker
 - A reproducible environment from nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
-- Working directory with all IMC_Denoise scripts and notebooks is /IMC_Denoise
 ```
 $ docker run -it koetjen/imc_denoise:latest 
 ```
@@ -87,6 +86,7 @@ $ docker run -it koetjen/imc_denoise:latest
 ```
 $ LSF_DOCKER_PORTS="8888:8888" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(koetjen/imc_denoise:latest)' /bin/bash
 ```
+- Working directory with all IMC_Denoise scripts and notebooks is /IMC_Denoise
 
 
 ## Implement IMC_Denoise
