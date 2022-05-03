@@ -112,7 +112,7 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 |---|---|---Channel_n_img.tiff
 ```
 ### Download example data
-
+Please go to https://zenodo.org/record/6513175#.YnC2-JLMLpA and download Raw_IMC_dataset_for_training_supp_table5.zip. Then unzip the file in a proper folder.
 ### IMC_Denoise tutorials with Jupyter Notebook
 - To start Jupyter Notebooks and run the examples.
 ```
