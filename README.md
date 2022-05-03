@@ -76,6 +76,18 @@ $ cd IMC_Denoise
 $ pip install -e .
 ```
 
+### Docker
+- A reproducible environment from nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
+- Working directory with all IMC_Denoise scripts and notebooks is /IMC_Denoise-main
+```
+$ docker run -it koetjen/imc_denoise:latest 
+```
+- On LSF cluster:
+```
+$ LSF_DOCKER_PORTS="8888:8888" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(koetjen/imc_denoise:latest)' /bin/bash
+```
+
+
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
 In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the Channel_img names must contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
