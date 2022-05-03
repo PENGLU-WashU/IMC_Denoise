@@ -12,6 +12,7 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy a **D**iff
 - [Customize environment for IMC_Denoise](#customize-environment-for-imc_denoise)
   - [Our IMC_Denoise environment](#our-imc_denoise-environment)
   - [Installation](#installation)
+  - [Docker](#docker)
 - [Implement IMC_Denoise](#implement-imc_denoise)
   - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
   - [Download example data](#download-example-data)
@@ -78,7 +79,7 @@ $ pip install -e .
 
 ### Docker
 - A reproducible environment from nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
-- Working directory with all IMC_Denoise scripts and notebooks is /IMC_Denoise-main
+- Working directory with all IMC_Denoise scripts and notebooks is /IMC_Denoise
 ```
 $ docker run -it koetjen/imc_denoise:latest 
 ```
