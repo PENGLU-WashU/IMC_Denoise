@@ -29,7 +29,7 @@ parser.add_argument("--load_directory", help = "the folder of the raw IMC images
 parser.add_argument("--save_directory", help = "the folder to save the denoised IMC images", type = str)
 parser.add_argument("--loss_func", help = "the folder to save the denoised IMC images", type = str, default = "I_divergence")
 parser.add_argument("--weights_name", help = "trained network weights. hdf5 format", type = str)
-parser.add_argument("--weights_dir", help = "directory of trained network weights", type = str, default = None)
+parser.add_argument("--weights_save_directory", help = "directory of trained network weights", type = str, default = None)
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_iter", help = "DIMR algorithm parameter", default = 3, type = int)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
@@ -38,7 +38,7 @@ args = parser.parse_args()
 print(args)
 
 start = time.time()
-weights_dir = args.weights_dir
+weights_dir = args.weights_save_directory
 if weights_dir is None:
     weights_dir = os.path.abspath(os.getcwd()) + "\\trained_weights\\" 
 else:
