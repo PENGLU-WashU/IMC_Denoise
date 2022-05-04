@@ -29,6 +29,7 @@ parser.add_argument("--load_directory", help = "the folder of the raw IMC images
 parser.add_argument("--save_directory", help = "the folder to save the denoised IMC images", type = str)
 parser.add_argument("--loss_func", help = "the folder to save the denoised IMC images", type = str, default = "I_divergence")
 parser.add_argument("--weights_name", help = "trained network weights. hdf5 format", type = str)
+parser.add_argument("--weights_dir", help = "directory of trained network weights", type = str, default = None)
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_iter", help = "DIMR algorithm parameter", default = 3, type = int)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
@@ -37,9 +38,13 @@ args = parser.parse_args()
 print(args)
 
 start = time.time()
-print(args.weights_name)
+weights_dir = args.weights_dir
+if weights_dir is None:
+    weights_dir = os.path.abspath(os.getcwd()) + "\\trained_weights\\" 
+else:
+    weights_dir = weights_dir + '\\'
+print('The file containing the trained weights is {}.'.format(weights_dir + args.weights_name))
 
-weights_dir = os.path.abspath(os.getcwd()) + "\\trained_weights\\" 
 myrange = np.load(weights_dir + args.weights_name.replace('.hdf5', '_range_val.npz'))
 myrange = myrange['range_val']
 print('The range is %f' % myrange)
@@ -72,6 +77,7 @@ for sub_img_folder in img_folders:
             else:
                 Img_DIMR = np.divide(Img_DIMR, myrange)
                 
+            # Img_DIMR[Img_DIMR>1] = 1
             Rows, Cols = np.shape(Img_DIMR)
             Rows_new = int((Rows//16+1)*16)
             Cols_new = int((Cols//16+1)*16)
