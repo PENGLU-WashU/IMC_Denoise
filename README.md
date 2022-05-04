@@ -113,9 +113,9 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 ### Download example data
 - Please go to https://zenodo.org/record/6513175#.YnC2-JLMLpA and download **Raw_IMC_dataset_for_training_supp_table5.zip**. Then unzip this file as the folder **Raw_IMC_dataset_for_training_supp_table5**. This folder contains all the images for DeepSNF training. 
 
-- We also provide all the images of this human bone marrow IMC dataset, which are compressed in **Raw_IMC_dataset_all_supp_table5** and can also be downloaded from https://zenodo.org/record/6516116#.YnH-SN9OlQI. 
+- We also provide all the images of this human bone marrow IMC dataset, which are compressed in **Raw_IMC_dataset_all_supp_table5** and can also be downloaded from https://zenodo.org/record/6513175#.YnC2-JLMLpA. 
 
-- Previously generated training sets and trained weights can be accessed from https://zenodo.org/record/6516116#.YnH-SN9OlQI.
+- Previously generated training sets and trained weights can be accessed from https://zenodo.org/record/6516116#.YnH-SN9OlQI. Please refer to our paper for more details.
 ### IMC_Denoise tutorials with Jupyter Notebook
 - To start Jupyter Notebooks and run the examples.
 ```
