@@ -101,7 +101,6 @@ class DIMR():
                 break
         
             nPoint = int(np.ceil((np.max(d_mat)-np.min(d_mat))/binWidth))
-            # few points without possibility of hot pixels.
             if nPoint <= 4/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)):
                 break
             
@@ -124,7 +123,6 @@ class DIMR():
             ii_max = peaks_loc[0]
             
             diff_ff = np.diff(ff_smoothed, n = 1)
-            diff2_ff = np.diff(ff_smoothed, n = 2)
             
             length_diff_ff = np.prod(np.shape(diff_ff))
             
@@ -235,7 +233,6 @@ class DIMR():
             ii_max = peaks_loc[0]
             
             diff_ff = np.diff(ff_smoothed, n = 1)
-            diff2_ff = np.diff(ff_smoothed, n = 2)
             
             length_diff_ff = np.prod(np.shape(diff_ff))
             
