@@ -101,6 +101,7 @@ class DIMR():
                 break
         
             nPoint = int(np.ceil((np.max(d_mat)-np.min(d_mat))/binWidth))
+            # few points without possibility of hot pixels.
             if nPoint <= 4/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)):
                 break
             
@@ -128,19 +129,15 @@ class DIMR():
             length_diff_ff = np.prod(np.shape(diff_ff))
             
             for ii in range(ii_max, length_diff_ff):
-                if diff_ff[ii] >= diff_ff[ii-1] and diff_ff[ii] <= 0 and diff_ff[ii] >= -2:
+                if diff_ff[ii] >= diff_ff[ii-1] and diff_ff[ii] <= 0 and diff_ff[ii] >= -2: # Condition 1
                     break
-                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] <= 0 and diff_ff[ii] >= 0:
+                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] <= 0 and diff_ff[ii] >= 0: # Condition 1
                     break
-                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] >= diff_ff[ii] and diff_ff[ii-1] < -2:
+                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] >= diff_ff[ii] and diff_ff[ii-1] < -2: # Condition 2
                     break
-                elif ii < length_diff_ff-3:
-                    if diff_ff[ii] >= diff_ff[ii-1] and diff_ff[ii] <= 0 and ff_smoothed[ii] > 0.2*np.max(ff_smoothed) and np.sum(np.abs(diff2_ff[ii:ii+2])<=.2) == 3:
-                        break
              
             if ii < length_diff_ff:
                 idx1 = d_mat > xx1[ii]
-                # print(np.shape(idx1))
                 if np.sum(idx1) == 0:
                     break
                 
@@ -215,7 +212,8 @@ class DIMR():
                 break
         
             nPoint = np.ceil((np.max(d_mat)-np.min(d_mat))/binWidth)
-            if nPoint <= 4/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)):
+            # few points without possibility of hot pixels.
+            if nPoint <= 4/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)): 
                 break
             
             nBandWidth = 1.06*np.std(d_mat)*nPoint**(-0.2)
@@ -242,19 +240,15 @@ class DIMR():
             length_diff_ff = np.prod(np.shape(diff_ff))
             
             for ii in range(ii_max, length_diff_ff):
-                if diff_ff[ii] >= diff_ff[ii-1] and diff_ff[ii] <= 0 and diff_ff[ii] >= -2:
+                if diff_ff[ii] >= diff_ff[ii-1] and diff_ff[ii] <= 0 and diff_ff[ii] >= -2: # Condition 1
                     break
-                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] <= 0 and diff_ff[ii] >= 0:
+                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] <= 0 and diff_ff[ii] >= 0: # Condition 1
                     break
-                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] >= diff_ff[ii] and diff_ff[ii-1] < -2:
+                elif diff_ff[ii-1] >= diff_ff[ii-2] and diff_ff[ii-1] >= diff_ff[ii] and diff_ff[ii-1] < -2: # Condition 2
                     break
-                elif ii < length_diff_ff-3:
-                    if diff_ff[ii] >= diff_ff[ii-1] and diff_ff[ii] <= 0 and ff_smoothed[ii] > 0.2*np.max(ff_smoothed) and np.sum(np.abs(diff2_ff[ii:ii+2])<=.2) == 3:
-                        break
              
             if ii < length_diff_ff:
                 idx1 = d_mat > xx1[ii]
-                # print(np.shape(idx1))
                 if np.sum(idx1) == 0:
                     break
                 
