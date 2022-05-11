@@ -31,7 +31,7 @@ class DIMR():
         bin_width: scalar(float)
             Bin width in the kernel density estimation. The default is 1 for adequate sampling.
         is_moving_mean_filter: (bool)
-            Whether a moving mean filter is applied. The default is True.
+            Whether a moving mean filter with window size of 3 is applied. The default is True.
 
         """
         assert window_size % 2 == 1 and isinstance(window_size, int), "window_size must be an odd!"
