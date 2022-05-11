@@ -14,7 +14,7 @@ class DIMR():
         algorithm to effectively remove hot pixels in raw IMC images. 
         
     """
-    def __init__(self, n_neighbours = 4, n_iter = 3, window_size = 3, binWidth = 1):
+    def __init__(self, n_neighbours = 4, n_iter = 3, window_size = 3, binWidth = 1, is_moving_mean_filter = True):
         
         """
     
@@ -28,6 +28,10 @@ class DIMR():
             Iteration number for DIMR
         window_size: scalar(int)
             Slide window size. Must be an odd. The default is 3. 
+        bin_width: scalar(float)
+            Bin width in the kernel density estimation. The default is 1 for adequate sampling.
+        is_moving_mean_filter: (bool)
+            Whether a moving mean filter is applied. The default is True.
 
         """
         assert window_size % 2 == 1 and isinstance(window_size, int), "window_size must be an odd!"
@@ -39,6 +43,7 @@ class DIMR():
         self.n_iter = n_iter
         self.window_size = window_size
         self.binWidth = binWidth
+        self.is_moving_mean_filter = is_moving_mean_filter
 
     def predict(self, X):
         
@@ -115,7 +120,9 @@ class DIMR():
             ff = ff[0,:]
             xx1 = xx1[0,:]
             
-            ff_smoothed = np.prod(np.shape(d_mat)) * uniform_filter1d(ff, size = 3) * binWidth
+            if self.is_moving_mean_filter:
+                ff = uniform_filter1d(ff, size = 3)
+            ff_smoothed = np.prod(np.shape(d_mat)) * ff * binWidth
             peaks_loc, _ = find_peaks(ff_smoothed, height = np.mean(ff_smoothed))
             
             if np.prod(np.shape(peaks_loc)) == 0:
@@ -202,7 +209,7 @@ class DIMR():
             # compare the maps and form a new histogram
             d_sum_abs = np.abs(np.subtract(d_sum, np.median(d_sum, axis = (0, 1))))
             indice_sorted = np.argsort(d_sum_abs, axis = -1)
-            d_sum_sorted = np.take_along_axis(d_sum, indice_sorted, axis = -1)
+            d_sum_sorted = np.take_along_axis(np.subtract(d_sum, np.median(d_sum, axis = (0, 1))), indice_sorted, axis = -1)
             d_sum_new = d_sum_sorted[:, :, 0:self.n_neighbours]
             d_mat = np.sum(d_sum_new, axis = -1)
             
@@ -225,7 +232,9 @@ class DIMR():
             ff = ff[0,:]
             xx1 = xx1[0,:]
             
-            ff_smoothed = np.prod(np.shape(d_mat)) * uniform_filter1d(ff, size = 3) * binWidth
+            if self.is_moving_mean_filter:
+                ff = uniform_filter1d(ff, size = 3)
+            ff_smoothed = np.prod(np.shape(d_mat)) * ff * binWidth
             peaks_loc, _ = find_peaks(ff_smoothed, height = np.mean(ff_smoothed))
             
             if np.prod(np.shape(peaks_loc)) == 0:
