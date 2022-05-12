@@ -69,6 +69,7 @@ $ conda install -c anaconda brotlipy
 $ pip install tensorflow==2.2.0 keras==2.3.1
 $ conda install -c anaconda cudnn 
 $ conda install -c anaconda cudatoolkit=10.1 
+$ pip install jupyter
 ```
 - Download the source code and install the package
 ```
