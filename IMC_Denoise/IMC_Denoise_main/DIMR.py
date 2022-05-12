@@ -4,7 +4,7 @@ import numpy as np
 import scipy.signal as sps
 from scipy.ndimage import uniform_filter1d
 from scipy.signal import find_peaks
-from .KDE_functions import KernelDensityEstimation
+from ..DIMR_utils.KDE_functions import KernelDensityEstimation
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_direct
 
 class DIMR():
@@ -237,6 +237,7 @@ class DIMR():
             
             if self.is_moving_mean_filter:
                 ff = uniform_filter1d(ff, size = self.mmf_window_size)
+                
             ff_smoothed = np.prod(np.shape(d_mat)) * ff * binWidth
             peaks_loc, _ = find_peaks(ff_smoothed, height = np.mean(ff_smoothed))
             
