@@ -14,7 +14,7 @@ class DIMR():
         algorithm to effectively remove hot pixels in raw IMC images. 
         
     """
-    def __init__(self, n_neighbours = 4, n_iter = 3, window_size = 3, binWidth = 1, is_moving_mean_filter = True):
+    def __init__(self, n_neighbours = 4, n_iter = 3, window_size = 3, binWidth = 1, is_moving_mean_filter = True, mmf_window_size = 3):
         
         """
     
@@ -31,7 +31,9 @@ class DIMR():
         bin_width: scalar(float)
             Bin width in the kernel density estimation. The default is 1 for adequate sampling.
         is_moving_mean_filter: (bool)
-            Whether a moving mean filter with window size of 3 is applied. The default is True.
+            Whether a moving mean filter is applied. The default is True.
+        mmf_window_size: scalar(int)
+            The window size of the moving mean filter. The default is 3.
 
         """
         assert window_size % 2 == 1 and isinstance(window_size, int), "window_size must be an odd!"
@@ -44,6 +46,7 @@ class DIMR():
         self.window_size = window_size
         self.binWidth = binWidth
         self.is_moving_mean_filter = is_moving_mean_filter
+        self.mmf_window_size = mmf_window_size
 
     def predict(self, X):
         
@@ -121,7 +124,7 @@ class DIMR():
             xx1 = xx1[0,:]
             
             if self.is_moving_mean_filter:
-                ff = uniform_filter1d(ff, size = 3)
+                ff = uniform_filter1d(ff, size = self.mmf_window_size)
             ff_smoothed = np.prod(np.shape(d_mat)) * ff * binWidth
             peaks_loc, _ = find_peaks(ff_smoothed, height = np.mean(ff_smoothed))
             
@@ -233,7 +236,7 @@ class DIMR():
             xx1 = xx1[0,:]
             
             if self.is_moving_mean_filter:
-                ff = uniform_filter1d(ff, size = 3)
+                ff = uniform_filter1d(ff, size = self.mmf_window_size)
             ff_smoothed = np.prod(np.shape(d_mat)) * ff * binWidth
             peaks_loc, _ = find_peaks(ff_smoothed, height = np.mean(ff_smoothed))
             
