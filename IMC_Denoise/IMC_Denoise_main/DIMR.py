@@ -267,7 +267,7 @@ class DIMR():
             idx2[idx_remain[0, :]] = np.transpose(idx1[:, 0])
             idx2 = np.reshape(idx2, (n_rows, n_cols), order = 'F') 
             DIMR_output = X
-            Img_med = sps.medfilt2d(X, kernel_size = 3)
+            Img_med = sps.medfilt2d(X, kernel_size = self.window_size)
             DIMR_output[idx2] = Img_med[idx2]
                   
         return DIMR_output
