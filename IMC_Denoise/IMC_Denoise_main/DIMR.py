@@ -109,7 +109,7 @@ class DIMR():
                 break
         
             nPoint = int(np.ceil((np.max(d_mat)-np.min(d_mat))/binWidth))
-            if nPoint <= 4/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)):
+            if nPoint <= self.n_neighbours/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)):
                 break
             
             nBandWidth = 1.06*np.std(d_mat)*nPoint**(-0.2)
@@ -221,7 +221,7 @@ class DIMR():
         
             nPoint = np.ceil((np.max(d_mat)-np.min(d_mat))/binWidth)
             # few points without possibility of hot pixels.
-            if nPoint <= 4/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)): 
+            if nPoint <= self.n_neighbours/binWidth*(2*np.sqrt(4.375)-2*np.sqrt(0.375)): 
                 break
             
             nBandWidth = 1.06*np.std(d_mat)*nPoint**(-0.2)
