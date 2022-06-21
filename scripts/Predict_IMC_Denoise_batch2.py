@@ -2,7 +2,6 @@
 
 import numpy as np
 import time
-import scipy.io as sio
 import gc
 import os
 
@@ -30,7 +29,6 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
 parser.add_argument("--channel_name", help = "the denoised channel name", type = str)
 parser.add_argument("--load_directory", help = "the folder of the raw IMC images", type = str)
 parser.add_argument("--save_directory", help = "the folder to save the denoised IMC images", type = str)
@@ -42,7 +40,6 @@ parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default
 parser.add_argument("--n_iter", help = "DIMR algorithm parameter", default = 3, type = int)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
 parser.add_argument("--GPU", help = "using GPU?", default = True, type = str2bool)
-                    
 args = parser.parse_args()
 print(args)
 
@@ -59,12 +56,11 @@ class single_img_info:
 
 start = time.time()
 
-myDIMR = DIMR(n_neighbours = args.n_neighbours, n_iter = args.n_iter, window_size = args.slide_window_size)
-
 max_row_num = 0
 max_col_num = 0
 image_collect = []
 img_folders = glob(join(args.load_directory, "*", ""))
+myDIMR = DIMR(n_neighbours = args.n_neighbours, n_iter = args.n_iter, window_size = args.slide_window_size)
 for sub_img_folder in img_folders:
     Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
     for Img_file in Img_list:
@@ -101,9 +97,10 @@ model.compile(optimizer = optimizers.Adam(lr=1e-3), loss = create_I_divergence(l
 model.load_weights(weights_dir + args.weights_name)
 print('Model loaded.')
 
-all_img = []
-for cur_image_collect in image_collect:
-    cur_img = cur_image_collect.img
+img_num = len(image_collect)
+all_img = np.zeros((img_num, max_row_num, max_col_num, 1))
+for ii in range(img_num):
+    cur_img = image_collect[ii].img
     Rows, Cols = np.shape(cur_img)
     
     if args.loss_func == 'mse_relu':
@@ -127,10 +124,10 @@ for cur_image_collect in image_collect:
         Cols_diff1 = int(Cols_diff/2)
         Cols_diff2 = Cols_diff1+1
         
-    all_img.append(np.pad(cur_img,((Rows_diff1,Rows_diff2),(Cols_diff1,Cols_diff2)),'edge'))
-    cur_image_collect.pad_dims = [Rows_diff1, Rows_diff2, Cols_diff1, Cols_diff2]
+    all_img[ii][:,:,0] = np.pad(cur_img,((Rows_diff1,Rows_diff2),(Cols_diff1,Cols_diff2)),'edge')
+    image_collect[ii].pad_dims = [Rows_diff1, Rows_diff2, Cols_diff1, Cols_diff2]
 
-all_img_denoised = model.predict(np.expand_dims(np.array(all_img),axis=-1), batch_size = args.batch_size)
+all_img_denoised = model.predict(all_img, batch_size = args.batch_size)
 _ = gc.collect()
 
 for ii in range(np.shape(all_img_denoised)[0]):
