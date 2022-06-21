@@ -130,7 +130,7 @@ for ii in range(img_num):
 all_img_denoised = model.predict(all_img, batch_size = args.batch_size)
 _ = gc.collect()
 
-for ii in range(np.shape(all_img_denoised)[0]):
+for ii in range(img_num):
     img_denoised = all_img_denoised[ii][:,:,0]
     pad_dims = image_collect[ii].pad_dims
     sub_img_folder = image_collect[ii].sub_folder 
