@@ -36,6 +36,7 @@ parser.add_argument("--loss_func", help = "the folder to save the denoised IMC i
 parser.add_argument("--weights_name", help = "trained network weights. hdf5 format", type = str)
 parser.add_argument("--weights_save_directory", help = "directory of trained network weights", type = str, default = None)
 parser.add_argument("--batch_size", help = "batch size in prediction", type = int, default = 1)
+parser.add_argument("--DIMR", help = "using DIMR?", default = True, type = str2bool)
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_iter", help = "DIMR algorithm parameter", default = 3, type = int)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
@@ -48,35 +49,40 @@ if not args.GPU:
 
 # define a class to save image information
 class single_img_info:
-    def __init__(self, img = None, sub_folder = None, img_name = None, pad_dims = None):
-        self.img = img
-        self.sub_folder = sub_folder
-        self.img_name = img_name
-        self.pad_dims = pad_dims
+    def __init__(self, Img = None, Sub_folder = None, Img_name = None, Pad_dims = None):
+        self.Img = Img
+        self.Sub_folder = Sub_folder
+        self.Img_name = Img_name
+        self.Pad_dims = Pad_dims
+
+def split_border(length):
+    if length%2 == 0:
+        return int(length/2), int(length/2)
+    else:
+        return int(length/2), int(length/2)+1
 
 start = time.time()
 
-max_row_num = 0
-max_col_num = 0
-image_collect = []
-img_folders = glob(join(args.load_directory, "*", ""))
+Max_row_num = 0
+Max_col_num = 0
+Image_collect = []
+Img_folders = glob(join(args.load_directory, "*", ""))
 myDIMR = DIMR(n_neighbours = args.n_neighbours, n_iter = args.n_iter, window_size = args.slide_window_size)
-for sub_img_folder in img_folders:
-    Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
+for Sub_img_folder in Img_folders:
+    Img_list = [f for f in listdir(Sub_img_folder) if isfile(join(Sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
     for Img_file in Img_list:
         if args.channel_name.lower() in Img_file.lower():
-            Img_read = tp.imread(sub_img_folder + Img_file).astype('float32')
-            Img_DIMR = myDIMR.perform_DIMR(Img_read)
-
-            image_collect.append(single_img_info(Img_DIMR, sub_img_folder, Img_file))
-                
-            Rows, Cols = np.shape(Img_DIMR)
-            max_row_num = max(max_row_num, Rows)
-            max_col_num = max(max_col_num, Cols)
+            Img_read = tp.imread(Sub_img_folder + Img_file).astype('float32')
+            if args.DIMR:
+                Img_read = myDIMR.perform_DIMR(Img_read)
+            Image_collect.append(single_img_info(Img_read, Sub_img_folder, Img_file))
+            Rows, Cols = np.shape(Img_read)
+            Max_row_num = max(Max_row_num, Rows)
+            Max_col_num = max(Max_col_num, Cols)
             break
             
-max_row_num = int((max_row_num//16+1)*16)
-max_col_num = int((max_col_num//16+1)*16)
+Max_row_num = int((Max_row_num//16+1)*16)
+Max_col_num = int((Max_col_num//16+1)*16)
 
 print('Loading model...')
 weights_dir = args.weights_save_directory
@@ -88,70 +94,60 @@ print('The file containing the trained weights is {}.'.format(weights_dir + args
 
 myrange = np.load(weights_dir + args.weights_name.replace('.hdf5', '_range_val.npz'))
 myrange = myrange['range_val']
-print('The range is %f' % myrange)
+print('The range is %f.' % myrange)
 
 input_ = Input (shape = (None, None, 1))
 act_ = DeepSNF_net(input_, 'Pred_', loss_func = args.loss_func)
 model = Model (inputs= input_, outputs=act_)
 model.compile(optimizer = optimizers.Adam(lr=1e-3), loss = create_I_divergence(lambda_HF = 0))
 model.load_weights(weights_dir + args.weights_name)
-print('Model loaded.')
+print('Model loaded!')
 
-img_num = len(image_collect)
-all_img = np.zeros((img_num, max_row_num, max_col_num, 1))
-for ii in range(img_num):
-    cur_img = image_collect[ii].img
-    Rows, Cols = np.shape(cur_img)
+Img_num = len(Image_collect)
+All_img_read = np.zeros((Img_num, Max_row_num, Max_col_num, 1))
+for ii in range(Img_num):
+    Cur_img = Image_collect[ii].Img
+    Image_collect[ii].Img = None
+    Rows, Cols = np.shape(Cur_img)
     
     if args.loss_func == 'mse_relu':
-        cur_img = Anscombe_forward(cur_img)
-        cur_img = np.divide(cur_img - 2*np.sqrt(3/8), myrange)
+        Cur_img = Anscombe_forward(Cur_img)
+        Cur_img = np.divide(Cur_img - 2*np.sqrt(3/8), myrange)
     else:
-        cur_img = np.divide(cur_img, myrange)
+        Cur_img = np.divide(Cur_img, myrange)
     
-    Rows_diff = max_row_num - Rows
-    Cols_diff = max_col_num - Cols
-    
-    if Rows_diff%2 == 0:
-        Rows_diff1 = Rows_diff2 = int(Rows_diff/2)
-    else:
-        Rows_diff1 = int(Rows_diff/2)
-        Rows_diff2 = Rows_diff1+1
+    Rows_diff = Max_row_num - Rows
+    Cols_diff = Max_col_num - Cols
+    Rows_diff1, Rows_diff2 = split_border(Rows_diff)
+    Cols_diff1, Cols_diff2 = split_border(Cols_diff)
         
-    if Cols_diff%2 == 0:
-        Cols_diff1 = Cols_diff2 = int(Cols_diff/2)
-    else:
-        Cols_diff1 = int(Cols_diff/2)
-        Cols_diff2 = Cols_diff1+1
-        
-    all_img[ii][:,:,0] = np.pad(cur_img,((Rows_diff1,Rows_diff2),(Cols_diff1,Cols_diff2)),'edge')
-    image_collect[ii].pad_dims = [Rows_diff1, Rows_diff2, Cols_diff1, Cols_diff2]
+    All_img_read[ii][:,:,0] = np.pad(Cur_img,((Rows_diff1,Rows_diff2),(Cols_diff1,Cols_diff2)),'edge')
+    Image_collect[ii].Pad_dims = [Rows_diff1, Rows_diff2, Cols_diff1, Cols_diff2]
 
-all_img_denoised = model.predict(all_img, batch_size = args.batch_size)
+All_img_denoised = model.predict(All_img_read, batch_size = args.batch_size)
 _ = gc.collect()
 
-for ii in range(img_num):
-    img_denoised = all_img_denoised[ii][:,:,0]
-    pad_dims = image_collect[ii].pad_dims
-    sub_img_folder = image_collect[ii].sub_folder 
-    img_name = image_collect[ii].img_name 
+for ii in range(Img_num):
+    Img_denoised = All_img_denoised[ii][:,:,0]
+    Pad_dims = Image_collect[ii].Pad_dims
+    Sub_img_folder = Image_collect[ii].Sub_folder 
+    Img_name = Image_collect[ii].Img_name 
 
-    img_denoised = img_denoised[pad_dims[0]:(-pad_dims[1]),pad_dims[2]:(-pad_dims[3])]
+    Img_denoised = Img_denoised[Pad_dims[0]:(-Pad_dims[1]),Pad_dims[2]:(-Pad_dims[3])]
 
     if args.loss_func == 'mse_relu':
-        img_denoised = img_denoised * myrange + 2*np.sqrt(3/8)
-        img_denoised = Anscombe_inverse_exact_unbiased(img_denoised)
+        Img_denoised = Img_denoised * myrange + 2*np.sqrt(3/8)
+        Img_denoised = Anscombe_inverse_exact_unbiased(Img_denoised)
     else:
-        img_denoised = img_denoised * myrange
+        Img_denoised = Img_denoised * myrange
     
-    img_denoised[img_denoised<0] = 0
-    sub_save_directory = args.save_directory + sub_img_folder[len(args.load_directory):]
+    Img_denoised[Img_denoised<0] = 0
+    sub_save_directory = args.save_directory + Sub_img_folder[len(args.load_directory):]
     if not os.path.exists(sub_save_directory):
         os.makedirs(sub_save_directory)
-    tp.imsave(sub_save_directory + img_name, img_denoised.astype('float32'))
+    tp.imsave(sub_save_directory + Img_name, Img_denoised.astype('float32'))
 
-    print(sub_save_directory + img_name + ' saved!')
+    print(sub_save_directory + Img_name + ' saved!')
  
 end = time.time()
 print(end - start)
-
