@@ -56,10 +56,11 @@ class single_img_info:
         self.Pad_dims = Pad_dims
 
 def split_border(length):
+    half_length = int(length/2)
     if length%2 == 0:
-        return int(length/2), int(length/2)
+        return half_length, half_length
     else:
-        return int(length/2), int(length/2)+1
+        return half_length, half_length + 1
 
 start = time.time()
 
