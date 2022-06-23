@@ -77,15 +77,18 @@ $ pip install -e .
 ```
 
 ### Docker
-- A reproducible environment from nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
+- A reproducible environment from nvidia/cuda:11.6.1-cudnn8-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
 ```
 $ docker run -it koetjen/imc_denoise:latest 
 ```
-- On LSF cluster:
+- On LSF cluster to run scripts or jupyter notebooks, respectively:
 ```
 $ LSF_DOCKER_PORTS="8888:8888" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(koetjen/imc_denoise:latest)' /bin/bash
+$ cd /IMC_Denoise
+
+$ LSF_DOCKER_PORTS="8888:8888" PATH="/opt/conda/bin:$PATH" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(koetjen/imc_denoise:latest)' jupyter-notebook --ip=0.0.0.0 --NotebookApp.allow_origin=*
 ```
-- Working directory with all IMC_Denoise scripts and notebooks is /IMC_Denoise
+
 
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
