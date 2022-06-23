@@ -1,6 +1,6 @@
 
 
-FROM koetjen/cuda:10.1
+FROM koetjen/cuda:11.6
 
 WORKDIR /IMC_Denoise
 
