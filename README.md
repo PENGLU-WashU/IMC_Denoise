@@ -18,7 +18,6 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy **(i)** a 
   - [Download example data](#download-example-data)
   - [IMC_Denoise tutorials with Jupyter Notebook](#imc_denoise-tutorials-with-jupyter-notebook)
   - [Implement IMC_Denoise with scripts](#implement-imc_denoise-with-scripts)
-- [License](#license)
 - [Contact](#contact)
 - [References](#references)
 
