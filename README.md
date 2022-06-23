@@ -77,7 +77,7 @@ $ pip install -e .
 ```
 
 ### Docker
-- A reproducible environment from nvidia/cuda:11.6.1-cudnn8-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
+- A reproducible environment from nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
 ```
 $ docker run -it koetjen/imc_denoise:latest 
 ```
