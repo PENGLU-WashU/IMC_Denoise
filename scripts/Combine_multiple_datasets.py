@@ -34,7 +34,7 @@ for ii in range(len(dataset_list)):
         combined_dataset = np.concatenate((combined_dataset, cur_dataset), axis = 0)
         
 np.random.shuffle(combined_dataset)
-saved_name = args.save_directory + args.saved_training_set_name
+saved_name = os.join.path(args.save_directory, args.saved_training_set_name)
 np.savez(saved_name, patches = combined_dataset)
 print('The generated training set with shape of {} is saved as {}.'.format(combined_dataset.shape, saved_name))
 

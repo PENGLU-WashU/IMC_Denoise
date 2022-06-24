@@ -88,12 +88,11 @@ Max_col_num = int((Max_col_num//16+1)*16)
 print('Loading model...')
 weights_dir = args.weights_save_directory
 if weights_dir is None:
-    weights_dir = os.path.abspath(os.getcwd()) + "\\trained_weights\\" 
-else:
-    weights_dir = weights_dir + '\\'
-print('The file containing the trained weights is {}.'.format(weights_dir + args.weights_name))
+    weights_dir = os.path.abspath('trained_weights')
+trained_weights = os.path.join(weights_dir, args.weights_name))
+print('The file containing the trained weights is {}.'.format(trained_weights)
 
-myrange = np.load(weights_dir + args.weights_name.replace('.hdf5', '_range_val.npz'))
+myrange = np.load(os.path.join(weights_dir, args.weights_name.replace('.hdf5', '_range_val.npz')))
 myrange = myrange['range_val']
 print('The range is %f.' % myrange)
 
@@ -101,7 +100,7 @@ input_ = Input (shape = (None, None, 1))
 act_ = DeepSNF_net(input_, 'Pred_', loss_func = args.loss_func)
 model = Model (inputs= input_, outputs=act_)
 model.compile(optimizer = optimizers.Adam(lr=1e-3), loss = create_I_divergence(lambda_HF = 0))
-model.load_weights(weights_dir + args.weights_name)
+model.load_weights(trained_weights)
 print('Model loaded!')
 
 Img_num = len(Image_collect)
@@ -143,10 +142,10 @@ for ii in range(Img_num):
         Img_denoised = Img_denoised * myrange
     
     Img_denoised[Img_denoised<0] = 0
-    sub_save_directory = args.save_directory + Sub_img_folder[len(args.load_directory):]
+    sub_save_directory = os.path.join(args.save_directory, Sub_img_folder[len(args.load_directory):])
     if not os.path.exists(sub_save_directory):
         os.makedirs(sub_save_directory)
-    tp.imsave(sub_save_directory + Img_name, Img_denoised.astype('float32'))
+    tp.imsave(os.path.join(sub_save_directory, Img_name), Img_denoised.astype('float32'))
 
     print(sub_save_directory + Img_name + ' saved!')
  
