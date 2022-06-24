@@ -179,7 +179,7 @@ class DeepSNF_DataGenerator():
         
         print('\n' + 'Image data loaded completed!')
         if not Img_collect:
-            print('No such channels! Please check the channel name again!)
+            print('No such channels! Please check the channel name again!')
             return
                 
         return Img_collect
