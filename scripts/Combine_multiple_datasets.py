@@ -26,7 +26,7 @@ dataset_list = [f for f in listdir(args.load_directory) if isfile(join(args.load
 for ii in range(len(dataset_list)):
     data_file = dataset_list[ii]
     print('Loading {}'.format(data_file))
-    cur_dataset = np.load(args.load_directory + '\\' + data_file)
+    cur_dataset = np.load(join(args.load_directory, data_file))
     cur_dataset = cur_dataset['patches']
     if ii == 0:
         combined_dataset = cur_dataset

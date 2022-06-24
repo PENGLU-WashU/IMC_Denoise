@@ -48,7 +48,7 @@ for sub_img_folder in img_folders:
             Img_DIMR = myDIMR.perform_DIMR(Img_read)
                 
             Img_DIMR[Img_DIMR<0] = 0
-            sub_save_directory = join(args.save_directory, sub_img_folder[len(args.load_directory):])
+            sub_save_directory = join(args.save_directory, sub_img_folder[len(args.load_directory)+1:])
             if not exists(sub_save_directory):
                 os.makedirs(sub_save_directory)
             tp.imsave(join(sub_save_directory, Img_file), Img_DIMR.astype('float32'))

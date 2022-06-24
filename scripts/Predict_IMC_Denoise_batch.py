@@ -89,10 +89,10 @@ print('Loading model...')
 weights_dir = args.weights_save_directory
 if weights_dir is None:
     weights_dir = abspath('trained_weights')
-trained_weights = join(weights_dir, args.weights_name))
-print('The file containing the trained weights is {}.'.format(trained_weights)
+trained_weights = join(weights_dir, args.weights_name)
+print('The file containing the trained weights is {}.'.format(trained_weights))
 
-myrange = np.load(join(weights_dir, args.weights_name.replace('.hdf5', '_range_val.npz')))
+myrange = np.load(join(weights_dir, args.weights_name.replace('.hdf5', '_range_val.npz'))) 
 myrange = myrange['range_val']
 print('The range is %f.' % myrange)
 
@@ -142,7 +142,7 @@ for ii in range(Img_num):
         Img_denoised = Img_denoised * myrange
     
     Img_denoised[Img_denoised<0] = 0
-    sub_save_directory = join(args.save_directory, Sub_img_folder[len(args.load_directory):])
+    sub_save_directory = join(args.save_directory, Sub_img_folder[len(args.load_directory)+1:])
     if not exists(sub_save_directory):
         os.makedirs(sub_save_directory)
     tp.imsave(join(sub_save_directory, Img_name), Img_denoised.astype('float32'))
