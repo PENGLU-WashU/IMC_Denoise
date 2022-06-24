@@ -117,7 +117,7 @@ class DeepSNF():
         if weights_dir is not None:
             self.weights_dir = weights_dir
         else:
-            self.weights_dir = os.path.abspath(os.getcwd()) + "\\trained_weights"
+            self.weights_dir = os.path.abspath('trained_weights')
             if not os.path.exists(self.weights_dir):
                 os.makedirs(self.weights_dir)
         
@@ -188,14 +188,14 @@ class DeepSNF():
                 X = Anscombe_forward(X)
             X, self.range_val = self.normalize_patches(X)  
         
-        print('The range value to the corresponding model is ' + str(self.range_val) + '.')
+        print('The range value to the corresponding model is {}.'.format(self.range_val))
         
         if not self.is_load_weights:
             X[X > 1.0] = 1.0
             X[X < 0.0] = 0.0
         X = np.expand_dims(X, axis = -1)
         
-        print("Input Channel Shape => " + str(X.shape))
+        print('Input Channel Shape => {}'.format(X.shape))
           
         X_train, X_test = train_test_split(X, test_size = self.val_perc, random_state = 42)
         del X
@@ -216,8 +216,8 @@ class DeepSNF():
         
         # Save the model weights after each epoch
         if self.weights_name is not None: 
-            np.savez(self.weights_dir + '\\'+ self.weights_name.replace('.hdf5','_range_val.npz'), range_val = self.range_val)
-            checkpointer = ModelCheckpoint(filepath = self.weights_dir + '\\'+ self.weights_name, verbose = 1, save_best_only = False)
+            np.savez(os.path.join(self.weights_dir, self.weights_name.replace('.hdf5','_range_val.npz')), range_val = self.range_val)
+            checkpointer = ModelCheckpoint(filepath = os.path.join(self.weights_dir, self.weights_name), verbose = 1, save_best_only = False)
             callback_list = [history, checkpointer, change_lr]
         else:
             callback_list = [history, change_lr]
@@ -245,9 +245,9 @@ class DeepSNF():
         # Save datasets to a matfile to open later in matlab
         if  self.loss_name is not None:
             if self.loss_name.endswith('.npz'):
-                np.savez(self.weights_dir + '\\' + self.loss_name, train_loss = loss, val_loss = val_loss)
+                np.savez(os.join.path(self.weights_dir, self.loss_name), train_loss = loss, val_loss = val_loss)
             elif self.loss_name.endswith('.mat'):
-                sio.savemat(self.weights_dir + '\\' + self.loss_name, {"train_loss": loss, "val_loss": val_loss})
+                sio.savemat(os.join.path(self.weights_dir, self.loss_name), {"train_loss": loss, "val_loss": val_loss})
             else:
                 print('saved format should be .npz or .mat. Save failed.')
         
@@ -260,14 +260,14 @@ class DeepSNF():
 
         """
         if self.weights_name is None:
-            print('\033[91m' + 'when loading a model, a legal .hdf5 file must be provided. Weights loaded failed.' + '\033[0m')
+            print('When loading a model, a legal .hdf5 file must be provided. Weights loaded failed!')
             return
         
         # Build the DeepSNF network structure
         model = self.buildModel((None, None, 1))
         
         # Load the trained weights
-        load_weights_name = self.weights_dir + '\\' + self.weights_name
+        load_weights_name = os.join.path(self.weights_dir, self.weights_name)
         if os.path.exists(load_weights_name): 
             model.load_weights(load_weights_name)
             print('Pre-trained model {} loaded successfully.'.format(load_weights_name))
@@ -275,7 +275,7 @@ class DeepSNF():
             print('Pre-trained model loaded fail. Please check if the file {} exists.'.format(load_weights_name))
             return
            
-        load_range_name = self.weights_dir + '\\' + self.weights_name.replace('.hdf5', '_range_val.npz')
+        load_range_name = os.path.join(self.weights_dir, self.weights_name.replace('.hdf5', '_range_val.npz'))
         if os.path.exists(load_range_name): 
             loaded_range_val = np.load(load_range_name)
             self.range_val = loaded_range_val['range_val']
@@ -334,17 +334,8 @@ class DeepSNF():
         Rows_diff = Rows_new - Rows
         Cols_diff = Cols_new - Cols
             
-        if Rows_diff%2 == 0:
-            Rows_diff1 = Rows_diff2 = int(Rows_diff/2)
-        else:
-            Rows_diff1 = int(Rows_diff/2)
-            Rows_diff2 = Rows_diff1+1
-            
-        if Cols_diff%2 == 0:
-            Cols_diff1 = Cols_diff2 = int(Cols_diff/2)
-        else:
-            Cols_diff1 = int(Cols_diff/2)
-            Cols_diff2 = Cols_diff1+1
+        Rows_diff1, Rows_diff2 = self.__split_border__(Rows_diff)
+        Cols_diff1, Cols_diff2 = self.__split_border__(Cols_diff)
                  
         Input_img_pad = np.pad(Input_img_norm,((Rows_diff1,Rows_diff2),(Cols_diff1,Cols_diff2)),'edge')   
         Input_img_pad_dims = np.expand_dims(Input_img_pad,axis=-1) 
@@ -396,17 +387,8 @@ class DeepSNF():
         Rows_diff = Rows_new - Rows
         Cols_diff = Cols_new - Cols
             
-        if Rows_diff%2 == 0:
-            Rows_diff1 = Rows_diff2 = int(Rows_diff/2)
-        else:
-            Rows_diff1 = int(Rows_diff/2)
-            Rows_diff2 = Rows_diff1+1
-            
-        if Cols_diff%2 == 0:
-            Cols_diff1 = Cols_diff2 = int(Cols_diff/2)
-        else:
-            Cols_diff1 = int(Cols_diff/2)
-            Cols_diff2 = Cols_diff1+1
+        Rows_diff1, Rows_diff2 = self.__split_border__(Rows_diff)
+        Cols_diff1, Cols_diff2 = self.__split_border__(Cols_diff)
                  
         Input_img_pad = np.pad(Input_img_norm,((0,0), (Rows_diff1,Rows_diff2), (Cols_diff1,Cols_diff2)), 'edge')   
         Input_img_pad_dims = np.expand_dims(Input_img_pad, axis=-1) 
@@ -533,3 +515,10 @@ class DeepSNF():
     
     def __Denormalize__(self, img, range_val, min_val):
         return img * range_val + min_val
+    
+    def __split_border__(self, length):
+        half_length = int(length/2)
+        if length%2 == 0:
+            return half_length, half_length
+        else:
+            return half_length, half_length + 1
