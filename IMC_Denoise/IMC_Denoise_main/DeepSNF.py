@@ -267,7 +267,7 @@ class DeepSNF():
         model = self.buildModel((None, None, 1))
         
         # Load the trained weights
-        load_weights_name = os.join.path(self.weights_dir, self.weights_name)
+        load_weights_name = os.path.join(self.weights_dir, self.weights_name)
         if os.path.exists(load_weights_name): 
             model.load_weights(load_weights_name)
             print('Pre-trained model {} loaded successfully.'.format(load_weights_name))
