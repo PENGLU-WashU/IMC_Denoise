@@ -261,7 +261,7 @@ class DeepSNF_DataGenerator():
             save_directory = os.path.abspath('Generated_training_set')
         if not os.path.exists(save_directory):
             os.makedirs(save_directory)
-        saved_name = os.path.join(save_directory, 'training_set_', self.channel_name, '.npz')
+        saved_name = os.path.join(save_directory, 'training_set_' + self.channel_name + '.npz')
         np.savez(saved_name, patches = generated_patches)
         print('The generated training set with shape of {} is saved as {}.'.format(generated_patches.shape, saved_name))
         return True
