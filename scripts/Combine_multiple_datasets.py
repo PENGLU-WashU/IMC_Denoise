@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, exists
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -19,7 +19,7 @@ if not args.saved_training_set_name.endswith(".npz"):
     print('The saved training set name must end with .npz!')
     quit()
     
-if not os.path.exists(args.save_directory):
+if not exists(args.save_directory):
     os.makedirs(args.save_directory)
 
 dataset_list = [f for f in listdir(args.load_directory) if isfile(join(args.load_directory, f)) & f.endswith(".npz")]
@@ -34,7 +34,7 @@ for ii in range(len(dataset_list)):
         combined_dataset = np.concatenate((combined_dataset, cur_dataset), axis = 0)
         
 np.random.shuffle(combined_dataset)
-saved_name = os.join.path(args.save_directory, args.saved_training_set_name)
+saved_name = join(args.save_directory, args.saved_training_set_name)
 np.savez(saved_name, patches = combined_dataset)
 print('The generated training set with shape of {} is saved as {}.'.format(combined_dataset.shape, saved_name))
 

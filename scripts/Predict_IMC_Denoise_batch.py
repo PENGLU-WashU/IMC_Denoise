@@ -7,7 +7,7 @@ import os
 
 import argparse
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, abspath, exists
 from glob import glob
 import tifffile as tp
 from keras import optimizers
@@ -88,11 +88,11 @@ Max_col_num = int((Max_col_num//16+1)*16)
 print('Loading model...')
 weights_dir = args.weights_save_directory
 if weights_dir is None:
-    weights_dir = os.path.abspath('trained_weights')
-trained_weights = os.path.join(weights_dir, args.weights_name))
+    weights_dir = abspath('trained_weights')
+trained_weights = join(weights_dir, args.weights_name))
 print('The file containing the trained weights is {}.'.format(trained_weights)
 
-myrange = np.load(os.path.join(weights_dir, args.weights_name.replace('.hdf5', '_range_val.npz')))
+myrange = np.load(join(weights_dir, args.weights_name.replace('.hdf5', '_range_val.npz')))
 myrange = myrange['range_val']
 print('The range is %f.' % myrange)
 
@@ -142,10 +142,10 @@ for ii in range(Img_num):
         Img_denoised = Img_denoised * myrange
     
     Img_denoised[Img_denoised<0] = 0
-    sub_save_directory = os.path.join(args.save_directory, Sub_img_folder[len(args.load_directory):])
-    if not os.path.exists(sub_save_directory):
+    sub_save_directory = join(args.save_directory, Sub_img_folder[len(args.load_directory):])
+    if not exists(sub_save_directory):
         os.makedirs(sub_save_directory)
-    tp.imsave(os.path.join(sub_save_directory, Img_name), Img_denoised.astype('float32'))
+    tp.imsave(join(sub_save_directory, Img_name), Img_denoised.astype('float32'))
 
     print(sub_save_directory + Img_name + ' saved!')
  

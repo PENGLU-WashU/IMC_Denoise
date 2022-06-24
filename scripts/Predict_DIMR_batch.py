@@ -17,7 +17,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 import argparse
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, exists
 from glob import glob
 import tifffile as tp
 from IMC_Denoise.IMC_Denoise_main.DIMR import DIMR
@@ -48,10 +48,10 @@ for sub_img_folder in img_folders:
             Img_DIMR = myDIMR.perform_DIMR(Img_read)
                 
             Img_DIMR[Img_DIMR<0] = 0
-            sub_save_directory = os.path.join(args.save_directory, sub_img_folder[len(args.load_directory):])
-            if not os.path.exists(sub_save_directory):
+            sub_save_directory = join(args.save_directory, sub_img_folder[len(args.load_directory):])
+            if not exists(sub_save_directory):
                 os.makedirs(sub_save_directory)
-            tp.imsave(os.path.join(sub_save_directory, Img_file), Img_DIMR.astype('float32'))
+            tp.imsave(join(sub_save_directory, Img_file), Img_DIMR.astype('float32'))
             
             print(sub_save_directory + Img_file + ' saved!')
             break
