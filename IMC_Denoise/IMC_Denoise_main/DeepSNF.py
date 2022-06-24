@@ -245,9 +245,9 @@ class DeepSNF():
         # Save datasets to a matfile to open later in matlab
         if  self.loss_name is not None:
             if self.loss_name.endswith('.npz'):
-                np.savez(os.join.path(self.weights_dir, self.loss_name), train_loss = loss, val_loss = val_loss)
+                np.savez(os.path.join(self.weights_dir, self.loss_name), train_loss = loss, val_loss = val_loss)
             elif self.loss_name.endswith('.mat'):
-                sio.savemat(os.join.path(self.weights_dir, self.loss_name), {"train_loss": loss, "val_loss": val_loss})
+                sio.savemat(os.path.join(self.weights_dir, self.loss_name), {"train_loss": loss, "val_loss": val_loss})
             else:
                 print('saved format should be .npz or .mat. Save failed.')
         
