@@ -258,7 +258,7 @@ class DeepSNF_DataGenerator():
 
         """
         if save_directory is None:
-            save_directory = os.path.abspath(os.getcwd()) + '\\Generated_training_set'
+            save_directory = os.path.abspath('Generated_training_set')
         if not os.path.exists(save_directory):
             os.makedirs(save_directory)
         saved_name = save_directory + '\\training_set_' + self.channel_name + '.npz'
@@ -273,7 +273,7 @@ def load_training_patches(filename, save_directory = None):
 
     """
     if save_directory is None:
-        save_directory = os.path.abspath(os.getcwd()) + '\\Generated_training_set'
+        save_directory = os.path.abspath('Generated_training_set')
     elif not os.path.exists(save_directory):
         raise ValueError('No such dataset!')
     if not filename.endswith('.npz'):
