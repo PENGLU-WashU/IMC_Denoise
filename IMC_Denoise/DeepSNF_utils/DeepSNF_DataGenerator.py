@@ -4,7 +4,7 @@ import numpy as np
 import tifffile as tp
 import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, abspath, exists
 from glob import glob
 from ..IMC_Denoise_main.DIMR import DIMR
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_direct
@@ -179,7 +179,7 @@ class DeepSNF_DataGenerator():
         
         print('\n' + 'Image data loaded completed!')
         if not Img_collect:
-            print('\033[91m' + "No such channels! Please check the channel name again!" + '\033[0m')
+            print('No such channels! Please check the channel name again!)
             return
                 
         return Img_collect
@@ -258,10 +258,10 @@ class DeepSNF_DataGenerator():
 
         """
         if save_directory is None:
-            save_directory = os.path.abspath('Generated_training_set')
-        if not os.path.exists(save_directory):
+            save_directory = abspath('Generated_training_set')
+        if not exists(save_directory):
             os.makedirs(save_directory)
-        saved_name = os.path.join(save_directory, 'training_set_' + self.channel_name + '.npz')
+        saved_name = join(save_directory, 'training_set_' + self.channel_name + '.npz')
         np.savez(saved_name, patches = generated_patches)
         print('The generated training set with shape of {} is saved as {}.'.format(generated_patches.shape, saved_name))
         return True
@@ -273,11 +273,11 @@ def load_training_patches(filename, save_directory = None):
 
     """
     if save_directory is None:
-        save_directory = os.path.abspath('Generated_training_set')
-    elif not os.path.exists(save_directory):
+        save_directory = abspath('Generated_training_set')
+    elif not exists(save_directory):
         raise ValueError('No such dataset!')
     if not filename.endswith('.npz'):
         print('The generated training set should be .npz format!')
         return
-    generated_data = np.load(os.path.join(save_directory, filename))
+    generated_data = np.load(join(save_directory, filename))
     return generated_data['patches']
