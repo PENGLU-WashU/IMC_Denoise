@@ -2,6 +2,7 @@
 import numpy as np
 import scipy.io as sio
 import os
+from os.path import join, exists, abspath
 import gc
 
 from sklearn.model_selection import train_test_split
@@ -117,8 +118,8 @@ class DeepSNF():
         if weights_dir is not None:
             self.weights_dir = weights_dir
         else:
-            self.weights_dir = os.path.abspath('trained_weights')
-            if not os.path.exists(self.weights_dir):
+            self.weights_dir = abspath('trained_weights')
+            if not exists(self.weights_dir):
                 os.makedirs(self.weights_dir)
         
         self.weights_name = weights_name
@@ -216,8 +217,8 @@ class DeepSNF():
         
         # Save the model weights after each epoch
         if self.weights_name is not None: 
-            np.savez(os.path.join(self.weights_dir, self.weights_name.replace('.hdf5','_range_val.npz')), range_val = self.range_val)
-            checkpointer = ModelCheckpoint(filepath = os.path.join(self.weights_dir, self.weights_name), verbose = 1, save_best_only = False)
+            np.savez(join(self.weights_dir, self.weights_name.replace('.hdf5','_range_val.npz')), range_val = self.range_val)
+            checkpointer = ModelCheckpoint(filepath = join(self.weights_dir, self.weights_name), verbose = 1, save_best_only = False)
             callback_list = [history, checkpointer, change_lr]
         else:
             callback_list = [history, change_lr]
@@ -245,9 +246,9 @@ class DeepSNF():
         # Save datasets to a matfile to open later in matlab
         if  self.loss_name is not None:
             if self.loss_name.endswith('.npz'):
-                np.savez(os.path.join(self.weights_dir, self.loss_name), train_loss = loss, val_loss = val_loss)
+                np.savez(join(self.weights_dir, self.loss_name), train_loss = loss, val_loss = val_loss)
             elif self.loss_name.endswith('.mat'):
-                sio.savemat(os.path.join(self.weights_dir, self.loss_name), {"train_loss": loss, "val_loss": val_loss})
+                sio.savemat(join(self.weights_dir, self.loss_name), {"train_loss": loss, "val_loss": val_loss})
             else:
                 print('saved format should be .npz or .mat. Save failed.')
         
@@ -267,16 +268,16 @@ class DeepSNF():
         model = self.buildModel((None, None, 1))
         
         # Load the trained weights
-        load_weights_name = os.path.join(self.weights_dir, self.weights_name)
-        if os.path.exists(load_weights_name): 
+        load_weights_name = join(self.weights_dir, self.weights_name)
+        if exists(load_weights_name): 
             model.load_weights(load_weights_name)
             print('Pre-trained model {} loaded successfully.'.format(load_weights_name))
         else:
             print('Pre-trained model loaded fail. Please check if the file {} exists.'.format(load_weights_name))
             return
            
-        load_range_name = os.path.join(self.weights_dir, self.weights_name.replace('.hdf5', '_range_val.npz'))
-        if os.path.exists(load_range_name): 
+        load_range_name = join(self.weights_dir, self.weights_name.replace('.hdf5', '_range_val.npz'))
+        if exists(load_range_name): 
             loaded_range_val = np.load(load_range_name)
             self.range_val = loaded_range_val['range_val']
             print('Pre-calculated range value file {} loaded successfully.'.format(load_range_name))
