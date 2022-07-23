@@ -180,4 +180,8 @@ Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
 
 ## References
 If you find this software package helpful, please cite our paper on biorxiv: 
-<br/>[IMC-Denoise: a content aware pipeline to enhance Imaging Mass Cytometry](https://www.biorxiv.org/content/10.1101/2022.07.21.501021v1)
+<br/>[IMC-Denoise: a content aware pipeline to enhance Imaging Mass Cytometry]()
+
+If you find our work useful in your research or if you use parts of this code please consider citing our [paper](https://www.biorxiv.org/content/10.1101/2022.07.21.501021v1):
+
+Lu P, Oetjen K, Bender D, et al. IMC-Denoise: a content aware pipeline to enhance Imaging Mass Cytometry. https://doi.org/10.1101/2022.07.21.501021 
