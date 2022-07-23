@@ -182,3 +182,17 @@ Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
 If you find our work useful in your research or if you use parts of this code please consider citing our [paper](https://www.biorxiv.org/content/10.1101/2022.07.21.501021v1):
 
 Lu P, Oetjen K, Bender D, et al. IMC-Denoise: a content aware pipeline to enhance Imaging Mass Cytometry. bioRxiv (2022) https://doi.org/10.1101/2022.07.21.501021 
+
+```
+@article {Lu2022.07.21.501021,
+	author = {Lu, Peng and Oetjen, Karolyn A and Bender, Diane E and Ruzinova, Marianna B and Fisher, Daniel AC and Shim, Kevin G and Pachynski, Russell K and Brennen, W Nathaniel and Oh, Stephen and Link, Daniel C and Thorek, Daniel LJ},
+	title = {IMC-Denoise: a content aware denoising pipeline to enhance Imaging Mass Cytometry},
+	elocation-id = {2022.07.21.501021},
+	year = {2022},
+	doi = {10.1101/2022.07.21.501021},
+	publisher = {Cold Spring Harbor Laboratory},
+	URL = {https://www.biorxiv.org/content/early/2022/07/22/2022.07.21.501021},
+	eprint = {https://www.biorxiv.org/content/early/2022/07/22/2022.07.21.501021.full.pdf},
+	journal = {bioRxiv}
+}
+```
