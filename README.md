@@ -185,14 +185,14 @@ Lu P, Oetjen K, Bender D, et al. IMC-Denoise: a content aware pipeline to enhanc
 
 ```
 @article {Lu2022.07.21.501021,
-	author = {Lu, Peng and Oetjen, Karolyn A and Bender, Diane E and Ruzinova, Marianna B and Fisher, Daniel AC and Shim, Kevin G and Pachynski, Russell K and Brennen, W Nathaniel and Oh, Stephen and Link, Daniel C and Thorek, Daniel LJ},
-	title = {IMC-Denoise: a content aware denoising pipeline to enhance Imaging Mass Cytometry},
-	elocation-id = {2022.07.21.501021},
-	year = {2022},
-	doi = {10.1101/2022.07.21.501021},
-	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2022/07/22/2022.07.21.501021},
-	eprint = {https://www.biorxiv.org/content/early/2022/07/22/2022.07.21.501021.full.pdf},
-	journal = {bioRxiv}
+  author = {Lu, Peng and Oetjen, Karolyn A and Bender, Diane E and Ruzinova, Marianna B and Fisher, Daniel AC and Shim, Kevin G and Pachynski, Russell K and Brennen, W Nathaniel and Oh, Stephen and Link, Daniel C and Thorek, Daniel LJ},
+  title = {IMC-Denoise: a content aware denoising pipeline to enhance Imaging Mass Cytometry},
+  elocation-id = {2022.07.21.501021},
+  year = {2022},
+  doi = {10.1101/2022.07.21.501021},
+  publisher = {Cold Spring Harbor Laboratory},
+  URL = {https://www.biorxiv.org/content/early/2022/07/22/2022.07.21.501021},
+  eprint = {https://www.biorxiv.org/content/early/2022/07/22/2022.07.21.501021.full.pdf},
+  journal = {bioRxiv}
 }
 ```
