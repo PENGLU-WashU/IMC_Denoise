@@ -179,3 +179,5 @@ Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
 <br/>Lab Website: [Thorek Lab WashU](https://sites.wustl.edu/thoreklab/)
 
 ## References
+If you find this software package helpful, please cite our paper on biorxiv: 
+<br/>[IMC-Denoise: a content aware pipeline to enhance Imaging Mass Cytometry](https://www.biorxiv.org/content/10.1101/2022.07.21.501021v1)
