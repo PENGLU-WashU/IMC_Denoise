@@ -77,9 +77,11 @@ $ pip install -e .
 ```
 
 ### Docker
-- Dockerfile to build reproducible environment with miniconda environment activated for IMC_Denoise.  
+- Use dockerfile provided to build reproducible environment with IMC_Denoise.  
 ```
-$ docker build -t imc_denoise:1.0 --platform linux/amd64
+$ git clone https://github.com/PENGLU-WashU/IMC_Denoise.git
+$ cd IMC_Denoise
+$ docker build -t imc_denoise:1.0 . --platform linux/amd64
 ```
 - On LSF cluster to run scripts or jupyter notebooks, respectively:
 ```
