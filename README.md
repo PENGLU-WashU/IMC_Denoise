@@ -77,16 +77,16 @@ $ pip install -e .
 ```
 
 ### Docker
-- A reproducible environment from nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04 with miniconda environment activated for IMC_Denoise.  
+- Dockerfile to build reproducible environment with miniconda environment activated for IMC_Denoise.  
 ```
-$ docker run -it koetjen/imc_denoise:latest 
+$ docker build -t imc_denoise:1.0 --platform linux/amd64
 ```
 - On LSF cluster to run scripts or jupyter notebooks, respectively:
 ```
-$ LSF_DOCKER_PORTS="8888:8888" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(koetjen/imc_denoise:latest)' /bin/bash
+$ LSF_DOCKER_PORTS="8888:8888" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(imc_denoise:1.0)' /bin/bash
 $ cd /IMC_Denoise
 
-$ LSF_DOCKER_PORTS="8888:8888" PATH="/opt/conda/bin:$PATH" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(koetjen/imc_denoise:latest)' jupyter-notebook --ip=0.0.0.0 --NotebookApp.allow_origin=*
+$ LSF_DOCKER_PORTS="8888:8888" PATH="/opt/conda/bin:$PATH" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(imc_denoise:latest)' jupyter-notebook --ip=0.0.0.0 --NotebookApp.allow_origin=*
 ```
 
 
