@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
-from keras.utils import Sequence
+from tensorflow.keras.utils import Sequence
 
 def get_subpatch(patch, coord, local_sub_patch_radius):
     start = np.maximum(0, np.array(coord) - local_sub_patch_radius)
