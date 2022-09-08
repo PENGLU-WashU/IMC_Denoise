@@ -1,3 +1,10 @@
+![GitHub repo size](https://img.shields.io/github/repo-size/PENGLU-WashU/IMC_Denoise)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/PENGLU-WashU/IMC_Denoise)
+![Python version](https://img.shields.io/badge/python-v3.6-blue)
+![visitors](https://visitor-badge.glitch.me/badge?page_id=PENGLU-WashU.IMC_Denoise&left_color=green&right_color=red)
+![GitHub](https://img.shields.io/github/license/PENGLU-WashU/IMC_Denoise)
+![Suggestions](https://img.shields.io/badge/suggestions-welcome-green)
+
 # IMC-Denoise: a content aware denoising pipeline to enhance Imaging Mass Cytometry
 
 <img src="images/github.png" alt="Logo" width="600" align = "right">
