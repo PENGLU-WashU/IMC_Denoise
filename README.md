@@ -9,7 +9,7 @@
 
 Imaging Mass Cytometry (IMC) is an emerging multiplexed imaging technology for analyzing complex microenvironments that has the ability to detect the spatial distribution of at least 40 cell markers. However, this new modality has unique image data processing requirements, particularly when applying this
 technology to patient tissue specimens. In these cases, signal-to-noise ratio (SNR) for particular markers can be low despite optimization of staining conditions, and the presence of pixel intensity artifacts can deteriorate image quality and the performance of downstream analysis. Here we demonstrate a content aware
-pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy **(i)** a **D**ifferential **I**ntensity **M**ap-based **R**estoration (**DIMR**) algorithm for removing hot pixels and **(ii, iii)** a self-supervised **Deep** learning algorithm for **S**hot **N**oise **F**iltering (**DeepSNF**). IMC-Denoise enables adaptive hot pixel removal without loss of resolution and delivers significant SNR improvement to a diverse set of IMC channels and datasets. Here we show how to implement IMC-Denoise and develop the software package **IMC_Denoise**. We hope this package could help the researchers in the field of mass cytometry imaging.
+pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy **(i)** a **D**ifferential **I**ntensity **M**ap-based **R**estoration (**DIMR**) algorithm for removing hot pixels and **(ii, iii)** a self-supervised **Deep** learning algorithm for **S**hot **N**oise **i**mage **F**iltering (**DeepSNiF**). IMC-Denoise enables adaptive hot pixel removal without loss of resolution and delivers significant SNR improvement to a diverse set of IMC channels and datasets. Here we show how to implement IMC-Denoise and develop the software package **IMC_Denoise**. We hope this package could help the researchers in the field of mass cytometry imaging.
 
 ## Examples of denoising results from human bone marrow IMC dataset
 <p align = "center"><b>Denoise lymphocyte antibody-stained images</b></p>
@@ -39,12 +39,12 @@ IMC_Denoise
 |---IMC_Denoise
 |---|---IMC_Denoise_main
 |---|---|---DIMR.py
-|---|---|---DeepSNF.py
-|---|---|---DeepSNF_model.py
+|---|---|---DeepSNiF.py
+|---|---|---DeepSNiF_model.py
 |---|---|---loss_functions.py
-|---|---DeepSNF_utils
-|---|---|---DeepSNF_DataGenerator.py
-|---|---|---DeepSNF_TrainGenerator.py
+|---|---DeepSNiF_utils
+|---|---|---DeepSNiF_DataGenerator.py
+|---|---|---DeepSNiF_TrainGenerator.py
 |---|---Anscombe_transform
 |---|---|---Anscombe_transform_functions.py
 |---|---|---Anscombe_vectors.mat
@@ -53,13 +53,13 @@ IMC_Denoise
 |---|---IMC_Denoise_Train.ipynb
 |---|---IMC_Denoise_Predict.ipynb
 |---scripts
-|---|---Data_generation_DeepSNF_script.py
-|---|---Training_DeepSNF_script.py
-|---|---Generate_data_and_training_DeepSNF_script.py
+|---|---Data_generation_DeepSNiF_script.py
+|---|---Training_DeepSNiF_script.py
+|---|---Generate_data_and_training_DeepSNiF_script.py
 |---|---Predict_DIMR_script.py
 |---|---Predict_IMC_Denoise_script.py
 ```
-- **IMC_Denoise** implements DIMR and DeepSNF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
+- **IMC_Denoise** implements DIMR and DeepSNiF algorithms to remove hot pixels and filter shot noise in IMC images, respectively.
 - **Jupyter Notebooks** and **scripts** include several examples to implement IMC_Denoise algorithms.
 
 ## Customize environment for IMC_Denoise
@@ -106,7 +106,7 @@ $ LSF_DOCKER_PORTS="8888:8888" PATH="/opt/conda/bin:$PATH" bsub -Is -R 'select[g
 
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
-In order to generate a training set for DeepSNF, the directory structure of raw IMC images must be arranged as follows. Note that the Channel_img names should contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
+In order to generate a training set for DeepSNiF, the directory structure of raw IMC images must be arranged as follows. Note that the Channel_img names should contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
 ```
 |---Raw_image_directory
 |---|---Tissue1_sub_directory
@@ -127,7 +127,7 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 |---|---|---Channel_n_img.tiff
 ```
 ### Download example data
-- Please go to https://doi.org/10.5281/zenodo.6533905 and download **Raw_IMC_dataset_for_training_supp_table5.zip**. Then unzip this file as the folder **Raw_IMC_dataset_for_training_supp_table5**. This folder contains all the images for DeepSNF training. 
+- Please go to https://doi.org/10.5281/zenodo.6533905 and download **Raw_IMC_dataset_for_training_supp_table5.zip**. Then unzip this file as the folder **Raw_IMC_dataset_for_training_supp_table5**. This folder contains all the images for DeepSNiF training. 
 
 - We also provide all the images of this human bone marrow IMC dataset, which are compressed in **Raw_IMC_dataset_all_supp_table5** and can also be downloaded from https://doi.org/10.5281/zenodo.6533905. 
 
@@ -138,11 +138,11 @@ In order to generate a training set for DeepSNF, the directory structure of raw 
 $ conda activate IMC_Denoise
 $ jupyter notebook --notebook-dir=your_folder_of_notebook_examples
 ```
-- Train and predict the DeepSNF algorithm separately, in which the generated dataset and trained weights will be saved.
-  - [DeepSNF: generate data and training](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
-  - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
-- Train and predict the DeepSNF algorithm in the same notebook, in which the generated dataset and trained weights will not be saved.
-  - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
+- Train and predict the DeepSNiF algorithm separately, in which the generated dataset and trained weights will be saved.
+  - [DeepSNiF: generate data and training](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train.ipynb)
+  - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the pre-trained model of DeepSNiF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Predict.ipynb)
+- Train and predict the DeepSNiF algorithm in the same notebook, in which the generated dataset and trained weights will not be saved.
+  - [IMC_Denoise: remove hot pixels with DIMR and filter shot noise with the onsite training of DeepSNiF](https://github.com/PENGLU-WashU/IMC_Denoise/blob/main/Jupyter_Notebook_examples/IMC_Denoise_Train_and_Predict.ipynb)
 
 ### Implement IMC_Denoise with scripts
 - Activate the IMC_Denoise environment.
@@ -150,18 +150,18 @@ $ jupyter notebook --notebook-dir=your_folder_of_notebook_examples
 $ conda activate IMC_Denoise
 ```
 - Here we take the images with marker CD38 as an example. For our dataset, CD38 is conjucted with 141Pr. In this case, the "channel_name" should be set as its corresponding isotope name "141Pr".
-- Generating training set and train a DeepSNF model.
-  - Generate training set of a specific marker channel for DeepSNF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. For CD38, the saved name will be "training_set_141Pr.npz".
+- Generating training set and train a DeepSNiF model.
+  - Generate training set of a specific marker channel for DeepSNiF. The generated training data will be saved in a sub-directory "Generated_training_set" of the current folder other than setting a customized folder. For CD38, the saved name will be "training_set_141Pr.npz".
   ```
-  python scripts/Data_generation_DeepSNF_script.py --channel_name '141Pr' --Raw_directory 'Your_raw_img_directory' --Save_directory 'your_generated_training_set_directory'  --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8'
+  python scripts/Data_generation_DeepSNiF_script.py --channel_name '141Pr' --Raw_directory 'Your_raw_img_directory' --Save_directory 'your_generated_training_set_directory'  --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8'
   ```
-  - Train a DeepSNF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted. Note that when implementing prediction, input the same "trained_weights" name. If your GPU has smaller memory so that it cannot afford a large "train_batch_size" such as 128 or 256, please use a smaller one, e.g. 64, 32.
+  - Train a DeepSNiF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted. Note that when implementing prediction, input the same "trained_weights" name. If your GPU has smaller memory so that it cannot afford a large "train_batch_size" such as 128 or 256, please use a smaller one, e.g. 64, 32.
   ```
-  python scripts/Training_DeepSNF_script.py --train_set_name 'training_set_141Pr.npz' --train_data_directory 'directory_of_your_training_set' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '200' --train_batch_size '128' --lambda_HF '3e-6'
+  python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' --train_data_directory 'directory_of_your_training_set' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '200' --train_batch_size '128' --lambda_HF '3e-6'
   ```
-  - Generate training set for a specific marker channel and then train a DeepSNF network. In this process, the generated training set will not be saved in a directory.
+  - Generate training set for a specific marker channel and then train a DeepSNiF network. In this process, the generated training set will not be saved in a directory.
   ```
-  python scripts/Generate_data_and_training_DeepSNF_script.py --channel_name '141Pr' --weights_name 'weights_141Pr-CD38.hdf5' --Raw_directory 'Your_raw_img_directory' --train_epoches '200' --train_batch_size '128' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8' --lambda_HF '3e-6'
+  python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141Pr' --weights_name 'weights_141Pr-CD38.hdf5' --Raw_directory 'Your_raw_img_directory' --train_epoches '200' --train_batch_size '128' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8' --lambda_HF '3e-6'
   ```   
 - Combine multiple generated training sets from different channels into a single training set.
   ```
@@ -176,11 +176,11 @@ $ conda activate IMC_Denoise
   ```
   python scripts/Predict_DIMR_batch.py --channel_name '141Pr' --load_directory 'raw_image_folders (please refer to Section: Directory structure of IMC_Denoise)' --save_directory 'DIMR_processed_image_folders' --n_neighbours '4' --n_iter '3' --slide_window_size '3'
   ```
-  - Implement IMC_Denoise including DIMR and DeepSNF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
+  - Implement IMC_Denoise including DIMR and DeepSNiF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
   python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'your_raw_img_name(.tiff)' --Denoised_img_name 'your_denoised_img_name(.tiff)' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --n_neighbours '4' --n_iter '3' --slide_window_size '3' 
   ```
-  - Implement IMC_Denoise including DIMR and DeepSNF for multiple IMC imagse if the images are contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
+  - Implement IMC_Denoise including DIMR and DeepSNiF for multiple IMC imagse if the images are contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
   python scripts/Predict_IMC_Denoise_batch.py --channel_name '141Pr' --load_directory 'raw_image_folders (please refer to Section: Directory structure of IMC_Denoise)' --save_directory 'IMC_Denoise_processed_image_folders' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --loss_func 'the_loss_function_in_training' --n_neighbours '4' --n_iter '3' --slide_window_size '3' 
   ```
