@@ -64,7 +64,7 @@ IMC_Denoise
 
 ## Customize environment for IMC_Denoise
 ### Our IMC_Denoise environment
-- Windows 10 64bit
+- Windows 10 64bit or Linux
 - Python 3.6
 - Tensorflow 2.2.0
 - Keras 2.3.1
