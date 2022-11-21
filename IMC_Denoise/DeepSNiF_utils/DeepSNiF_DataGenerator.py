@@ -177,7 +177,7 @@ class DeepSNiF_DataGenerator():
                     Img_collect.append(Img_read)
                     break
         
-        print('\n' + 'Image data loaded completed!')
+        print('\n' + 'Image data loading completed!')
         if not Img_collect:
             print('No such channels! Please check the channel name again!')
             return
