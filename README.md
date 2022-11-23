@@ -75,10 +75,10 @@ IMC_Denoise
 - Create a virtual environment and install tensorflow-gpu and keras.
 ```
 $ conda create -n 'IMC_Denoise' python=3.6
-$ conda activate IMC_Denoise
+$ conda activate IMC_Denoise (in some cases, source activate IMC_Denoise, depending on the system)
 $ conda install -c anaconda brotlipy
 $ pip install tensorflow==2.2.0 keras==2.3.1
-$ conda install -c anaconda cudnn=7.6.5 
+$ conda install -c anaconda cudnn=7.6.5 cudatoolkit=10.1.243
 $ pip install jupyter
 ```
 - Download the source code and install the package in your folder.
