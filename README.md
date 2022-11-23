@@ -69,7 +69,7 @@ IMC_Denoise
 - Tensorflow 2.2.0
 - Keras 2.3.1
 - NVIDIA GPU + CUDA
-Note that Linux also works with such configurations.
+- Note that Linux also works with such configurations
 
 ### Installation
 - Create a virtual environment and install tensorflow-gpu and keras (we run all the codes in a Anaconda Powershell Prompt).
