@@ -64,15 +64,15 @@ IMC_Denoise
 
 ## Customize environment for IMC_Denoise
 ### Our IMC_Denoise environment
-- Windows 10 64bit or Linux
+- Windows 10 64bit
 - Python 3.6
 - Tensorflow 2.2.0
 - Keras 2.3.1
-- NVIDIA GPU (24 GB Memory) + CUDA
-- We run all the codes in a Anaconda Powershell Prompt
+- NVIDIA GPU + CUDA
+Note that Linux also works with such configurations.
 
 ### Installation
-- Create a virtual environment and install tensorflow-gpu and keras.
+- Create a virtual environment and install tensorflow-gpu and keras (we run all the codes in a Anaconda Powershell Prompt).
 ```
 $ conda create -n 'IMC_Denoise' python=3.6
 $ conda activate IMC_Denoise (in some cases, source activate IMC_Denoise, depending on the system)
