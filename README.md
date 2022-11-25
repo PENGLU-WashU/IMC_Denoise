@@ -74,8 +74,8 @@ IMC_Denoise
 ### Installation
 - Create a virtual environment and install tensorflow-gpu and keras (we run all the codes in a Anaconda Powershell Prompt).
 ```
-$ conda create -n 'IMC_Denoise' python=3.6
-$ conda activate IMC_Denoise (in some cases, source activate IMC_Denoise, depending on the system)
+$ conda create -n 'IMC_Denoise' python=3.6 (in case it does not work, please try: conda create -n IMC_Denoise python=3.6 anaconda)
+$ conda activate IMC_Denoise (some systems recommend: source activate IMC_Denoise)
 $ conda install -c anaconda brotlipy
 $ pip install tensorflow==2.2.0 keras==2.3.1
 $ conda install -c anaconda cudnn=7.6.5 cudatoolkit=10.1.243
