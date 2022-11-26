@@ -41,7 +41,7 @@ class DeepSNiF():
     
     def __init__(self, train_epoches = 200, train_learning_rate = 0.001, lr_decay_rate = 0.6, train_batch_size = 128, mask_perc_pix = 0.2, val_perc = 0.1,
                  loss_func = "I_divergence", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, 
-                 truncated_max_rate = 0.99999, lambda_HF = 0):
+                 truncated_max_rate = 0.99999, lambda_HF = 3e-6):
         
         """
         Parameters
@@ -74,7 +74,7 @@ class DeepSNiF():
             False: not load any pre-trained weights. 
             The default is False.
         truncated_max_rate: float, optional
-            The max_val of the channel is 1.1*max(images, truncated_max_rate*maximum).
+            The max_val of the channel is 1.1*(truncated_max_rate*100)-th pixel values.
             The default is 0.99999. It should work in most cases.
             When the maximum of the predicted image is much higher, the value may be set higher during 
             training. But the values which is out of the range of the training set may not be predicted
