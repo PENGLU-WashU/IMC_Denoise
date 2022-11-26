@@ -4,6 +4,7 @@ python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.
                                            --weights_name 'weights_141Pr-CD38.hdf5' 
                                            --train_epoches '50' 
                                            --train_batch_size '128'
+                                           --val_set_percent '0.15'
                                            --train_initial_lr '1e-3' 
                                            --lambda_HF '3e-6'
                                            --truncated_max_rate '0.99999'
