@@ -39,7 +39,7 @@ class DeepSNiF():
     
     # DeepSNiF class, including DeepSNiF training, prediction, etc.
     
-    def __init__(self, train_epoches = 200, train_learning_rate = 0.001, lr_decay_rate = 0.6, train_batch_size = 128, mask_perc_pix = 0.2, val_perc = 0.1,
+    def __init__(self, train_epoches = 200, train_learning_rate = 0.001, lr_decay_rate = 0.5, train_batch_size = 128, mask_perc_pix = 0.2, val_perc = 0.15,
                  loss_func = "I_divergence", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, 
                  truncated_max_rate = 0.99999, lambda_HF = 3e-6):
         
@@ -47,13 +47,13 @@ class DeepSNiF():
         Parameters
         ----------
         train_epoches : int, optional
-            The default is 100.
+            The default is 200.
         train_learning_rate : float, optional
             The default is 0.001.
         lr_decay_rate: float, optional
-            The default is 0.6.
+            The default is 0.5.
         train_batch_size : int, optional
-            The default is 256.
+            The default is 128.
         mask_perc_pix : float, optional
             Percentage of the masked pixels for every patch. The default is 0.2.
         val_perc : float, optional
