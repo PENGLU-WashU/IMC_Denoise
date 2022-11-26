@@ -2,7 +2,7 @@
 """
 python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' 
                                            --weights_name 'weights_141Pr-CD38.hdf5' 
-                                           --train_epoches '50' 
+                                           --train_epoches '200' 
                                            --train_batch_size '128'
                                            --val_set_percent '0.15'
                                            --train_initial_lr '1e-3' 
@@ -65,10 +65,10 @@ parser.add_argument("--loss_name", help = "training and validation losses saved 
                     If not defined, the losses will not be saved.", default = None, type = str)
 parser.add_argument("--weights_save_directory", help = "location where 'weights_name' and 'loss_name' saved. If the \
                     value is None, the files will be saved in the current file folder.", default = None, type = str)
-parser.add_argument("--train_epoches", help = "training_epoches", default = 100, type = int)
+parser.add_argument("--train_epoches", help = "training_epoches", default = 200, type = int)
 parser.add_argument("--train_initial_lr", help = "initial learning rate", default = 1e-3, type = float)
 parser.add_argument("--lr_decay_rate", help = "decay learning rate", default = 0.5, type = float)
-parser.add_argument("--train_batch_size", help = "batch size", default = 256, type = int)
+parser.add_argument("--train_batch_size", help = "batch size", default = 128, type = int)
 parser.add_argument("--pixel_mask_percent", help = "percentage of the masked pixels in each patch", default = 0.2, type = float)
 parser.add_argument("--val_set_percent", help = "percentage of validation set", default = 0.15, type = float)
 parser.add_argument("--loss_function", help = "loss function used, I_divergence, mse or mse_relu", default = "I_divergence", type = str)
