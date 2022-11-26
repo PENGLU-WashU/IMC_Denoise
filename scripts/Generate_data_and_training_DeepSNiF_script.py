@@ -5,6 +5,7 @@ python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141
                                                             --Raw_directory "Raw_IMC_for_training" 
                                                             --train_epoches '200' 
                                                             --train_batch_size '128'
+                                                            --ratio_thresh '0.8'
                                                             --val_set_percent '0.15'
                                                             --n_neighbours '4' --n_iter '3' --slide_window_size '3'
                                                             --lambda_HF '3e-6'
