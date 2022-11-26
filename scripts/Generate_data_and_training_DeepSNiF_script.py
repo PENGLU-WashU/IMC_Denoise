@@ -52,7 +52,7 @@ parser.add_argument("--val_set_percent", help = "percentage of validation set", 
 parser.add_argument("--loss_function", help = "loss function used, I_divergence or mse", default = "I_divergence", type = str)
 parser.add_argument("--is_load_weights", help = "If True, the pre-trained will be loaded, which is fit for \
                     prediction or transfer learning", default = False, type = str2bool)
-parser.add_argument("--truncated_max_rate", help = "the max_val of the channel is 1.1*max(images, truncated_max_rate*maximum truncated). \
+parser.add_argument("--truncated_max_rate", help = "The max_val of the channel is 1.1*(truncated_max_rate*100)-th pixel values. \
                     The default is 0.99999. It should work in most cases. \
                     When the maximum of the predicted image is much higher, the value may be set higher during \
                     training. But the values which is out of the range of the training set may not be predicted \
