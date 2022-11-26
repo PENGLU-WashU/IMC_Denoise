@@ -72,7 +72,7 @@ parser.add_argument("--truncated_max_rate", help = "the max_val of the channel i
                     When the maximum of the predicted image is much higher, the value may be set higher during \
                     training. But the values which is out of the range of the training set may not be predicted \
                     well. Therefore, the selection of a good training set is important.", default = 0.99999, type = float)   
-parser.add_argument("--lambda_HF", help = "The parameter for Hessian regularization", default = 0, type = float)
+parser.add_argument("--lambda_HF", help = "The parameter for Hessian regularization", default = 3e-6, type = float)
 
 args = parser.parse_args()
 print(args)
