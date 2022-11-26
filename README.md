@@ -140,15 +140,17 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
 
 - Previously generated training sets and trained weights can be accessed from https://doi.org/10.5281/zenodo.7101454. Please refer to our paper for more details.
 ### Commonly used hyper-parameters of the algorithm
-| Parameter         | Description                                                                                                                                                                                                                       | Default Value | Data type |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------|
-| n_neighbours      | The number of adjacent pixels used to compare with center pixel in DIMR algorithm.                                                                                                                                                | 4             | int       |
-| n_iter            | The iteration number of DIMR algorithm.                                                                                                                                                                                           | 3             | int       |
-| slide_window_size | The sliding window size in DIMR algorithm.                                                                                                                                                                                        | 3             | int       |
-| ratio_thresh      | The threshold of the sparsity of the generated patch, which is range from 0 to 1.  If the percentage of zero-value pixel is larger than this threshold, the  corresponding patch will not be saved in the generated training set. | 0.8           | float     |
-| train_epoches     | The training epoches in DeepSNiF.                                                                                                                                                                                                 | 200           | int       |
-| train_batch_size  | The training batch size in DeepSNiF. Try smaller value if memory is not enough.                                                                                                                                                   | 256           | int       |
-| lambda_HF         | The parameter for Hessian regularization. We recommend to set it as 3e-6.                                                                                                                                                         | 3e-6          | float     |
+| Parameter          | Description                                                                                                                                                                                                                       | Default Value | Data type |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------|
+| n_neighbours       | The number of adjacent pixels used to compare with center pixel in DIMR algorithm.                                                                                                                                                | 4             | int       |
+| n_iter             | The iteration number of DIMR algorithm.                                                                                                                                                                                           | 3             | int       |
+| slide_window_size  | The sliding window size in DIMR algorithm.                                                                                                                                                                                        | 3             | int       |
+| ratio_thresh       | The threshold of the sparsity of the generated patch, which is range from 0 to 1.  If the percentage of zero-value pixel is larger than this threshold, the  corresponding patch will not be saved in the generated training set. | 0.8           | float     |
+| train_epoches      | The training epoches in DeepSNiF.                                                                                                                                                                                                 | 200           | int       |
+| train_batch_size   | The training batch size in DeepSNiF. Try smaller value if memory is not enough.                                                                                                                                                   | 256           | int       |
+| lambda_HF          | The parameter for Hessian regularization. We recommend to set it as 3e-6.                                                                                                                                                         | 3e-6          | float     |
+| train_initial_lr   | Initial training rate                                                                                                                                                                                                             | 1e-3          | float     |
+| truncated_max_rate | The max_val of the channel is 1.1*(truncated_max_rate*100)-th pixel values, which is used to mitigate the impact of extremely large pixel values. Normally set as  0.99999, 0.9999 or 0.999.                                      | 0.99999       | float     |
 ### IMC_Denoise tutorials with Jupyter Notebook
 - To start Jupyter Notebooks and run the examples.
 ```
@@ -174,11 +176,11 @@ $ conda activate IMC_Denoise
   ```
   - Train a DeepSNiF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted. Note that when implementing prediction, input the same "trained_weights" name. If your GPU has smaller memory so that it cannot afford a large "train_batch_size" such as 128 or 256, please use a smaller one, e.g. 64, 32.
   ```
-  python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' --train_data_directory 'directory_of_your_training_set' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '200' --train_batch_size '128' --lambda_HF '3e-6'
+  python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' --train_data_directory 'directory_of_your_training_set' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '200' --train_batch_size '128' --lambda_HF '3e-6' --train_initial_lr '1e-3' --truncated_max_rate '0.99999'
   ```
   - Generate training set for a specific marker channel and then train a DeepSNiF network. In this process, the generated training set will not be saved in a directory.
   ```
-  python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141Pr' --weights_name 'weights_141Pr-CD38.hdf5' --Raw_directory 'Your_raw_img_directory' --train_epoches '200' --train_batch_size '128' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8' --lambda_HF '3e-6'
+  python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141Pr' --weights_name 'weights_141Pr-CD38.hdf5' --Raw_directory 'Your_raw_img_directory' --train_epoches '200' --train_batch_size '128' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8' --lambda_HF '3e-6' --train_initial_lr '1e-3' --truncated_max_rate '0.99999'
   ```   
 - Combine multiple generated training sets from different channels into a single training set.
   ```
