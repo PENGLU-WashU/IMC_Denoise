@@ -7,6 +7,7 @@ python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141
                                                             --train_batch_size '128'
                                                             --n_neighbours '4' --n_iter '3' --slide_window_size '3'
                                                             --lambda_HF '3e-6'
+                                                            --truncated_max_rate '0.99999'
                                              
 """
 from IMC_Denoise.IMC_Denoise_main.DeepSNiF import DeepSNiF
