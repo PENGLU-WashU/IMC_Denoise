@@ -139,7 +139,7 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
 - We also provide all the images of this human bone marrow IMC dataset, which are compressed in **Raw_IMC_dataset_all_supp_table5** and can also be downloaded from https://doi.org/10.5281/zenodo.6533905. 
 
 - Previously generated training sets and trained weights can be accessed from https://doi.org/10.5281/zenodo.7101454. Please refer to our paper for more details.
-### Common used hyper-parameters
+### Common used hyper-parameters of the algorithm
 | Parameter         | Description                                                                                                                                                                                                                       | Default Value | Data type |
 |-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------|
 | n_neighbours      | The number of adjacent pixels used to compare with center pixel in DIMR algorithm.                                                                                                                                                | 4             | int       |
