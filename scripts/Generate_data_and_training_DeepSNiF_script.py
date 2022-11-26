@@ -3,7 +3,7 @@
 python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141Pr' 
                                                             --weights_name 'weights_141Pr-CD38.hdf5'
                                                             --Raw_directory "Raw_IMC_for_training" 
-                                                            --train_epoches '50' 
+                                                            --train_epoches '200' 
                                                             --train_batch_size '128'
                                                             --val_set_percent '0.15'
                                                             --n_neighbours '4' --n_iter '3' --slide_window_size '3'
@@ -30,7 +30,7 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--channel_name", help = "channel used to generate training set, e.g. 141Pr", type = str)
 parser.add_argument("--is_augment", help = "Augment data?", default = True, type = str2bool)
 parser.add_argument("--ratio_thresh", help = "The threshold of the sparsity of the generated patch. If larger than this threshold, \
-            the corresponding patch will be omitted. The default is 0.95.", default = 0.95, type = float)
+            the corresponding patch will be omitted. The default is 0.8.", default = 0.8, type = float)
 parser.add_argument("--patch_row_size", help = "The row size of generated patch.", default = 64, type = int)
 parser.add_argument("--patch_col_size", help = "The column size of generated patch.", default = 64, type = int)
 parser.add_argument("--row_step", help = "Row step length when generating training patches from imgs.", default = 60, type = int)
@@ -45,9 +45,9 @@ parser.add_argument("--loss_name", help = "training and validation losses saved 
                     If not defined, the losses will not be saved.", default = None, type = str)
 parser.add_argument("--weights_save_directory", help = "location where 'weights_name' and 'loss_name' saved. If the \
                     value is None, the files will be saved in the current file folder.", default = None, type = str)
-parser.add_argument("--train_epoches", help = "training_epoches", default = 100, type = int)
-parser.add_argument("--train_initial_lr", help = "initial learning rate", default = 5e-4, type = float)
-parser.add_argument("--train_batch_size", help = "batch size", default = 256, type = int)
+parser.add_argument("--train_epoches", help = "training_epoches", default = 200, type = int)
+parser.add_argument("--train_initial_lr", help = "initial learning rate", default = 1e-3, type = float)
+parser.add_argument("--train_batch_size", help = "batch size", default = 128, type = int)
 parser.add_argument("--pixel_mask_percent", help = "percentage of the masked pixels in each patch", default = 0.2, type = float)
 parser.add_argument("--val_set_percent", help = "percentage of validation set", default = 0.15, type = float)
 parser.add_argument("--loss_function", help = "loss function used, I_divergence or mse", default = "I_divergence", type = str)
