@@ -3,6 +3,7 @@
 python scripts/Data_generation_DeepSNiF_script.py --channel_name '141Pr' 
                                                  --Raw_directory "D:\python_file_folder\IMC_learning\IMC_Denoise\Raw_IMC_for_training"
                                                  --n_neighbours '4' --n_iter '3' --slide_window_size '3'
+                                                 --ratio_thresh '0.8'
 """
          
 from IMC_Denoise.DeepSNiF_utils.DeepSNiF_DataGenerator import DeepSNiF_DataGenerator
