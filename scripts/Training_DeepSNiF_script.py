@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '50' --train_batch_size '128'
+python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' 
+                                           --weights_name 'weights_141Pr-CD38.hdf5' 
+                                           --train_epoches '50' 
+                                           --train_batch_size '128'
+                                           --train_initial_lr '1e-3' 
+                                           --lambda_HF '3e-6'
+                                           --truncated_max_rate '0.99999'
 
 """
 
@@ -67,7 +73,7 @@ parser.add_argument("--val_set_percent", help = "percentage of validation set", 
 parser.add_argument("--loss_function", help = "loss function used, I_divergence, mse or mse_relu", default = "I_divergence", type = str)
 parser.add_argument("--is_load_weights", help = "If True, the pre-trained will be loaded, which is fit for \
                     prediction or transfer learning", default = False, type = str2bool)
-parser.add_argument("--truncated_max_rate", help = "the max_val of the channel is 1.1*max(images, truncated_max_rate*maximum truncated). \
+parser.add_argument("--truncated_max_rate", help = "The max_val of the channel is 1.1*(truncated_max_rate*100)-th pixel values. \
                     The default is 0.99999. It should work in most cases. \
                     When the maximum of the predicted image is much higher, the value may be set higher during \
                     training. But the values which is out of the range of the training set may not be predicted \
