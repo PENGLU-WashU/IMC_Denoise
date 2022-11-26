@@ -139,6 +139,16 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
 - We also provide all the images of this human bone marrow IMC dataset, which are compressed in **Raw_IMC_dataset_all_supp_table5** and can also be downloaded from https://doi.org/10.5281/zenodo.6533905. 
 
 - Previously generated training sets and trained weights can be accessed from https://doi.org/10.5281/zenodo.7101454. Please refer to our paper for more details.
+### Common used hyper-parameters
+| Parameter         | Description                                                                                                                                                                                                                       | Default Value | Data type |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------|
+| n_neighbours      | The number of adjacent pixels used to compare with center pixel in DIMR algorithm.                                                                                                                                                | 4             | int       |
+| n_iter            | The iteration number of DIMR algorithm.                                                                                                                                                                                           | 3             | int       |
+| slide_window_size | The sliding window size in DIMR algorithm.                                                                                                                                                                                        | 3             | int       |
+| ratio_thresh      | The threshold of the sparsity of the generated patch, which is range from 0 to 1.  If the percentage of zero-value pixel is larger than this threshold, the  corresponding patch will not be saved in the generated training set. | 0.8           | float     |
+| train_epoches     | The training epoches in DeepSNiF.                                                                                                                                                                                                 | 200           | int       |
+| train_batch_size  | The training batch size in DeepSNiF. Try smaller value if memory is not enough.                                                                                                                                                   | 256           | int       |
+| lambda_HF         | The parameter for Hessian regularization. We recommend to set it as 3e-6.                                                                                                                                                         | 3e-6          | float     |
 ### IMC_Denoise tutorials with Jupyter Notebook
 - To start Jupyter Notebooks and run the examples.
 ```
@@ -189,7 +199,7 @@ $ conda activate IMC_Denoise
   ```
   - Implement IMC_Denoise including DIMR and DeepSNiF for multiple IMC imagse if the images are contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
-  python scripts/Predict_IMC_Denoise_batch.py --channel_name '141Pr' --load_directory 'raw_image_folders (please refer to Section: Directory structure of IMC_Denoise)' --save_directory 'IMC_Denoise_processed_image_folders' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --loss_func 'the_loss_function_in_training' --n_neighbours '4' --n_iter '3' --slide_window_size '3' 
+  python scripts/Predict_IMC_Denoise_batch.py --channel_name '141Pr' --load_directory 'raw_image_folders (please refer to Section: Directory structure of IMC_Denoise)' --save_directory 'IMC_Denoise_processed_image_folders' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --n_neighbours '4' --n_iter '3' --slide_window_size '3' 
   ```
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
 
