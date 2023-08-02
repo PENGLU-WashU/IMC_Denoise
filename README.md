@@ -24,6 +24,7 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy **(i)** a 
 - [Customize environment for IMC_Denoise](#customize-environment-for-imc_denoise)
   - [Our IMC_Denoise environment](#our-imc_denoise-environment)
   - [Installation](#installation)
+  - [Encountering NaN loss](#encountering-nan-loss)
   - [Docker](#docker)
 - [Implement IMC_Denoise](#implement-imc_denoise)
   - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
