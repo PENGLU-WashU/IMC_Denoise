@@ -94,7 +94,11 @@ $ git clone https://github.com/PENGLU-WashU/IMC_Denoise.git
 $ cd IMC_Denoise
 $ pip install -e .
 ```
-
+### Encountering NaN loss
+- In case the training losses are NaN, please install the following cuda libraries:
+```
+conda install -c anaconda cudnn=8.1 cudatoolkit=11.2
+```
 ### Docker
 - Use dockerfile provided to build reproducible environment with IMC_Denoise.  
 ```
