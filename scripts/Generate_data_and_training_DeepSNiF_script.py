@@ -88,7 +88,7 @@ deepsnif = DeepSNiF(train_epoches = args.train_epoches,
                   weights_dir = args.weights_save_directory,
                   is_load_weights = args.is_load_weights,
                   truncated_max_rate = args.truncated_max_rate,
-                  lambda_HF = args.lambda_HF
+                  lambda_HF = args.lambda_HF,
                   network_size = args.network_size)
 
 deepsnif.train(generated_patches)
