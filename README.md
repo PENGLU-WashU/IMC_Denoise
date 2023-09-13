@@ -26,6 +26,7 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy **(i)** a 
   - [Installation](#installation)
   - [Encountering NaN loss](#encountering-nan-loss)
   - [Docker](#docker)
+- [Network structure (new)](#network-structure-new)
 - [Implement IMC_Denoise](#implement-imc_denoise)
   - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
   - [Download example data](#download-example-data)
@@ -114,6 +115,7 @@ $ cd /IMC_Denoise
 
 $ LSF_DOCKER_PORTS="8888:8888" PATH="/opt/conda/bin:$PATH" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(imc_denoise:latest)' jupyter-notebook --ip=0.0.0.0 --NotebookApp.allow_origin=*
 ```
+## Network structure (new)
 
 
 ## Implement IMC_Denoise
@@ -157,6 +159,7 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
 | train_initial_lr   | Initial training rate.                                                                                                                                                                                                             | 1e-3          | float     |
 | truncated_max_rate | The max_val of the channel is 1.1*(truncated_max_rate*100)-th pixel values, which is used to mitigate the impact of extremely large pixel values. Normally set as  0.99999, 0.9999 or 0.999.                                      | 0.99999       | float     |
 | val_set_percent    | The percentage of patches used as validation set, which ranges from 0 to 1.                                                                                                                                                                                  | 0.15          | float     |
+| network_size    | Decide whether normal (33,136,320 parameters) or small (243,488 parameters) network to be used.                                                                                                                                                                                  | small          | str     |
 ### IMC_Denoise tutorials with Jupyter Notebook
 - To start Jupyter Notebooks and run the examples.
 ```
@@ -182,11 +185,11 @@ $ conda activate IMC_Denoise
   ```
   - Train a DeepSNiF network. The generated training set will be loaded from a default folder other than choosing a customized folder. The trained weights will be saved in a sub-directory "trained_weights" of the current folder other than setting a customized folder. Hyper-parameters can be adjusted. Note that when implementing prediction, input the same "trained_weights" name. If your GPU has smaller memory so that it cannot afford a large "train_batch_size" such as 128 or 256, please use a smaller one, e.g. 64, 32.
   ```
-  python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' --train_data_directory 'directory_of_your_training_set' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '200' --train_batch_size '128' --val_set_percent '0.15' --lambda_HF '3e-6' --train_initial_lr '1e-3' --truncated_max_rate '0.99999'
+  python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.npz' --train_data_directory 'directory_of_your_training_set' --weights_name 'weights_141Pr-CD38.hdf5' --train_epoches '200' --train_batch_size '128' --val_set_percent '0.15' --lambda_HF '3e-6' --train_initial_lr '1e-3' --truncated_max_rate '0.99999' --network_size 'small'
   ```
   - Generate training set for a specific marker channel and then train a DeepSNiF network. In this process, the generated training set will not be saved in a directory.
   ```
-  python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141Pr' --weights_name 'weights_141Pr-CD38.hdf5' --Raw_directory 'Your_raw_img_directory' --train_epoches '200' --train_batch_size '128' --val_set_percent '0.15' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8' --lambda_HF '3e-6' --train_initial_lr '1e-3' --truncated_max_rate '0.99999'
+  python scripts/Generate_data_and_training_DeepSNiF_script.py --channel_name '141Pr' --weights_name 'weights_141Pr-CD38.hdf5' --Raw_directory 'Your_raw_img_directory' --train_epoches '200' --train_batch_size '128' --val_set_percent '0.15' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --ratio_thresh '0.8' --lambda_HF '3e-6' --train_initial_lr '1e-3' --truncated_max_rate '0.99999' --network_size 'small'
   ```   
 - Combine multiple generated training sets from different channels into a single training set.
   ```
@@ -203,11 +206,11 @@ $ conda activate IMC_Denoise
   ```
   - Implement IMC_Denoise including DIMR and DeepSNiF for a single IMC image if the image is contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
-  python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'your_raw_img_name(.tiff)' --Denoised_img_name 'your_denoised_img_name(.tiff)' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --n_neighbours '4' --n_iter '3' --slide_window_size '3' 
+  python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'your_raw_img_name(.tiff)' --Denoised_img_name 'your_denoised_img_name(.tiff)' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --n_neighbours '4' --n_iter '3' --slide_window_size '3'  --network_size 'small'
   ```
   - Implement IMC_Denoise including DIMR and DeepSNiF for multiple IMC imagse if the images are contaminated by hot pixels and suffers from low SNR. The trained weights will be loaded from the default directory other than choosing a customized folder. 
   ```
-  python scripts/Predict_IMC_Denoise_batch.py --channel_name '141Pr' --load_directory 'raw_image_folders (please refer to Section: Directory structure of IMC_Denoise)' --save_directory 'IMC_Denoise_processed_image_folders' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --n_neighbours '4' --n_iter '3' --slide_window_size '3' 
+  python scripts/Predict_IMC_Denoise_batch.py --channel_name '141Pr' --load_directory 'raw_image_folders (please refer to Section: Directory structure of IMC_Denoise)' --save_directory 'IMC_Denoise_processed_image_folders' --weights_name 'weights_141Pr-CD38.hdf5' --weights_save_directory 'your_directory_to_save_trained_weights' --n_neighbours '4' --n_iter '3' --slide_window_size '3' --network_size 'small'
   ```
 - More specific parameters can also be added and adjusted. Please refer to the scripts files.
 
