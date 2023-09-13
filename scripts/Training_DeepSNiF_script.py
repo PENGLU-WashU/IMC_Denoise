@@ -8,6 +8,7 @@ python scripts/Training_DeepSNiF_script.py --train_set_name 'training_set_141Pr.
                                            --train_initial_lr '1e-3' 
                                            --lambda_HF '3e-6'
                                            --truncated_max_rate '0.99999'
+                                           --network_size 'small'
 
 """
 
@@ -80,6 +81,7 @@ parser.add_argument("--truncated_max_rate", help = "The max_val of the channel i
                     training. But the values which is out of the range of the training set may not be predicted \
                     well. Therefore, the selection of a good training set is important.", default = 0.99999, type = float)   
 parser.add_argument("--lambda_HF", help = "The parameter for Hessian regularization", default = 3e-6, type = float)
+parser.add_argument("--network_size", help = "normal or small network to be used?", default = 'small', type = str)
 
 args = parser.parse_args()
 print(args)
@@ -102,6 +104,7 @@ deepsnif = DeepSNiF(train_epoches = args.train_epoches,
                   weights_dir = args.weights_save_directory,
                   is_load_weights = args.is_load_weights,
                   truncated_max_rate = args.truncated_max_rate,
-                  lambda_HF = args.lambda_HF)
+                  lambda_HF = args.lambda_HF,
+                  network_size = args.network_size)
 
 deepsnif.train(train_data)

@@ -13,7 +13,7 @@ import tifffile as tp
 from keras import optimizers
 from keras.models import Model
 from keras.layers import Input
-from IMC_Denoise.IMC_Denoise_main.DeepSNiF_model import DeepSNiF_net
+from IMC_Denoise.IMC_Denoise_main.DeepSNiF_model import DeepSNiF_net, DeepSNiF_net_small
 from IMC_Denoise.IMC_Denoise_main.loss_functions import create_I_divergence, create_mse
 from IMC_Denoise.IMC_Denoise_main.DIMR import DIMR
 from IMC_Denoise.Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased
@@ -41,11 +41,20 @@ parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default
 parser.add_argument("--n_iter", help = "DIMR algorithm parameter", default = 3, type = int)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
 parser.add_argument("--GPU", help = "using GPU?", default = True, type = str2bool)
+parser.add_argument("--network_size", help = "normal or small network to be used?", default = 'small', type = str)
 args = parser.parse_args()
 print(args)
 
 if not args.GPU:
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
+if args.network_size == 'normal':
+    network_used = DeepSNiF_net
+elif args.network_size == 'small':
+    network_used = DeepSNiF_net_small
+else:
+    raise Exception('The network_size should be either normal or small!')
+    
 
 # define a class to save image information
 class single_img_info:
@@ -97,7 +106,7 @@ myrange = myrange['range_val']
 print('The range is %f.' % myrange)
 
 input_ = Input (shape = (None, None, 1))
-act_ = DeepSNiF_net(input_, 'Pred_', loss_func = args.loss_func)
+act_ = network_used(input_, 'Pred_', loss_func = args.loss_func)
 model = Model (inputs= input_, outputs=act_)
 model.compile(optimizer = optimizers.Adam(lr=1e-3), loss = create_I_divergence(lambda_HF = 0))
 model.load_weights(trained_weights)

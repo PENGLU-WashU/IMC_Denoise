@@ -90,3 +90,47 @@ def DeepSNiF_net(input, names, loss_func,trainable_label = True):
                                name='Prediction_relu')(Features9)
 
     return Features10
+
+def DeepSNiF_net_small(input, names, loss_func,trainable_label = True):
+    filter_num = 16
+    Features1 = conv_bn_relu_gen(filter_num, 3, 3, 1, names+'Block1',trainable_label=trainable_label)(input)
+    
+    pool1 = MaxPooling2D(pool_size=(2,2),name=names+'Pool1')(Features1)
+    Features2 = conv_bn_relu_gen(filter_num*2, 3, 3, 1, names+'Block2',trainable_label=trainable_label)(pool1)
+    
+    pool2 = MaxPooling2D(pool_size=(2, 2),name=names+'Pool2')(Features2)
+    Features3 = conv_bn_relu_gen(filter_num*4, 3, 3, 1, names+'Block3',trainable_label=trainable_label)(pool2)
+    
+    pool3 = MaxPooling2D(pool_size=(2, 2),name=names+'Pool3')(Features3)
+    Features4 = conv_bn_relu_gen(filter_num*8, 3, 3, 1, names+'Block4',trainable_label=trainable_label)(pool3)
+    
+    up1 = UpSampling2D(size=(2, 2),name=names+'Upsample1')(Features4)
+    merge1 = concatenate([Features3,up1], axis = 3)
+    Features5 = conv_bn_relu_gen(filter_num*4, 3, 3, 1, names+'Block5',trainable_label=trainable_label)(merge1)
+    
+    up2 = UpSampling2D(size=(2, 2),name=names+'Upsample2')(Features5)
+    merge2 = concatenate([Features2,up2], axis = 3)
+    Features6 = conv_bn_relu_gen(filter_num*2, 3, 3, 1, names+'Block6',trainable_label=trainable_label)(merge2)
+    
+    up3 = UpSampling2D(size=(2, 2),name=names+'Upsample3')(Features6)
+    merge3 = concatenate([Features1,up3], axis = 3)
+    Features7 = conv_bn_relu_gen(filter_num, 3, 3, 1, names+'Block7',trainable_label=trainable_label)(merge3)
+    
+    if loss_func == "I_divergence":
+        Features8 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+                               activation="softplus", use_bias = False, 
+                               kernel_initializer="truncated_normal",
+                               name='Prediction_softplus')(Features7)
+    elif loss_func == "mse":
+        Features8 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+                               activation="linear", use_bias = False, 
+                               kernel_initializer="truncated_normal",
+                               name='Prediction_linear')(Features7)
+        
+    elif loss_func == "mse_relu":
+        Features8 = Convolution2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same", 
+                               activation="relu", use_bias = False, 
+                               kernel_initializer="truncated_normal",
+                               name='Prediction_relu')(Features7)
+
+    return Features8

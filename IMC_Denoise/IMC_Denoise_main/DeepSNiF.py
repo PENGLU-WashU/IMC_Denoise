@@ -12,7 +12,7 @@ from keras.layers import Input
 from keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
 
 from .DIMR import DIMR
-from .DeepSNiF_model import DeepSNiF_net
+from .DeepSNiF_model import DeepSNiF_net, DeepSNiF_net_small
 from .loss_functions import create_I_divergence, create_mse
 from ..DeepSNiF_utils.DeepSNiF_TrainGenerator import DeepSNiF_Training_DataGenerator, DeepSNiF_Validation_DataGenerator
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased, Anscombe_inverse_direct
@@ -41,7 +41,7 @@ class DeepSNiF():
     
     def __init__(self, train_epoches = 200, train_learning_rate = 0.001, lr_decay_rate = 0.5, train_batch_size = 128, mask_perc_pix = 0.2, val_perc = 0.15,
                  loss_func = "I_divergence", weights_name = None, loss_name = None, weights_dir = None, is_load_weights = False, 
-                 truncated_max_rate = 0.99999, lambda_HF = 3e-6):
+                 truncated_max_rate = 0.99999, lambda_HF = 3e-6, network_size = 'small'):
         
         """
         Parameters
@@ -81,6 +81,10 @@ class DeepSNiF():
             well. Therefore, the selection of a good training set is important.
         lambda_HF: float, optional
             The parameter for Hessian regularization. The best value is around 3e-6.
+        network_size: 'normal' or 'small', optional
+            The parameter to determine the size of the network used for training. The default value is 'small'.
+            'small' for faster training, inference and less memory used
+            'normal' for a large dataset
 
         """
         if not isinstance(train_epoches, int):
@@ -129,6 +133,13 @@ class DeepSNiF():
                 return
             
         self.lambda_HF = lambda_HF
+        if network_size == 'normal':
+            self.network_used = DeepSNiF_net
+        elif network_size == 'small':
+            self.network_used = DeepSNiF_net_small
+        else:
+            print('the network_size should be either normal or small!')
+            return
         
         if is_load_weights:
             self.trained_model = self.load_model()
@@ -148,7 +159,7 @@ class DeepSNiF():
             self.loss_function == "I_divergence"
             network_name = 'DeepSNiF_'
             
-        act_ = DeepSNiF_net(input_, network_name, loss_func = self.loss_function, trainable_label = True)
+        act_ = self.network_used(input_, network_name, loss_func = self.loss_function, trainable_label = True)
         model = Model (inputs= input_, outputs=act_)  
         
         opt = optimizers.Adam(lr=self.train_learning_rate)
@@ -156,7 +167,7 @@ class DeepSNiF():
             model.compile(optimizer=opt, loss = create_mse(lambda_HF = self.lambda_HF))
         else:
             model.compile(optimizer=opt, loss = create_I_divergence(lambda_HF = self.lambda_HF))
-            
+        
         return model
     
     def train(self, X):

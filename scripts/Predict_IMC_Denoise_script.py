@@ -4,6 +4,7 @@ python scripts/Predict_IMC_Denoise_script.py --Raw_img_name 'D:\IMC analysis\Raw
                                              --Denoised_img_name 'D:\IMC analysis\Denoised_IMC_dataset\141Pr-CD38_Pr141.tiff' 
                                              --weights_name "weights_141Pr-CD38.hdf5"   
                                              --n_neighbours '4' --n_iter '3' --slide_window_size '3' 
+                                             --network_size 'small'
 """
 
 import tifffile as tp
@@ -20,11 +21,13 @@ parser.add_argument("--weights_save_directory", help = "location where 'weights_
 parser.add_argument("--n_neighbours", help = "DIMR algorithm parameter", default = 4, type = int)
 parser.add_argument("--n_iter", help = "DIMR algorithm parameter", default = 3, type = int)
 parser.add_argument("--slide_window_size", help = "DIMR algorithm parameter", default=3, type = int)
+parser.add_argument("--network_size", help = "normal or small network to be used?", default = 'small', type = str)
                     
 args = parser.parse_args()
 print(args)
 
-deepsnif = DeepSNiF(weights_name = args.weights_name,
+deepsnif = DeepSNiF(network_size = args.network_size,
+                  weights_name = args.weights_name,
                   weights_dir = args.weights_save_directory,
                   is_load_weights = True) # in prediction, this parameter should be set as true so that the trained weights can be loaded.  
 
