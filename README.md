@@ -116,7 +116,11 @@ $ cd /IMC_Denoise
 $ LSF_DOCKER_PORTS="8888:8888" PATH="/opt/conda/bin:$PATH" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(imc_denoise:latest)' jupyter-notebook --ip=0.0.0.0 --NotebookApp.allow_origin=*
 ```
 ## Network structure (new)
-
+Now we have added one more hyper-parameter "network_size" (please refer to the hyper-parameter table and the code). 
+- When setting the parameter as "normal", the original network structure using Resnet and UNet will be applied in training and prediction.
+- When setting the parameter as "small", a much smaller network only using UNet will be applied, so that the total parameters decrease from 33,136,320 to 243,488, and the training time decreases by approximately 80%.
+- The small network is fit for small datasets (all of our cases work well!). Nevertheless, the normal one can be applied if you have a much larger dataset or the performance of the small one is not ideal.
+- You can even define your own network structure by changing the code in "IMC_Denoise/IMC_Denoise_main/DeepSNiF_model".
 
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
