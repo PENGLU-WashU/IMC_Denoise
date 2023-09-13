@@ -26,10 +26,11 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy **(i)** a 
   - [Installation](#installation)
   - [Encountering NaN loss](#encountering-nan-loss)
   - [Docker](#docker)
-- [Network structure (new)](#network-structure-new)
 - [Implement IMC_Denoise](#implement-imc_denoise)
   - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
   - [Download example data](#download-example-data)
+  - [Network structure (new)](#network-structure-new)
+  - [Commonly used hyper-parameters of the algorithm](commonly-used-hyper-parameters-of-the-algorithm)
   - [IMC_Denoise tutorials with Jupyter Notebook](#imc_denoise-tutorials-with-jupyter-notebook)
   - [Implement IMC_Denoise with scripts](#implement-imc_denoise-with-scripts)
 - [Contact](#contact)
@@ -115,13 +116,6 @@ $ cd /IMC_Denoise
 
 $ LSF_DOCKER_PORTS="8888:8888" PATH="/opt/conda/bin:$PATH" bsub -Is -R 'select[gpuhost,port8888=1]' -gpu "num=1:gmodel=TeslaV100_SXM2_32GB" -a 'docker(imc_denoise:latest)' jupyter-notebook --ip=0.0.0.0 --NotebookApp.allow_origin=*
 ```
-## Network structure (new)
-Now we have added one more hyper-parameter "network_size" (please refer to the hyper-parameter table and the code). 
-- When setting the parameter as "normal", the original network structure using Resnet and UNet will be applied in training and prediction.
-- When setting the parameter as "small", a much smaller network only using UNet will be applied, so that the total parameters decrease from 33,136,320 to 243,488, and the training time decreases by approximately 80%.
-- The small network is fit for small datasets (all of our cases work well!). Nevertheless, the normal one can be applied if you have a much larger dataset or the performance of the small one is not ideal.
-- You can even define your own network structure by changing the code in "IMC_Denoise/IMC_Denoise_main/DeepSNiF_model".
-
 ## Implement IMC_Denoise
 ### Directory structure of raw IMC images
 In order to generate a training set for DeepSNiF, the directory structure of raw IMC images must be arranged as follows. Note that the Channel_img names should contain the specific isotope names. For example, "141Pr" in "141Pr-CD38_Pr141.tiff" and "144Nd" in "144Nd-CD14_Nd144.tiff". We define the isotope names as the channel names of the IMC images.
@@ -150,6 +144,12 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
 - We also provide all the images of this human bone marrow IMC dataset, which are compressed in **Raw_IMC_dataset_all_supp_table5** and can also be downloaded from https://doi.org/10.5281/zenodo.6533905. 
 
 - Previously generated training sets and trained weights can be accessed from https://doi.org/10.5281/zenodo.7101454. Please refer to our paper for more details.
+### Network structure (new)
+Now we have added one more hyper-parameter "network_size" (please refer to the hyper-parameter table and the code). 
+- When setting the parameter as "normal", the original network structure using Resnet and UNet will be applied in training and prediction.
+- When setting the parameter as "small", a much smaller network only using UNet will be applied, so that the total parameters decrease from 33,136,320 to 243,488, and the training time decreases by approximately 80%.
+- The small network is fit for small datasets (all of our cases work well!). Nevertheless, the normal one can be applied if you have a much larger dataset or the performance of the small one is not ideal.
+- You can even define your own network structure by changing the code in "IMC_Denoise/IMC_Denoise_main/DeepSNiF_model".
 ### Commonly used hyper-parameters of the algorithm
 | Parameter          | Description                                                                                                                                                                                                                       | Default Value | Data type |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|-----------|
