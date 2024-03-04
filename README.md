@@ -10,7 +10,7 @@
       
       - This funcitonality is optionally set as part of the DeepSNiF Data Generator class
       
-      - The original single-channel .tiff format should remain the default behavior (multi-channel must be explicitly defined to get th enew behaviour)
+      - The original single-channel .tiff format should remain the default behavior (multi-channel must be explicitly defined to get the new behaviour)
       
 --> added IMC_Denoise_integrated_with_steinbock_output.ipynb file to scripts folder
 
