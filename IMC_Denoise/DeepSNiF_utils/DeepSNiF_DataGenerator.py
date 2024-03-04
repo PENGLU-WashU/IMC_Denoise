@@ -9,6 +9,9 @@ from glob import glob
 from ..IMC_Denoise_main.DIMR import DIMR
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_direct
 
+#### Edited by Ben Caiello 2-26-24 to be able to ingest multi-channel .tiffs in a single folder
+#### This is to allow it to seemlessly take in data from Steinbock (https://bodenmillergroup.github.io/steinbock/)
+
 class DeepSNiF_DataGenerator():
     
     """
@@ -17,7 +20,7 @@ class DeepSNiF_DataGenerator():
     """
     def __init__(self, patch_row_size = 64, patch_col_size = 64, row_step = 60, col_step = 60, 
                  ratio_thresh = 0.8, channel_name = None, is_augment = True, 
-                 n_neighbours = 4, n_iter = 3, window_size = 3):
+                 n_neighbours = 4, n_iter = 3, window_size = 3, run_type = "multi_channel_tiff"):
         
         """
         Initialize class parameters.
@@ -63,8 +66,13 @@ class DeepSNiF_DataGenerator():
             See DIMR. The default is 4.
         n_iter : float, optional
             See DIMR. The default is 3.
-
+        run_type : string, optional
+            This determines whether the program will ingest data in the multi-folder single-channel .tiff format,
+            as described above, or if it will ingest data in a single folder with multi-channel .tiffs (in line
+            with steinbock output). The two options are 'single_channel_tiff' or the default, 'multi_channel_tiff',
+            corresponding to the two file formats described above, in order. 
         """
+        ## note the added run_type attribute!
         if not isinstance(patch_row_size, int) or not isinstance(patch_col_size, int) \
             or not isinstance(row_step, int) or not isinstance(col_step, int):
             raise ValueError('patch_row_size, patch_col_size, row_step and col_step must be int!')
@@ -86,6 +94,7 @@ class DeepSNiF_DataGenerator():
         self.n_neighbours = n_neighbours
         self.n_iter = n_iter
         self.window_size = window_size
+        self.run_type = run_type    # edited in
         
         if channel_name is None:
             raise ValueError('Please provide the channel name!')
@@ -165,17 +174,34 @@ class DeepSNiF_DataGenerator():
 
         """
         Img_collect = []
-        img_folders = glob(join(load_directory, "*", ""))
+        if (self.run_type == 'single_channel_tiff'):
+            img_folders = glob(join(load_directory, "*", ""))
     
-        print('Image data loaded from ...\n')
-        for sub_img_folder in img_folders:
-            Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
+            print('Image data loaded from ...\n')
+            for sub_img_folder in img_folders:
+                Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
+                for Img_file in Img_list:
+                    if self.channel_name.lower() in Img_file.lower():
+                        Img_read = self.load_single_img(sub_img_folder + Img_file)
+                        print(sub_img_folder + Img_file)
+                        Img_collect.append(Img_read)
+                        break
+        
+        ##### edited to read multichannel .tiffs directly inside load_directory (if statement also added above)
+        # selecting only the channel (with its name as an integer) of interest
+        elif (self.run_type == 'multi_channel_tiff'):
+            Img_list = []
+            for img in listdir(load_directory):
+                if img.endswith(".tiff") or img.endswith(".tif"):
+                    Img_list.append(img)
             for Img_file in Img_list:
-                if self.channel_name.lower() in Img_file.lower():
-                    Img_read = self.load_single_img(sub_img_folder + Img_file)
-                    print(sub_img_folder + Img_file)
-                    Img_collect.append(Img_read)
-                    break
+                Img_read = tp.TiffFile(load_directory + '\\' + Img_file).pages[self.channel_name].asarray()
+                Img_collect.append(Img_read)
+        
+                
+        else:
+            raise ValueError("run_type not of the values 'multi_channel_tiff' or 'single_channel_tiff'")
+        ###### end edit
         
         print('\n' + 'Image data loading completed!')
         if not Img_collect:
