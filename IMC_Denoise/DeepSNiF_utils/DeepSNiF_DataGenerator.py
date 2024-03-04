@@ -9,10 +9,6 @@ from glob import glob
 from ..IMC_Denoise_main.DIMR import DIMR
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_direct
 
-#### Edited by Ben Caiello 2-26-24 to be able to ingest multi-channel .tiffs in a single folder
-#### This is to allow it to seemlessly take in data from Steinbock (https://bodenmillergroup.github.io/steinbock/)
-#### see the following edited lines: 24 (+docstring 49-56, 79-83), 186, 199-212 
-
 class DeepSNiF_DataGenerator():
     
     """
@@ -21,8 +17,8 @@ class DeepSNiF_DataGenerator():
     """
     def __init__(self, patch_row_size = 64, patch_col_size = 64, row_step = 60, col_step = 60, 
                  ratio_thresh = 0.8, channel_name = None, is_augment = True, 
-                 n_neighbours = 4, n_iter = 3, window_size = 3, run_type = "single_channel_tiff"):           ## note the added run_type attribute!
-        
+                 n_neighbours = 4, n_iter = 3, window_size = 3, run_type = "single_channel_tiff"):
+
         """
         Initialize class parameters.
         
@@ -183,7 +179,7 @@ class DeepSNiF_DataGenerator():
 
         """
         Img_collect = []
-        if (self.run_type == 'single_channel_tiff'):    # runs the original code of IMC_denoise for data of the original structure
+        if (self.run_type == 'single_channel_tiff'):
             img_folders = glob(join(load_directory, "*", ""))
     
             print('Image data loaded from ...\n')
@@ -196,8 +192,6 @@ class DeepSNiF_DataGenerator():
                         Img_collect.append(Img_read)
                         break
         
-        ##### edited to read multichannel .tiffs directly inside the load_directory
-        # selecting only the channel (with its name as an integer) of interest
         elif (self.run_type == 'multi_channel_tiff'):
             Img_list = []
             for img in listdir(load_directory):
@@ -209,7 +203,6 @@ class DeepSNiF_DataGenerator():
                 
         else:
             raise ValueError("run_type not of the values 'multi_channel_tiff' or 'single_channel_tiff'")
-        ###### end edit
         
         print('\n' + 'Image data loading completed!')
         if not Img_collect:
