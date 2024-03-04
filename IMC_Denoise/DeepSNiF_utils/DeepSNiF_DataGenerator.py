@@ -26,7 +26,7 @@ class DeepSNiF_DataGenerator():
         """
         Initialize class parameters.
         
-        The raw image structure should be as follows for run_type = "single_channel_riff".
+        The raw image structure should be as follows for run_type = "single_channel_tiff".
         
             |---Raw_image_directory
             |---|---Tissue1
