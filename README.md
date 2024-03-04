@@ -7,6 +7,8 @@
 --> edited the DeepSNiF_DataGenerator.py file (in the IMC_denoise\DeepSNiF_utils folder)
 
       - modified file so that the package can ingest multi-channel .tiff data
+
+      - This was only designed to be accessible through a python / Jupyter notebook script -- I am uncertain of how this would be integrated with the docker portion of IMC_denoise
       
       - This funcitonality is optionally set as part of the DeepSNiF Data Generator class
       
