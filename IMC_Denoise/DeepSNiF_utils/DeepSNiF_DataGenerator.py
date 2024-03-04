@@ -181,7 +181,6 @@ class DeepSNiF_DataGenerator():
         Img_collect = []
         if (self.run_type == 'single_channel_tiff'):
             img_folders = glob(join(load_directory, "*", ""))
-    
             print('Image data loaded from ...\n')
             for sub_img_folder in img_folders:
                 Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
@@ -191,7 +190,6 @@ class DeepSNiF_DataGenerator():
                         print(sub_img_folder + Img_file)
                         Img_collect.append(Img_read)
                         break
-        
         elif (self.run_type == 'multi_channel_tiff'):
             Img_list = []
             for img in listdir(load_directory):
@@ -199,8 +197,7 @@ class DeepSNiF_DataGenerator():
                     Img_list.append(img)
             for Img_file in Img_list:
                 Img_read = tp.TiffFile(load_directory + '\\' + Img_file).pages[self.channel_name].asarray()
-                Img_collect.append(Img_read)
-                
+                Img_collect.append(Img_read)     
         else:
             raise ValueError("run_type not of the values 'multi_channel_tiff' or 'single_channel_tiff'")
         
