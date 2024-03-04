@@ -3,30 +3,6 @@
 ![Python version](https://img.shields.io/badge/python-v3.6-blue)
 ![Suggestions](https://img.shields.io/badge/suggestions-welcome-green)
 
-# IMC-denoise connection to steinbock:
-
-These edits are intended to allow the simple integration of IMC_denoise with the data structures produced by the steinbock package: https://github.com/BodenmillerGroup/steinbock
-
-Specifically, the edits allow the uptake of multi-channel .tiffs by IMC_denoise in a distinct file structure (all .tiffs in one folder, no sub-folders).
-
-Changes:
-
---> edited the DeepSNiF_DataGenerator.py file (in the IMC_denoise\DeepSNiF_utils folder)
-
-      - modified file so that the package can ingest multi-channel .tiff data
-
-      - This was only designed to be accessible through a python / Jupyter notebook script -- I am uncertain of how this would be integrated with the docker portion of IMC_denoise
-      
-      - This functionality is optionally set as part of the DeepSNiF Data Generator class
-      
-      - The original single-channel .tiff format should remain the default behavior (multi-channel must be explicitly defined to get the new behaviour)
-      
---> added IMC_Denoise_integrated_with_steinbock_output.ipynb file to scripts folder
-
-      - this is an example jupyter notebook script for how to use the new functionality
-      
-      - the example requires your directories (training, img, and output) to be manually set
-
 # IMC-Denoise: a content aware denoising pipeline to enhance Imaging Mass Cytometry
 
 <img src="images/github.png" alt="Logo" width="600" align = "right">
