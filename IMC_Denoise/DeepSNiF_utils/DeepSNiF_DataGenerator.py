@@ -196,7 +196,7 @@ class DeepSNiF_DataGenerator():
                 if img.endswith(".tiff") or img.endswith(".tif"):
                     Img_list.append(img)
             for Img_file in Img_list:
-                Img_read = tp.TiffFile(load_directory + '\\' + Img_file).pages[self.channel_name].asarray()
+                Img_read = tp.TiffFile(load_directory + '/' + Img_file).pages[self.channel_name].asarray()
                 Img_collect.append(Img_read)     
         else:
             raise ValueError("run_type not of the values 'multi_channel_tiff' or 'single_channel_tiff'")
