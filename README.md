@@ -143,7 +143,7 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
 ### Steinbock Multichannel tiff Alternative Directory Structure
 IMC_Denoise can now also be run with multi-channel .tiffs, originally intended as a way of smoothly integrating the package with the Steinbock pipeline from the Bodenmiller group (https://github.com/BodenmillerGroup/steinbock).
 
-**Multi-channel Directory Structure.** This is the structure naturally produced by Steinbock, with the /img directory produced by steinbock being the Raw_image_directory below:
+**Multi-channel Directory Structure:**
 ```
 |--- Raw_image_directory           
 |---|---MCD1_ROI_1.tiff
@@ -153,6 +153,8 @@ IMC_Denoise can now also be run with multi-channel .tiffs, originally intended a
 ...
 |---|---MCDn_ROI_n.tiff
 ```
+This is the structure naturally produced by Steinbock, with the /img directory produced by steinbock being the "Raw_image_directory".
+
 **How to use:**
 - **The DeepSNiF_DataGenerator Class now has an additional attribute: run_type.** Set run_type = 'multi_channel_tiff' in the DeepSNiF_DataGenerator() call to allow ingestion of multi-channel tiffs.
 - **The default behavior remains the same,** requiring the single-channel directory structure given above this section. This can be explicitly called with run_type = 'single_channel_tiff'.
