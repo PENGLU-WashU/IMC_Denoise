@@ -141,7 +141,7 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
 ```
 
 ### Steinbock Multichannel tiff Alternative Directory Structure
-DeepSNiF can now also be run with multi-channel .tiffs, and in particular in integration with the Steinbock pipeline from the Bodenmiller group: https://github.com/BodenmillerGroup/steinbock.
+IMC_Denoise can now also be run with multi-channel .tiffs, originally intended as a way of smoothly integrating the package with the Steinbock pipeline from the Bodenmiller group (https://github.com/BodenmillerGroup/steinbock).
 
 **Multi-channel Directory Structure.** This is the structure naturally produced by Steinbock, with the /img directory produced by steinbock being the Raw_image_directory below:
 ```
