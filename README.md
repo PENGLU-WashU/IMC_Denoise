@@ -27,7 +27,8 @@ pipeline, IMC-Denoise, to restore IMC images. Specifically, we deploy **(i)** a 
   - [Encountering NaN loss](#encountering-nan-loss)
   - [Docker](#docker)
 - [Implement IMC_Denoise](#implement-imc_denoise)
-  - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images) 
+  - [Directory structure of raw IMC images](#directory-structure-of-raw-imc-images)
+  - [Steinbock / Multichannel tiff Alternative Directory Structure (new)](#steinbock-multichannel-tiff-alternative-directory-structure) 
   - [Download example data](#download-example-data)
   - [Network structure (new)](#network-structure-new)
   - [Commonly used hyper-parameters of the algorithm](commonly-used-hyper-parameters-of-the-algorithm)
@@ -138,6 +139,29 @@ In order to generate a training set for DeepSNiF, the directory structure of raw
              ...
 |---|---|---Channel_n_img.tiff
 ```
+
+### Steinbock Multichannel tiff Alternative Directory Structure
+IMC_Denoise can now also be run with multi-channel .tiffs, originally intended as a way of smoothly integrating the package with the Steinbock pipeline from the Bodenmiller group (https://github.com/BodenmillerGroup/steinbock).
+
+**Multi-channel Directory Structure:**
+```
+|--- Raw_image_directory           
+|---|---MCD1_ROI_1.tiff
+|---|---MCD1_ROI_2.tiff
+|---|---MCD2_ROI_1.tiff
+...
+...
+|---|---MCDn_ROI_n.tiff
+```
+This is the structure naturally produced by Steinbock, with the /img directory produced by steinbock being the "Raw_image_directory".
+
+**How to use:**
+- **The DeepSNiF_DataGenerator Class now has an additional attribute: run_type.** Set run_type = 'multi_channel_tiff' in the DeepSNiF_DataGenerator() call to allow ingestion of multi-channel tiffs.
+- **The default behavior remains the same,** requiring the single-channel directory structure given above this section. This can be explicitly called with run_type = 'single_channel_tiff'.
+- **Channel Names with the multi_channel_tiff option MUST BE CALLED AS AN INTEGER, which corresponds to the channel's numbered order in the images, and NOT by isotope name.** This is different than the procedure with single channel tiffs. This also means that the order of channels needs to be the same for images to be succesfully processed in one batch, although this should usually be the case for an experiment. 
+- **There is an example jupyter notebook showing an example of how to use the steinbock integration / multi-channel option.** Notice in the notebook how the training directory can be set to be a different folder than the directory of the images that you process, or they can be the same. Both, though, need to have the directory structure shown above. 
+
+
 ### Download example data
 - Please go to https://doi.org/10.5281/zenodo.6533905 and download **Raw_IMC_dataset_for_training_supp_table5.zip**. Then unzip this file as the folder **Raw_IMC_dataset_for_training_supp_table5**. This folder contains all the images for DeepSNiF training. 
 
