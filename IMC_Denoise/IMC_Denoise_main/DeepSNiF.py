@@ -162,7 +162,7 @@ class DeepSNiF():
         act_ = self.network_used(input_, network_name, loss_func = self.loss_function, trainable_label = True)
         model = Model (inputs= input_, outputs=act_)  
         
-        opt = tf.keras.optimizers.Adam(lr=self.train_learning_rate)
+        opt = tf.keras.optimizers.Adam(learning_rate=self.train_learning_rate)
         if self.loss_function != "I_divergence":    
             model.compile(optimizer=opt, loss = create_mse(lambda_HF = self.lambda_HF))
         else:
