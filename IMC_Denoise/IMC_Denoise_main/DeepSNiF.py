@@ -5,8 +5,9 @@ import os
 from os.path import join, exists, abspath
 import gc
 
+import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from keras import optimizers
+# from keras import optimizers
 from keras.models import Model
 from keras.layers import Input
 from keras.callbacks import Callback, ModelCheckpoint, ReduceLROnPlateau
@@ -17,7 +18,6 @@ from .loss_functions import create_I_divergence, create_mse
 from ..DeepSNiF_utils.DeepSNiF_TrainGenerator import DeepSNiF_Training_DataGenerator, DeepSNiF_Validation_DataGenerator
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased, Anscombe_inverse_direct
 
-import tensorflow as tf
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
     try:
@@ -162,7 +162,7 @@ class DeepSNiF():
         act_ = self.network_used(input_, network_name, loss_func = self.loss_function, trainable_label = True)
         model = Model (inputs= input_, outputs=act_)  
         
-        opt = optimizers.Adam(lr=self.train_learning_rate)
+        opt = tf.keras.optimizers.Adam(lr=self.train_learning_rate)
         if self.loss_function != "I_divergence":    
             model.compile(optimizer=opt, loss = create_mse(lambda_HF = self.lambda_HF))
         else:
