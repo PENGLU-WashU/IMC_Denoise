@@ -155,11 +155,25 @@ IMC_Denoise can now also be run with multi-channel .tiffs, originally intended a
 ```
 This is the structure naturally produced by Steinbock, with the /img directory produced by steinbock being the "Raw_image_directory".
 
-**How to use:**
+### How to use:
 - **The DeepSNiF_DataGenerator Class now has an additional attribute: run_type.** Set run_type = 'multi_channel_tiff' in the DeepSNiF_DataGenerator() call to allow ingestion of multi-channel tiffs.
 - **The default behavior remains the same,** requiring the single-channel directory structure given above this section. This can be explicitly called with run_type = 'single_channel_tiff'.
 - **Channel Names with the multi_channel_tiff option MUST BE CALLED AS AN INTEGER, which corresponds to the channel's numbered order in the images, and NOT by isotope name.** This is different than the procedure with single channel tiffs. This also means that the order of channels needs to be the same for images to be succesfully processed in one batch, although this should usually be the case for an experiment. 
 - **There is an example jupyter notebook showing an example of how to use the steinbock integration / multi-channel option.** Notice in the notebook how the training directory can be set to be a different folder than the directory of the images that you process, or they can be the same. Both, though, need to have the directory structure shown above. 
+
+#### IMC_Denoise_Steinbock.py
+For user-friendly use of the Steinbock Jupyter script we now also provide a CLI version with some options to be directly called from the CLI. Note, that this script is provided for the Steinbock multichannel TIFF Version and currently does not support singlechannel.
+
+| Option                  | Description                                                                                               | Optional |
+|-------------------------|-----------------------------------------------------------------------------------------------------------|----------|
+| `-t`, `--train`         | Path to the training directory                                                                            | No       |
+| `-i`, `--input`         | Path to the input directory where raw multichannel tiffs are located                                      | No       |
+| `-o`, `--output`        | Path to the directory where denoised images will be saved. If not specified, denoised images will overwrite the original images in the input directory. | Yes      |
+| `-c`, `--channels`      | Comma-separated list of channels to denoise (e.g., '1,2,3'). If not provided, all channels will be used.  | Yes      |
+| `-b`, `--batch_size`    | Batch size for training of DeepSNIF, default is 128                                                       | Yes      |
+| `-e`, `--epochs`        | Number of Epochs for training, default is 100                                                             | Yes      |
+| `-l`, `--learning_rate` | Initial learning rate, default is 1e-3                                                                    | Yes      |
+
 
 
 ### Download example data
