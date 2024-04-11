@@ -263,6 +263,10 @@ Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
 <br/>Project Link: [https://github.com/PENGLU-WashU/IMC_Denoise](https://github.com/PENGLU-WashU/IMC_Denoise)
 <br/>Lab Website: [Thorek Lab WashU](https://sites.wustl.edu/thoreklab/)
 
+## Acknowledgement
+
+Thanks the contributions of [BenCaiello](https://github.com/BenCaiello) and [LukasHats](https://github.com/LukasHats) on this project, who help modify the code on Steinbock.
+
 ## References
 If you find our work useful in your research or if you use parts of this code please consider citing our [paper](https://www.nature.com/articles/s41467-023-37123-6):
 
