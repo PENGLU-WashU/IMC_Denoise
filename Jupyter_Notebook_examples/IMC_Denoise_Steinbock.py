@@ -93,16 +93,28 @@ if len(channel_names) < 1:
         print(f"Error reading TIFF file to determine channels: {e}")
         exit(1)
 
-# This loop iterates through the list of channels and performs DIMR + DeepSNiF on each:
+# Train a model for each channel and store it
+trained_models = {}
 for i in channel_names:
     n_neighbours, n_iter, window_size, train_loss, val_loss, deepsnif = DeepSNiF_train(i)
-    for img in os.listdir(Raw_directory):
-        img_path = os.path.join(Raw_directory, img)
-        Img_raw = tp.TiffFile(img_path).pages[i].asarray()
-        Img_DIMR_DeepSNiF = deepsnif.perform_IMC_Denoise(Img_raw, n_neighbours = n_neighbours, n_iter = n_iter, window_size = window_size)
-        numpy_tiff = tp.imread(img_path)
-        numpy_tiff[i] = Img_DIMR_DeepSNiF
-        tp.imwrite(os.path.join(temp_output_dir, img), numpy_tiff, photometric='minisblack')
+    trained_models[i] = deepsnif  # Store the trained model for later use
+
+# Iterate through each image in the Raw_directory
+for img in os.listdir(Raw_directory):
+    img_path = os.path.join(Raw_directory, img)
+    # Load the entire multi-channel image once
+    numpy_tiff = tp.imread(img_path)
+
+    # Process each specified channel using the pre-trained models
+    for i in channel_names:
+        deepsnif = trained_models[i]  # Retrieve the trained model for this channel
+        Img_raw = numpy_tiff[i]  # Work directly with the loaded numpy array
+        Img_DIMR_DeepSNiF = deepsnif.perform_IMC_Denoise(Img_raw, n_neighbours=n_neighbours, n_iter=n_iter, window_size=window_size)
+        numpy_tiff[i] = Img_DIMR_DeepSNiF  # Update the channel in the numpy array
+
+    # Write the fully denoised image to the output directory after all channels have been processed
+    tp.imwrite(os.path.join(temp_output_dir, img), numpy_tiff, photometric='minisblack')
+
 
 # If a temporary directory was used, move the processed files back to the original directory
 if Raw_directory == output_directory:
@@ -111,5 +123,3 @@ if Raw_directory == output_directory:
     # Remove the temporary directory
     shutil.rmtree(temp_output_dir)
 # Steinbock should now be able to seemlessly work with the denoised files
-
-
