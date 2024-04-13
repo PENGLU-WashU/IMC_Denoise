@@ -67,41 +67,36 @@ IMC_Denoise
 - **Jupyter Notebooks** and **scripts** include several examples to implement IMC_Denoise algorithms.
 
 ## Customize environment for IMC_Denoise
-### Our IMC_Denoise environment
+### The original IMC_Denoise environment
 - Windows 10 64bit
 - Python 3.6
-- Tensorflow 2.2.0
+- Tensorflow 2.6.0
 - Keras 2.3.1
 - NVIDIA GPU + CUDA
 - Note that Linux also works with such configurations
 
-### Installation
+### Installation for Tensorflow 2.6
 - Create a virtual environment and install tensorflow-gpu and keras (we run all the codes in a Anaconda Powershell Prompt).
 ```
 $ conda create -n 'IMC_Denoise' python=3.6
 $ conda activate IMC_Denoise (some systems recommend: source activate IMC_Denoise)
 $ conda install -c anaconda brotlipy
-$ pip install tensorflow==2.2.0 keras==2.3.1
-$ conda install -c anaconda cudnn=7.6.5 cudatoolkit=10.1.243
+$ pip install tensorflow==2.6.0
+$ conda install -c anaconda cudnn=8.1 cudatoolkit=11.2
 $ pip install jupyter
 ```
 - In case above commends do not work, please try:
 ```
 $ conda create -n IMC_Denoise python=3.6 anaconda
 $ conda activate IMC_Denoise (some systems recommend: source activate IMC_Denoise)
-$ pip install tensorflow==2.2.0 keras==2.3.1
-$ conda install -c anaconda cudnn=7.6.5 cudatoolkit=10.1.243
+$ pip install tensorflow==2.6.0
+$ conda install -c anaconda cudnn=8.1 cudatoolkit=11.2
 ```
 - Download the source code and install the package in your folder.
 ```
 $ git clone https://github.com/PENGLU-WashU/IMC_Denoise.git
 $ cd IMC_Denoise
 $ pip install -e .
-```
-### Encountering NaN loss
-- In case the training losses are NaN, please install the following cuda libraries:
-```
-conda install -c anaconda cudnn=8.1 cudatoolkit=11.2
 ```
 ### Docker
 - Use dockerfile provided to build reproducible environment with IMC_Denoise.  
