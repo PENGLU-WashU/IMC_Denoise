@@ -1,5 +1,3 @@
-### Step of steinbock pipeline: after the conversion of mcd into .tiff files 
-
 ### IMC_Denoise_integrated_with_steinbock_output.ipynb
 import os
 import shutil
@@ -42,10 +40,6 @@ if output_directory:
 
 if 'generated_patches' in globals():
     del generated_patches
-
-train_directory = args.train 
-Raw_directory = args.input
-output_directory = args.output
 
 if args.channels:
     channel_names = [int(ch.strip()) for ch in args.channels.split(',')]
