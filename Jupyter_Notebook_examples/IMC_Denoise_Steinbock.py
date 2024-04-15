@@ -1,8 +1,6 @@
-# %%
-### This example notebook is to integrate DIMR / DeepSNiF analysis from the IMC_denoise package into the steinbock (https://bodenmillergroup.github.io/steinbock/) workflow
 ### Step of steinbock pipeline: after the conversion of mcd into .tiff files 
 
-### Edited by Ben Caiello from the example DeepSNiF train/run jupyter notebook script in IMC_denoise
+### IMC_Denoise_integrated_with_steinbock_output.ipynb
 import os
 import shutil
 import numpy as np
@@ -12,6 +10,7 @@ from IMC_Denoise.IMC_Denoise_main.DeepSNiF import DeepSNiF
 from IMC_Denoise.DeepSNiF_utils.DeepSNiF_DataGenerator import DeepSNiF_DataGenerator
 import argparse
 import tempfile
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--train", type=str, help="Path to the training directory")
@@ -23,6 +22,24 @@ parser.add_argument("-e", "--epochs", type=int, default=100, help="Number of Epo
 parser.add_argument("-l", "--learning_rate", type=float, default=1e-3, help="Initial learning rate, default ist 1e-3")
 args = parser.parse_args()
 
+train_directory = args.train 
+Raw_directory = args.input
+output_directory = args.output
+
+# Directory checks
+if not os.path.isdir(args.train):
+    print(f"Error: The specified training directory '{args.train}' does not exist.")
+    sys.exit(1)
+
+if not os.path.isdir(args.input):
+    print(f"Error: The specified input directory '{args.input}' does not exist.")
+    sys.exit(1)
+
+if output_directory:
+    if not os.path.isdir(output_directory):
+        print(f"Error: The specified output directory '{output_directory}' does not exist.")
+        sys.exit(1)
+
 if 'generated_patches' in globals():
     del generated_patches
 
@@ -30,7 +47,6 @@ train_directory = args.train
 Raw_directory = args.input
 output_directory = args.output
 
-#### Choose what channels you want to denoise:
 if args.channels:
     channel_names = [int(ch.strip()) for ch in args.channels.split(',')]
 else:
@@ -42,13 +58,7 @@ if Raw_directory == output_directory:
     temp_output_dir = tempfile.mkdtemp()
 else:
     temp_output_dir = output_directory
-
-#if Raw_directory == output_directory:    
-#    if os.path.isdir(Raw_directory + "_pre_denoise") == False:
-#        shutil.copytree(Raw_directory,(Raw_directory + "_pre_denoise"))
-#    else:
-#        print('img_pre_denoise folder already exists, will not copy current img directory')
-        
+     
 ## Step 0.1: set up a function that integrates all the training functions of IMC_denoise
 # Just done here so that the code for iterating through the channels is simpler
 # DO note the -- run_type = 'multi_channel_tiff' --  attribute in the DataGenerator call: this is what allows the ingestion of multi-channel .tiffs
@@ -61,6 +71,9 @@ def DeepSNiF_train(channel_name, n_neighbours = 4, n_iter = 3, window_size = 3, 
     If you want more control / want to adjust many of the hyperparameters, it may be better to split this function into its original pieces. 
     This function is also set to work only with multi-channel .tiffs, but that can be edited in the DataGenerator call.
     '''
+    # Generate a unique weights name for each channel
+    weights_name = f'IMC_Model_Channel_{channel_name}.hdf5'
+    
     DataGenerator = DeepSNiF_DataGenerator(run_type = 'multi_channel_tiff', channel_name = channel_name, ratio_thresh = 0.8,
                                            patch_row_size = 64, patch_col_size = 64, row_step = 60, col_step = 60,
                                            n_neighbours = n_neighbours, n_iter = n_iter, window_size = window_size)
@@ -114,7 +127,6 @@ for img in os.listdir(Raw_directory):
 
     # Write the fully denoised image to the output directory after all channels have been processed
     tp.imwrite(os.path.join(temp_output_dir, img), numpy_tiff, photometric='minisblack')
-
 
 # If a temporary directory was used, move the processed files back to the original directory
 if Raw_directory == output_directory:
