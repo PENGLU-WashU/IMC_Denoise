@@ -89,8 +89,9 @@ $ pip install jupyter
 ```
 $ conda create -n IMC_Denoise python=3.6 anaconda
 $ conda activate IMC_Denoise (some systems recommend: source activate IMC_Denoise)
-$ pip install tensorflow==2.6.0
+$ pip install tensorflow==2.6.0 keras==2.6.0
 $ conda install -c anaconda cudnn=8.1 cudatoolkit=11.2
+$ pip install protobuf==3.20.3
 ```
 - Download the source code and install the package in your folder.
 ```

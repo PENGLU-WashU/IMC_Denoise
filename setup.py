@@ -16,6 +16,8 @@ setup(name='IMC_Denoise',
           "matplotlib",
           "scikit-learn",
           "tensorflow==2.6.0",
+          "keras==2.6.0",
+          "protobuf==3.20.3"
           "tifffile"
         ]
       )
