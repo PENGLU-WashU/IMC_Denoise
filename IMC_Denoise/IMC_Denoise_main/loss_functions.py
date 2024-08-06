@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-from keras import backend as K
+from tensorflow.keras import backend as K
 
 def HF_regularization(Img_in):
     sum_axis = [1,2,3]
@@ -17,7 +17,7 @@ def create_I_divergence(lambda_HF):
     loss1 = tf.multiply(target, tf.math.log(target+1e-15))
     loss2 = tf.multiply(target, tf.math.log(y_pred))
     I_divergence = tf.multiply((loss1 - loss2 - target + y_pred), mask)
-    return tf.reduce_sum(I_divergence)/ tf.reduce_sum(mask) + lambda_HF*K.mean(HF_regularization(y_pred))
+    return tf.reduce_sum(I_divergence)/ tf.reduce_sum(mask) + lambda_HF*tf.reduce_mean(HF_regularization(y_pred))
   return weighted_I_divergence
   
 def create_mse(lambda_HF):

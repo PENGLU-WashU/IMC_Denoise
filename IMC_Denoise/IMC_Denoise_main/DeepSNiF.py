@@ -6,6 +6,7 @@ from os.path import join, exists, abspath
 import gc
 
 from sklearn.model_selection import train_test_split
+#import tensorflow.keras as keras
 from keras import optimizers
 from keras.models import Model
 from keras.layers import Input
@@ -64,7 +65,7 @@ class DeepSNiF():
             If "mse_relu", the framework will be Noise2Void with Anscombe transformation and Relu activation
             The default is "I_divergence".
         weights_name : string, optional
-            The file name of the saved weights. .hdf5 format. The default is None.
+            The file name of the saved weights. .keras format. The default is None.
         loss_name : string, optional
             The file name of the saved losses. .npz or .mat format. The default is None.
         weights_dir : string, optional
@@ -128,8 +129,8 @@ class DeepSNiF():
         
         self.weights_name = weights_name
         if self.weights_name is not None:
-            if not self.weights_name.endswith('.hdf5'):
-                print('the weights file should end with .hdf5!')
+            if not self.weights_name.endswith('.keras'):
+                print('the weights file should end with .keras!')
                 return
             
         self.lambda_HF = lambda_HF
@@ -162,7 +163,7 @@ class DeepSNiF():
         act_ = self.network_used(input_, network_name, loss_func = self.loss_function, trainable_label = True)
         model = Model (inputs= input_, outputs=act_)  
         
-        opt = optimizers.Adam(lr=self.train_learning_rate)
+        opt = optimizers.Adam(learning_rate=self.train_learning_rate)
         if self.loss_function != "I_divergence":    
             model.compile(optimizer=opt, loss = create_mse(lambda_HF = self.lambda_HF))
         else:
@@ -228,7 +229,7 @@ class DeepSNiF():
         
         # Save the model weights after each epoch
         if self.weights_name is not None: 
-            np.savez(join(self.weights_dir, self.weights_name.replace('.hdf5','_range_val.npz')), range_val = self.range_val)
+            np.savez(join(self.weights_dir, self.weights_name.replace('.keras','_range_val.npz')), range_val = self.range_val)
             checkpointer = ModelCheckpoint(filepath = join(self.weights_dir, self.weights_name), verbose = 1, save_best_only = False)
             callback_list = [history, checkpointer, change_lr]
         else:
@@ -240,7 +241,7 @@ class DeepSNiF():
         # Inform user training begun
         print('Training model...')
         
-        train_history = model.fit_generator(generator = training_data, \
+        train_history = model.fit( training_data, \
                                             steps_per_epoch = STEPS_PER_EPOCH, epochs = self.train_epoches, verbose=1, \
                                             validation_data = (X_test, Y_test), \
                                             callbacks = callback_list)    
@@ -272,7 +273,7 @@ class DeepSNiF():
 
         """
         if self.weights_name is None:
-            print('When loading a model, a legal .hdf5 file must be provided. Weights loaded failed!')
+            print('When loading a model, a legal .keras file must be provided. Weights loaded failed!')
             return
         
         # Build the DeepSNiF network structure
@@ -287,7 +288,7 @@ class DeepSNiF():
             print('Pre-trained model loaded fail. Please check if the file {} exists.'.format(load_weights_name))
             return
            
-        load_range_name = join(self.weights_dir, self.weights_name.replace('.hdf5', '_range_val.npz'))
+        load_range_name = join(self.weights_dir, self.weights_name.replace('.keras', '_range_val.npz'))
         if exists(load_range_name): 
             loaded_range_val = np.load(load_range_name)
             self.range_val = loaded_range_val['range_val']
