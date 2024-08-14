@@ -259,13 +259,15 @@ $ conda activate IMC_Denoise
 
 ## Contact
 
-Peng Lu - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
+Peng Lu, PhD - [@penglu10](https://twitter.com/penglu10) - penglu@wustl.edu
 <br/>Project Link: [https://github.com/PENGLU-WashU/IMC_Denoise](https://github.com/PENGLU-WashU/IMC_Denoise)
 <br/>Lab Website: [Thorek Lab WashU](https://sites.wustl.edu/thoreklab/)
 
 ## Acknowledgement
 
 Thanks the contributions of [BenCaiello](https://github.com/BenCaiello) and [LukasHats](https://github.com/LukasHats) on this project, who help modify the code on Steinbock.
+
+Thanks the contribution of [g-torr](https://github.com/g-torr) on this project, who helps modify the code on Keras 3.
 
 ## References
 If you find our work useful in your research or if you use parts of this code please consider citing our [paper](https://www.nature.com/articles/s41467-023-37123-6):
