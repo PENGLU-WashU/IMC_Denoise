@@ -8,6 +8,8 @@ from os.path import isfile, join, abspath, exists
 from glob import glob
 from ..IMC_Denoise_main.DIMR import DIMR
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_direct
+import logging
+logger = logging.getLogger(__name__)
 
 class DeepSNiF_DataGenerator():
     
@@ -87,7 +89,7 @@ class DeepSNiF_DataGenerator():
             
         assert ratio_thresh >= 0 and ratio_thresh <= 1, "thresh value must be between 0 and 1."
         if patch_col_size%16 != 0 or patch_row_size%16 != 0:
-            print('patch size must be divisible by 16!')
+            logger.error('patch size must be divisible by 16!')
             return
         
         self.patch_row_size = patch_row_size
@@ -165,10 +167,10 @@ class DeepSNiF_DataGenerator():
         
         if self.is_augment:
             patch_collect = self.__augment_patches__(patch_collect)
-            print('The generated patches augmented.')
+            logger.debug('The generated patches augmented.')
         
         np.random.shuffle(patch_collect)
-        print('The generated patches shuffled.')
+        logger.debug('The generated patches shuffled.')
         
         return patch_collect
     
@@ -181,13 +183,13 @@ class DeepSNiF_DataGenerator():
         Img_collect = []
         if (self.run_type == 'single_channel_tiff'):
             img_folders = glob(join(load_directory, "*", ""))
-            print('Image data loaded from ...\n')
+            logger.info('Image data loaded from ...\n')
             for sub_img_folder in img_folders:
                 Img_list = [f for f in listdir(sub_img_folder) if isfile(join(sub_img_folder, f)) & (f.endswith(".tiff") or f.endswith(".tif"))]
                 for Img_file in Img_list:
                     if self.channel_name.lower() in Img_file.lower():
                         Img_read = self.load_single_img(sub_img_folder + Img_file)
-                        print(sub_img_folder + Img_file)
+                        logger.info(sub_img_folder + Img_file)
                         Img_collect.append(Img_read)
                         break
         elif (self.run_type == 'multi_channel_tiff'):
@@ -201,9 +203,9 @@ class DeepSNiF_DataGenerator():
         else:
             raise ValueError("run_type not of the values 'multi_channel_tiff' or 'single_channel_tiff'")
         
-        print('\n' + 'Image data loading completed!')
+        logger.info('\n' + 'Image data loading completed!')
         if not Img_collect:
-            print('No such channels! Please check the channel name again!')
+            logger.warning('No such channels! Please check the channel name again!')
             return
                 
         return Img_collect
@@ -287,7 +289,7 @@ class DeepSNiF_DataGenerator():
             os.makedirs(save_directory)
         saved_name = join(save_directory, 'training_set_' + self.channel_name + '.npz')
         np.savez(saved_name, patches = generated_patches)
-        print('The generated training set with shape of {} is saved as {}.'.format(generated_patches.shape, saved_name))
+        logger.info('The generated training set with shape of {} is saved as {}.'.format(generated_patches.shape, saved_name))
         return True
         
 def load_training_patches(filename, save_directory = None):
@@ -301,7 +303,7 @@ def load_training_patches(filename, save_directory = None):
     elif not exists(save_directory):
         raise ValueError('No such dataset!')
     if not filename.endswith('.npz'):
-        print('The generated training set should be .npz format!')
+        logger.warning('The generated training set should be .npz format!')
         return
     generated_data = np.load(join(save_directory, filename))
     return generated_data['patches']

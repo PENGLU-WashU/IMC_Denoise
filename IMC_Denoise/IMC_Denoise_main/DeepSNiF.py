@@ -6,6 +6,7 @@ from os.path import join, exists, abspath
 import gc
 
 from sklearn.model_selection import train_test_split
+#import tensorflow.keras as keras
 from keras import optimizers
 from keras.models import Model
 from keras.layers import Input
@@ -18,6 +19,9 @@ from ..DeepSNiF_utils.DeepSNiF_TrainGenerator import DeepSNiF_Training_DataGener
 from ..Anscombe_transform.Anscombe_transform_functions import Anscombe_forward, Anscombe_inverse_exact_unbiased, Anscombe_inverse_direct
 
 import tensorflow as tf
+import logging
+logger = logging.getLogger(__name__)
+
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
     try:
@@ -64,7 +68,7 @@ class DeepSNiF():
             If "mse_relu", the framework will be Noise2Void with Anscombe transformation and Relu activation
             The default is "I_divergence".
         weights_name : string, optional
-            The file name of the saved weights. .hdf5 format. The default is None.
+            The file name of the saved weights. .keras format. The default is None.
         loss_name : string, optional
             The file name of the saved losses. .npz or .mat format. The default is None.
         weights_dir : string, optional
@@ -128,8 +132,8 @@ class DeepSNiF():
         
         self.weights_name = weights_name
         if self.weights_name is not None:
-            if not self.weights_name.endswith('.hdf5'):
-                print('the weights file should end with .hdf5!')
+            if not self.weights_name.endswith('.keras'):
+                logger.error('the weights file should end with .keras!')
                 return
             
         self.lambda_HF = lambda_HF
@@ -138,7 +142,7 @@ class DeepSNiF():
         elif network_size == 'small':
             self.network_used = DeepSNiF_net_small
         else:
-            print('the network_size should be either normal or small!')
+            logger.error('the network_size should be either normal or small!')
             return
         
         if is_load_weights:
@@ -162,7 +166,7 @@ class DeepSNiF():
         act_ = self.network_used(input_, network_name, loss_func = self.loss_function, trainable_label = True)
         model = Model (inputs= input_, outputs=act_)  
         
-        opt = optimizers.Adam(lr=self.train_learning_rate)
+        opt = optimizers.Adam(learning_rate=self.train_learning_rate)
         if self.loss_function != "I_divergence":    
             model.compile(optimizer=opt, loss = create_mse(lambda_HF = self.lambda_HF))
         else:
@@ -186,7 +190,7 @@ class DeepSNiF():
 
         """
         if X.ndim != 3:
-            print('Please check the input data, must be 3d [N*R*C]!')
+            logger.error('Please check the input data, must be 3d [N*R*C]!')
             return
         
         if self.is_load_weights:
@@ -200,19 +204,19 @@ class DeepSNiF():
                 X = Anscombe_forward(X)
             X, self.range_val = self.normalize_patches(X)  
         
-        print('The range value to the corresponding model is {}.'.format(self.range_val))
+        logger.info('The range value to the corresponding model is {}.'.format(self.range_val))
         
         if not self.is_load_weights:
             X[X > 1.0] = 1.0
             X[X < 0.0] = 0.0
         X = np.expand_dims(X, axis = -1)
         
-        print('Input Channel Shape => {}'.format(X.shape))
+        logger.debug('Input Channel Shape => {}'.format(X.shape))
           
         X_train, X_test = train_test_split(X, test_size = self.val_perc, random_state = 42)
         del X
-        print('Number of Training Examples: %d' % X_train.shape[0])
-        print('Number of Validation Examples: %d' % X_test.shape[0])
+        logger.info('Number of Training Examples: %d' % X_train.shape[0])
+        logger.info('Number of Validation Examples: %d' % X_test.shape[0])
         
         STEPS_PER_EPOCH = int(np.floor(X_train.shape[0]/self.train_batch_size)+1)
         # Setting type
@@ -228,7 +232,7 @@ class DeepSNiF():
         
         # Save the model weights after each epoch
         if self.weights_name is not None: 
-            np.savez(join(self.weights_dir, self.weights_name.replace('.hdf5','_range_val.npz')), range_val = self.range_val)
+            np.savez(join(self.weights_dir, self.weights_name.replace('.keras','_range_val.npz')), range_val = self.range_val)
             checkpointer = ModelCheckpoint(filepath = join(self.weights_dir, self.weights_name), verbose = 1, save_best_only = False)
             callback_list = [history, checkpointer, change_lr]
         else:
@@ -238,15 +242,15 @@ class DeepSNiF():
         X_test, Y_test = DeepSNiF_Validation_DataGenerator(X_test, self.mask_perc_pix, (p_row_size, p_col_size))
     
         # Inform user training begun
-        print('Training model...')
+        logger.info('Training model...')
         
-        train_history = model.fit_generator(generator = training_data, \
+        train_history = model.fit( training_data, \
                                             steps_per_epoch = STEPS_PER_EPOCH, epochs = self.train_epoches, verbose=1, \
                                             validation_data = (X_test, Y_test), \
                                             callbacks = callback_list)    
     
         # Inform user training ended
-        print('Training Completed!')
+        logger.info('Training Completed!')
         
         self.trained_model = model
     
@@ -261,7 +265,7 @@ class DeepSNiF():
             elif self.loss_name.endswith('.mat'):
                 sio.savemat(join(self.weights_dir, self.loss_name), {"train_loss": loss, "val_loss": val_loss})
             else:
-                print('saved format should be .npz or .mat. Save failed.')
+                logger.warning('saved format should be .npz or .mat. Save failed.')
         
         return loss, val_loss
     
@@ -272,7 +276,7 @@ class DeepSNiF():
 
         """
         if self.weights_name is None:
-            print('When loading a model, a legal .hdf5 file must be provided. Weights loaded failed!')
+            logger.error('When loading a model, a legal .keras file must be provided. Weights loaded failed!')
             return
         
         # Build the DeepSNiF network structure
@@ -282,18 +286,18 @@ class DeepSNiF():
         load_weights_name = join(self.weights_dir, self.weights_name)
         if exists(load_weights_name): 
             model.load_weights(load_weights_name)
-            print('Pre-trained model {} loaded successfully.'.format(load_weights_name))
+            logger.info('Pre-trained model {} loaded successfully.'.format(load_weights_name))
         else:
-            print('Pre-trained model loaded fail. Please check if the file {} exists.'.format(load_weights_name))
+            logger.error('Pre-trained model loaded fail. Please check if the file {} exists.'.format(load_weights_name))
             return
            
-        load_range_name = join(self.weights_dir, self.weights_name.replace('.hdf5', '_range_val.npz'))
+        load_range_name = join(self.weights_dir, self.weights_name.replace('.keras', '_range_val.npz'))
         if exists(load_range_name): 
             loaded_range_val = np.load(load_range_name)
             self.range_val = loaded_range_val['range_val']
-            print('Pre-calculated range value file {} loaded successfully.'.format(load_range_name))
+            logger.info('Pre-calculated range value file {} loaded successfully.'.format(load_range_name))
         else:
-            print('Pre-calculated range value file loaded fail. Please check if the file {} exists.'.format(load_range_name))
+            logger.error('Pre-calculated range value file loaded fail. Please check if the file {} exists.'.format(load_range_name))
             return
         
         return model
@@ -332,7 +336,7 @@ class DeepSNiF():
             raise Exception("For DeepSNiF deneising, the input must be a 2d image!")
             
         if self.range_val is None:
-            print('In prediction, range value for the marker channel must be defined!')
+            logger.error('In prediction, range value for the marker channel must be defined!')
             return
         
         # Normalize the input image
@@ -385,7 +389,7 @@ class DeepSNiF():
             raise Exception("For DeepSNiF batch processing, the input must be a 3d array ([N, R, C])!")
             
         if self.range_val is None:
-            print('In prediction, range values for the marker channel must be defined!')
+            logger.error('In prediction, range values for the marker channel must be defined!')
             return
             
         # Normalize the input image
